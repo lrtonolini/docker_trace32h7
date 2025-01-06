@@ -1,0 +1,158 @@
+; --------------------------------------------------------------------------------
+; @Title: Load the Position Independent Terminal example (DCC3 mode)
+; @Description:
+;   Load the position independent t32term demo for ARM7/9/11, XSCALE,
+;   CortexA/R (AArch32 & AArch64) into RAM.
+;   The example shows how a simple terminal can be implemented using TRACE32
+;   and mrc/mcr/mtspr/mfspr instructions. The DCC3 mode transfers up to 3byte
+;   with every transaction.
+;   When to use this terminal method?
+;     => ARM7/9/11, XSCALE, CortexA/R (AArch32 & AArch64)
+;     => medium protocol overhead
+;     => good bandwidth
+;     => allows transfer of ASCII and binary data
+;   For more information please check ~~/pdf/debugger_arm.pdf
+;
+;   Prerequisites:
+;    * System is connected
+;    * RAM is accessible Read/Write/Execute
+;
+;   Usage:
+;          DO ~~/demo/arm/etc/virtual_terminal/dcc_based/demo_term_dcc3 <RamStart>
+;     e.g. DO ~~/demo/arm/etc/virtual_terminal/dcc_based/demo_term_dcc3 0x1000
+; @Author: AME
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: demo_term_dcc3.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+PRIVATE &param &offset
+ENTRY %LINE &param
+
+; --------------------------------------------------------------------------------
+; Prerequisites: Simulator? Connected?
+IF INTERFACE.SIM()
+(
+  PRINT %ERROR "Error: This demo does not work with the simulator."
+  ENDDO FALSE()
+)
+IF !SYSTEM.UP()
+(
+  PRINT %ERROR "Error: Please connect to the CPU first."
+  ENDDO FALSE()
+)
+IF STATE.RUN()
+  Break
+
+GOSUB ParseParameters &param
+RETURNVALUES &offset
+
+; --------------------------------------------------------------------------------
+; load the code depending on coretype
+IF CORE.NUMBER()>1.
+  CORE.select 0.
+
+IF (CPU.FEATURE(SPR))
+(
+  ; AArch64 capable CPU
+  ; detect AArch mode by checking bit4 of the M field of CPSR
+  IF ((Register(M)&0x10)==0x0)
+  (
+    Data.LOAD.Elf ~~~~/term_demo_dcc3_pic_aarch64.elf          &offset /RelPATH /Verify
+  )
+  ELSE IF (((Register(M)&0x10)!=0x0)&&(Register(E)==0.)&&(Register(T)==0.))
+  (
+    ; AArch32 mode
+      Data.LOAD.Elf ~~~~/term_demo_dcc3_pic_arm11_cortex.elf   &offset /RelPATH /Verify
+  )
+  ELSE
+  (
+    PRINT %ERROR "Error: Coretype not supported by this script."
+    ENDDO FALSE()
+  )
+)
+ELSE IF (STRing.SCAN(CORENAME(),"ARM7",0)>=0)||(STRing.SCAN(CORENAME(),"ARM9",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/term_demo_dcc3_pic_arm7_arm9.elf          &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"ARM11",0)>=0)||(STRing.SCAN(CORENAME(),"CORTEXA",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/term_demo_dcc3_pic_arm11_cortex.elf       &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"XSCALE",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/term_demo_dcc3_pic_xscale.elf             &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"CORTEXR",0)>=0)
+(
+  IF ((Data.Long(C15:0x1)&0x80000000)!=0x0)
+  (
+    IF VERSION.BUILD.BASE()>=77512.
+    (
+      Data.LOAD.Elf ~~~~/term_demo_dcc3_pic_arm11_cortex_be.elf  &offset /RelPATH /Verify
+    )
+    ELSE
+    (
+      PRINT %ERROR "Error: Please use more recent software. Contact support@lauterbach.com."
+      ENDDO FALSE()
+    )
+  )
+  ELSE
+    Data.LOAD.Elf ~~~~/term_demo_dcc3_pic_arm11_cortex.elf     &offset /RelPATH /Verify
+)
+ELSE
+(
+  PRINT %ERROR "Error: Coretype not supported by this script."
+  ENDDO FALSE()
+)
+
+; --------------------------------------------------------------------------------
+; handle secondary SMP cores
+PRIVATE &core
+&core=1.
+WHILE &core<CORE.NUMBER()
+(
+  Register.Set PC _start_secondary /CORE &core
+  &core=&core+1.
+)
+
+; --------------------------------------------------------------------------------
+; preboot executable - run to *main*
+Go main\1
+WAIT !STATE.RUN()
+
+; setup the terminal
+TERM.RESet
+TERM.METHOD DCC3
+TERM.view
+
+; start the demo
+Go
+
+
+ENDDO TRUE()
+
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+(
+  PRIVATE &param &offset
+  ENTRY %LINE &param
+  &offset=STRing.SCANAndExtract("&param","0x","")
+  IF "&offset"==""
+  (
+    PRINT %ERROR "Error: Missing Argument - Usage DO demo_term_dcc3.cmm 0x<offset> "
+    ENDDO FALSE()
+  )
+  ; ensure parameter is HEX and round down to the nearest LONG
+  &offset="0x&offset"
+  &offset=(&offset)&~0xfff
+
+  IF !SYStem.Up()
+  (
+    PRINT %ERROR "Error: Not connected to target. - Please use SYStem.Up before."
+    ENDDO FALSE()
+  )
+
+  RETURN "&offset"
+)

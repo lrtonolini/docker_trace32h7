@@ -1,0 +1,29 @@
+// t32 Tue Feb 27 11:02:59 2024
+
+B::
+
+Register.Set R0 0x0
+Register.Set R1 0x40140000
+Register.Set R2 0x200020D0
+Register.Set R3 0xFB84D567
+Register.Set R4 0x20002084
+Register.Set R5 0x20002084
+Register.Set R6 0x0
+Register.Set R7 0x20002BA0
+Register.Set R8 0x0
+Register.Set R9 0x0
+Register.Set R10 0x0
+Register.Set R11 0x0
+Register.Set R12 0x80280000
+Register.Set R13 0x20002B80
+Register.Set R14 0xFFFFFFF9
+Register.Set PC 0x20000760
+Register.Set XPSR 0x21000003
+Register.Set MSP 0x20002B80
+Register.Set PSP 0x0
+Register.Set CONTROL 0x0
+Register.Set FAULTMASK 0x0
+Register.Set BASEPRI 0x0
+Register.Set PRIMASK 0x1
+
+ENDDO

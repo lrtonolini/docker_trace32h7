@@ -1,0 +1,306 @@
+; --------------------------------------------------------------------------------
+; @Title: RTX-ARM specific menu
+; @Description: -
+; @Author: DIE
+; @Copyright: (c) 1989-2021 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: rtx.m 7861 2022-07-29 13:45:42Z amerkle $
+
+NAME "TASK.RTXARMV5"
+IF !MENU.EXIST("TASK.RTXARMV5")
+(
+add
+menu
+(
+  POPUP "RTX-ARM v5"
+  (
+    default
+    menuitem "Display &Threads"        "TASK.Thread"
+    menuitem "Display &Message Queue..."
+    (
+        dialog
+        (
+          header "Message Queue"
+          pos 1. 1. 30.
+var:      defedit "" ""
+          pos 32. 1. 7.
+br:       button "Browse..."
+          (
+            PRIVATE &wildcard
+            &wildcard=dialog.string(var)
+            if "&wildcard"==""
+              &wildcard="*"
+            if !string.find("&wildcard","*?")
+              &wildcard="*&wildcard*"
+            sYmbol.Browse.Var &wildcard osMessageQueueId_t /Click "DIALOG.Set var ""*""" /Delete
+          )
+          pos 40. 1. 7.
+          defbutton "Ok"
+          (
+            PRIVATE &var
+            &var=dialog.string(var)
+            TASK.MsgQueue var.value(&var)
+            dialog.end
+          )
+          pos 0. 0. 49. 3.
+          box "Message Queue"
+        )
+    )
+    menuitem "Display &Timer..."
+    (
+        dialog
+        (
+          header "Display Timer"
+          pos 1. 1. 20.
+ti.act:   choosebox "active timers"
+          (
+            dialog.disable var
+            dialog.disable br
+          )
+          pos 1. 2.
+ti.one:   choosebox "selected timer"
+          (
+            dialog.enable var
+            dialog.enable br
+          )
+          pos 1. 3. 30.
+var:      defedit "" ""
+          pos 32. 3. 7.
+br:       button "Browse..."
+          (
+            PRIVATE &wildcard
+            &wildcard=dialog.string(var)
+            if "&wildcard"==""
+              &wildcard="*"
+            if !string.find("&wildcard","*?")
+              &wildcard="*&wildcard*"
+            sYmbol.Browse.Var &wildcard osTimerId_t /Click "DIALOG.Set var ""*""" /Delete
+          )
+          pos 40. 3. 7.
+          defbutton "Ok"
+          (
+            PRIVATE &var
+            &var=dialog.string(var)
+            if dialog.boolean(ti.one)
+              TASK.TImer var.value(&var)
+            else
+              TASK.TImer
+            dialog.end
+          )
+          pos 0. 0. 49. 5.
+          box "Timer"
+        )
+        dialog.set ti.one
+    )
+    if !interface.gdb()
+    (
+      separator
+      popup "&Stack Coverage"
+      (
+        menuitem "&List Stacks"    "TASK.STacK.view"
+        menuitem "Add Task"        "TASK.STacK.ADD"
+        menuitem "Remove Task"     "TASK.STacK.RM"
+        menuitem "&Reset Coverage"
+        (
+          if icd()||simulator()
+          (
+            PRIVATE &yes
+            dialog.yesno "Overwrite unused stack space" "with stack fill pattern?"
+            entry &yes
+            if !&yes
+              enddo
+            )
+          TASK.STacK.Init
+        )
+        menuitem "Stack &Pattern..."
+        (
+            dialog
+            (
+              header "Stack Pattern"
+              pos 0 0 13. 3.
+              box "initialized pattern:"
+              pos 1 1 11. 1.
+  pattern:    defedit "" ""
+              pos 14. 1 6 1
+              defbutton "OK"
+              (
+                PRIVATE &pattern
+                &pattern=dialog.string(pattern)
+                TASK.STacK.PATtern &pattern
+                dialog.end
+              )
+            )
+            dialog.set pattern "0xCC"
+        )
+      )
+    )
+  )
+  popup "Trace"
+  (
+    popup "List"
+    (
+      separator
+      menuitem "&Task Switches"     "Trace.List List.TASK"
+      menuitem "&Default and Tasks" "Trace.List List.TASK DEFault"
+    )
+  )
+  popup "Perf"
+  (
+    separator
+    popup "&Task Runtime"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+        )
+        if a.mode.flow()
+        (
+          Break.Delete /TraceEnable
+          Break.Set  C:0x1F:::task.config(magic) /TraceEnable
+        )
+      )
+      menuitem "[:perf]Show &Numerical"   "Trace.STATistic.TASK"
+      menuitem "[:achart]Show as &Timing" "Trace.CHART.TASK"
+      menuitem "[:achart]Tracking with Trace &List"
+      (
+        Trace.List List.TASK DEFault /Track
+        Trace.CHART.TASK /Track
+      )
+    )
+    popup "Task &Function Runtime"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+          Analyzer.STATistic.PreFetch on
+        )
+        if a.mode.flow()
+        (
+          Break.Delete /TraceData
+          Break.Set  C:0x1F:::task.config(magic) /TraceData
+        )
+      )
+      menuitem "[:perf]Show &Numerical"     "Trace.STATistic.TASKFUNC"
+      menuitem "[:perf]Show as &Tree"       "Trace.STATistic.TASKTREE"
+      menuitem "[:perf]Show &Detailed Tree" "Trace.STATistic.TASKTREE ALL"
+      menuitem "[:achart]Show as &Timing"   "Trace.CHART.TASKFUNC"
+      menuitem "[:alist]Show N&esting"      "Trace.List List.TASK FUNC TI.FUNC"
+    )
+    popup "Task &Status"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+        )
+      )
+      menuitem "[:perf]Show &Numerical"   "Trace.STATistic.TASKSTATE"
+      menuitem "[:achart]Show as &Timing" "Trace.CHART.TASKSTATE"
+      menuitem "[:achart]Tracking with Trace &List"
+      (
+        Trace.List List.TASK DEFault /Track
+        Trace.CHART.TASKSTATE /Track
+      )
+    )
+  )
+  popup "&Help"
+  (
+    MENUITEM "[:manual]OS Awareness Manual RTXARM" "HELP __RTOS_RTXARM_"
+  )
+)
+
+
+menu "task.t"
+(
+  default
+  menuitem "Display detailed"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    TASK.Task &magic
+  )
+  menuitem "Display thread struct"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Var.View %Open %String (struct osRtxThread_s*)(&address)
+  )
+  separator
+  menuitem "Display Stack Frame"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    Var.Frame /Locals /Caller /Task &magic
+  )
+  menuitem "Display Registers"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    Register /Task &magic
+  )
+  menuitem "Switch Context"     "Register.TASK address.offset(track.address())"
+  separator
+  menuitem "Add to Stack Cov"   "TASK.STK.ADD address.offset(track.address())"
+  menuitem "Rm from Stack Cov"  "TASK.STK.RM  address.offset(track.address())"
+  separator
+  menuitem "Dump task entry"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Data.dump &address /Long /Dialog
+  )
+)
+
+
+menu "task.mq"
+(
+  default
+  menuitem "Display detailed"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    TASK.MsgQueue &magic
+  )
+  menuitem "Display message queue struct"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Var.View %Open %String (osRtxMessageQueue_t*)(&address)
+  )
+  menuitem "Dump message queue entry"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Data.dump &address /Long /Dialog
+  )
+)
+
+
+menu "task.ti"
+(
+  default
+  menuitem "Display detailed"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    TASK.TImer &magic
+  )
+  menuitem "Display timer struct"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Var.View %Open %String (struct osRtxTimer_s*)(&address)
+  )
+  menuitem "Dump timer entry"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Data.dump &address /Long /Dialog
+  )
+)
+)

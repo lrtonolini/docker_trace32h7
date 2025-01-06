@@ -1,0 +1,63 @@
+WinCLEAR
+
+; --------------------------------------------------------------------------------
+; initialize and start the debugger
+RESet
+SYStem.CPU STM32H747XI-CM7
+SYStem.CONFIG.DEBUGPORTTYPE SWD
+IF COMBIPROBE()||UTRACE()
+(
+  SYStem.CONFIG.CONNECTOR MIPI20T
+)
+SYStem.Option DUALPORT ON
+SYStem.Up
+
+; --------------------------------------------------------------------------------
+; load demo program (uses internal RAM only)
+Data.LOAD.Elf "~~~~/demo/sieve_ram_thumb_ii_v7m.elf"
+
+; --------------------------------------------------------------------------------
+; start program execution
+Go.direct main
+WAIT !STATE.RUN()
+
+; --------------------------------------------------------------------------------
+; open some windows
+WinCLEAR
+Mode.Hll
+WinPOS 0. 0. 116. 26.
+List.auto
+WinPOS 120. 0. 100. 8.
+Frame.view
+WinPOS 120. 14.
+Var.Watch
+Var.AddWatch %SpotLight ast flags
+WinPOS 120. 25.
+Register.view /SpotLight
+WinPOS 0. 32.
+Var.DRAW %DEFault sinewave
+
+MENU.ReProgram
+(
+  ADD
+  MENU
+  (
+    POPUP "Portenta H7"
+    (
+      MENUITEM "DEbug GDB"
+      (
+        Os.command C:\T32\PortentaH7\bin\t32marm.exe -c C:\T32\PortentaH7\config\configGDB.t32.txt -s "C:\T32\PortentaH7\ard.cmm"
+      )
+      MENUITEM "DEbug JTAG"
+      (
+        DO "C:/T32/PortentaH7/hardw.cmm"
+      )
+      MENUITEM "DEbug simulateur"
+      (
+        Os.command C:\T32\PortentaH7\bin\t32marm.exe -c C:\T32\PortentaH7\config\configSimu.t32.txt -s "C:\T32\PortentaH7\sim.cmm"
+      )
+
+    )
+  )
+)
+ENDDO

@@ -1,0 +1,74 @@
+Menu.RESet
+
+WinPOS 0.25 0.071429 100. 23. 21. 1. W002
+WinTABS 10. 10. 25.
+List
+
+WinPOS 106.13 0.0 88. 8. 9. 1. W001
+WinTABS 42. 13. 9.
+TASK.List
+
+WinPOS 105.0 12.357 44. 10. 5. 0. W004
+Frame /Args /Locals /Caller
+
+WinPOS 154.13 12.429 40. 10. 0. 0. W005
+Var.Watch %SpotLight
+
+VAR.ADDWATCH Counter
+VAR.ADDWATCH FastCount
+VAR.ADDWATCH SlowCount
+VAR.ADDWATCH Sinewave
+VAR.ADDWATCH flags
+
+WinPOS 153.25 28.571 38. 14. 0. 0. W007
+Logger
+
+WinPOS 104.88 29.143 44. 20. 0. 0. W003
+Register.view
+
+MENU.ReProgram
+(
+  ADD
+  MENU
+  (
+    POPUP "Portenta H7"
+    (
+      MENUITEM "DEbug GDB"
+      (
+        Os.command C:\T32\PortentaH7\bin\t32marm.exe -c C:\T32\PortentaH7\config\configGDB.t32.txt -s "C:\T32\PortentaH7\ard.cmm"
+      )
+      MENUITEM "DEbug JTAG"
+      (
+        Os.command C:\T32\PortentaH7\bin\t32marm.exe -c C:\T32\PortentaH7\config\configJTAG.t32.txt -s  "C:\T32\PortentaH7\hardw.cmm"
+      )
+      MENUITEM "DEbug simulateur"
+      (
+        Os.command C:\T32\PortentaH7\bin\t32marm.exe -c C:\T32\PortentaH7\config\configSimu.t32.txt -s "C:\T32\PortentaH7\sim.cmm"
+      )
+
+    )
+  )
+  ADD
+  MENU
+  (
+    POPUP "DEbug GDB"
+    (
+      MENUITEM "T32ThreadDebug"
+      (
+        CD.DO "C:/T32/PortentaH7/demo/T32ThreadDebug/start.cmm" MODE=MANUAL
+      )
+
+      MENUITEM "T32ThreadDebugLogger"
+      (
+        CD.DO "C:/T32/PortentaH7/demo/T32ThreadDebugLogger/start.cmm" MODE=MANUAL
+      )
+
+      MENUITEM "T32ThreadDebugPrint"
+      (
+        CD.DO "C:/T32/PortentaH7/demo/T32ThreadDebugPrint/start.cmm" MODE=MANUAL
+      )
+    )
+  )
+)
+
+ENDDO

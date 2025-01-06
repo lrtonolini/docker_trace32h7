@@ -1,0 +1,109 @@
+; --------------------------------------------------------------------------------
+; @Title: ETM.PseudoDataTrace support for ETMs without DataTrace support
+; @Description: 
+;   This script shows how to use the ETM.PseudoDataTrace on ARM.
+;   The demo code is compiled as position independent code and should run on 
+;   every ARM platform. The functionality can be used to transfer some variables
+;   via the ETM/PTM for targets that do not support a DataTrace.
+;
+;   Prerequisites:
+;    * System is connected
+;    * RAM is accessible Read/Write/Execute
+;    * Offchip/Onchip Trace is ready to use
+;
+;   Usage:
+;          DO ~~/demo/arm/etc/tracedata/demo_tracedata <RamStart>
+; @Author: KJM AME
+; @Keywords: Trace
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: demo_tracedata.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+PRIVATE &param &offset
+ENTRY &param
+
+// Prerequisites: Simulator? Connected?
+IF INTERFACE.SIM()
+(
+  PRINT %ERROR "Error: This demo does not work with the simulator."
+  ENDDO FALSE()
+)
+IF !SYSTEM.UP()
+(
+  PRINT %ERROR "Error: Please connect to the CPU first."
+  ENDDO FALSE()
+)
+
+GOSUB ParseParameters &param
+ENTRY &offset
+
+IF (STRing.SCAN(CORENAME(),"CORTEXA",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/sieve_pie_arm.elf       &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"CORTEXM3",0)>=0)||(STRing.SCAN(CORENAME(),"CORTEXM4",0)>=0)||(STRing.SCAN(CORENAME(),"CORTEXM7",0)>=0)
+(
+  PRINT %ERROR "Error: The selected CPU features a ITM - PseudoDataTrace not required."
+  ENDDO FALSE()
+)
+ELSE
+(
+  PRINT %ERROR "Error: Coretype not supported by this script."
+  ENDDO FALSE()
+)
+
+; preboot executable - run to *main*
+Go main
+WAIT !STATE.RUN()
+
+IF Analyzer()
+(
+  Trace.METHOD Analyzer
+  ETM.PseudoDataTrace ON
+  ETM.ON
+)
+ELSE IF Onchip()
+(
+  Trace.METHOD Onchip
+  ETM.PseudoDataTrace ON
+  ETM.ON
+)
+ELSE
+(
+  PRINT %ERROR "Error: No Trace support on this SoC."
+  ENDDO FALSE()
+)
+
+; show windows
+WinPOS 0% 0%
+List.auto
+WinPOS 60% 0%
+Trace.List
+WinPOS 60% 40%
+Trace.Chart.VarState
+
+ENDDO TRUE()
+
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+  LOCAL &param &offset
+  ENTRY &param
+  &offset=STRing.SCANAndExtract("&param","0x","")
+  IF "&offset"==""
+  (
+    PRINT %ERROR "Error: Missing Argument - Usage DO fdxtrace.cmm 0x<offset> "
+    ENDDO FALSE()
+  )
+  ; ensure parameter is HEX and round down to the nearest LONG
+  &offset="0x&offset"
+  &offset=(&offset)&~0x3
+
+  IF !SYStem.Up()
+  (
+    PRINT %ERROR "Error: Not connected to target. - Please use SYStem.Up before."
+    ENDDO FALSE()
+  )
+
+  RETURN &offset

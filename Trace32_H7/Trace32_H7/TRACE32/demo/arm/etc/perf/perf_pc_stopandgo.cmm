@@ -1,0 +1,45 @@
+; --------------------------------------------------------------------------------
+; @Title: Sample Based Profiling (PERF) for the Program Counter - Stop And Go
+; @Description: 
+;   The PC is sampled periodically without stopping the CPU.
+; @Author: KJM
+; @Keywords: PERF
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: perf_pc_stopandgo.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+  IF INTERFACE.SIM()
+  (
+      DO ~~/demo/arm/compiler/arm/cppdemo.cmm
+  )
+  ; System must be UP here and Symmbols loaded!
+  IF !SYSTEM.UP()
+  (
+      DIALOG.OK "System must be UP to run this demo"
+      ENDDO
+  )
+  PERF.RESet
+  PERF.Mode PC
+  PERF.Method StopAndGo
+  PERF.Arm
+  IF !STATE.RUN()
+      Go
+  WinCLEAR
+  
+  WinPOS 0. 0. 50% 33%
+  PERF.ListFunc
+  WinPOS 0. 33% 50% 33%  
+  PERF.ListLABEL 
+  IF sYmbol.EXIST(sieve)
+  (
+      WinPOS 0. 66% 50% 33%  
+      PERF.ListLINE /Address VAR.RANGE(sieve)
+  )
+  WinPOS 50% 0%
+  PERF
+  IF sYmbol.EXIST(main) 
+  (
+      WinPOS 50% 50% 50% 50%
+      List E:main /PERF
+   )

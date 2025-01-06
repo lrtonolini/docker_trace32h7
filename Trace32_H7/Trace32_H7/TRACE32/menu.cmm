@@ -1,0 +1,137 @@
+GLOBAL &psd
+&psd=OS.PSD()
+
+; ------------------------------------------------------------------------------
+
+IF OS.NAME()=="Windows"
+(
+MENU.RESet
+MENU.ReProgram
+(
+  ADD
+  MENU
+  (
+    POPUP "Portenta H7"
+    (
+      MENUITEM "DEbug GDB"
+      (
+        Os.Command  """&psd"""\bin\windows64\t32marm.exe -c  """&psd"""\config\configGDB.t32 -s  """&psd"""\ard.cmm  
+        quit 
+      )
+
+      POPUP "DEbug JTAG"
+      (
+          MENUITEM "Sieve"
+          (
+            Os.Command   """&psd"""\bin\windows64\t32marm.exe -c  """&psd"""\config\configJTAG.t32 -s   """&psd"""\hardw.cmm 
+          quit
+          )
+          MENUITEM "T32ThreadDebug"
+          (
+            Os.Command   """&psd"""\bin\windows64\t32marm.exe -c  """&psd"""\config\configJTAG.t32 -s   """&psd"""\demo\arm\flash\flashT32ThreadDebug.cmm 
+          quit
+          )
+          MENUITEM "T32ThreadDebugLogger"
+          (
+            Os.Command   """&psd"""\bin\windows64\t32marm.exe -c  """&psd"""\config\configJTAG.t32 -s   """&psd"""\demo\arm\flash\flashT32ThreadDebugLogger.cmm 
+          quit
+          )
+          MENUITEM "T32ThreadDebugPrint"
+          (
+            Os.Command   """&psd"""\bin\windows64\t32marm.exe -c  """&psd"""\config\configJTAG.t32 -s   """&psd"""\demo\arm\flash\flashT32ThreagDebugPrint.cmm 
+          quit
+          )
+          MENUITEM "Zephyr"
+          (
+            Os.Command """&psd"""\bin\windows64\t32marm.exe -c  """&psd"""\config\configJTAG.t32 -s     """&psd"""\demo\zephyr\stm32h747_zephyr_flash.cmm
+          quit
+          )
+      )
+
+      POPUP "DEbug simulateur"
+      (
+        MENUITEM "Bug image"
+        (
+          Os.Command  """&psd"""\bin\windows64\t32marm.exe -c  """&psd"""\config\configSimu.t32 -s   """&psd"""\sim.cmm 
+          quit
+        )
+        
+      )
+    
+    )
+  )
+)
+Menu.addtool "RESET CATCH" ":pconfig" "CD.DO &psd\resetcatch.cmm"
+Menu.addtool "GO main" ":stepover" "Register.Set PC _start"
+MENU.addtool "READE ME" ":group" "PEDIT &psd\..\README_WINDOWS.md"
+MENU.addtool "Save" ":Camera" "CD.DO  &psd\demo\kernel\freertos\ramdump.cmm"
+MENU.addtool "Red Bombe" ":colorred" "Var.set bug_a = 1"
+WELCOME.STARTUP
+ENDDO
+)
+
+ELSE IF OS.NAME()=="Linux"
+(
+MENU.RESet
+MENU.ReProgram
+(
+  ADD
+  MENU
+  (
+    POPUP "Portenta H7"
+    (
+      MENUITEM "DEbug GDB"
+      (
+        Os.screen  """&psd"""/bin/pc_linux64/t32marm -c  """&psd"""/config/configGDB.t32 -s  """&psd"""/ard.cmm
+        quit
+      )
+      POPUP "DEbug JTAG"
+      (
+          MENUITEM "Sieve"
+          (
+            Os.screen  """&psd"""/bin/pc_linux64/t32marm -c  """&psd"""/config/configJTAG.t32 -s   """&psd"""/hardw.cmm
+            quit
+          )
+          MENUITEM "T32ThreadDebug"
+          (
+            Os.screen  """&psd"""/bin/pc_linux64/t32marm -c  """&psd"""/config/configJTAG.t32 -s   """&psd"""/demo/arm/flash/flashT32ThreadDebug.cmm
+            quit
+          )
+          MENUITEM "T32ThreadDebugLogger"
+          (
+            Os.screen  """&psd"""/bin/pc_linux64/t32marm -c  """&psd"""/config/configJTAG.t32 -s   """&psd"""/demo/arm/flash/flashT32ThreadDebugLogger.cmm
+            quit
+          )
+          MENUITEM "T32ThreadDebugPrint"
+          (
+            Os.screen  """&psd"""/bin/pc_linux64/t32marm -c  """&psd"""/config/configJTAG.t32 -s   """&psd"""/demo/arm/flash/flashT32ThreagDebugPrint.cmm
+            quit
+          )
+          MENUITEM "Zephyr"
+          (
+            Os.screen  """&psd"""/bin/pc_linux64/t32marm -c  """&psd"""/config/configJTAG.t32 -s   """&psd"""/demo/zephyr/stm32h747_zephyr_flash.cmm
+            quit
+          )
+      )
+
+
+      POPUP "DEbug simulateur"
+      (
+        MENUITEM "Bug image"
+        (
+          Os.Command  """&psd"""/bin/pc_linux64/t32marm -c  """&psd"""/config/configSimu.t32 -s   """&psd"""/sim.cmm 
+          quit
+        )
+      )
+    
+    )
+  )
+)
+Menu.addtool "RESET CATCH" ":pconfig" "CD.DO &psd/resetcatch.cmm"
+Menu.addtool "GO main" ":stepover" "Register.Set PC _start"
+MENU.addtool "READE ME" ":group" "PEDIT &psd/../README_WINDOWS.md"
+MENU.addtool "Save" ":Camera" "CD.DO  &psd/demo/kernel/freertos/ramdump.cmm"
+MENU.addtool "Red Bombe" ":colorred" "Var.set bug_a = 1"
+WELCOME.STARTUP
+ENDDO
+)

@@ -1,0 +1,68 @@
+; --------------------------------------------------------------------------------
+; @Title: ARMv8/Cortex-A5x compatible semihosting via breakpoint at SVC (SWI) handler
+; @Description: The example assumes RAM at address 0x80000000.
+; @Keywords: AARCH, ARMv8 armcc, Cortex-A53, Cortex-A57, Semi-hosting
+; @Author: BES
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: swisoft_armv8.cmm 19124 2022-03-22 08:39:54Z bschroefel $
+
+
+; After executing this script you need to run the loaded dhrystone benchmark program (-> 'Go').
+; Enter a value e.g. '100000' in the TERM.GATE window. The program stops until the value has been entered. 
+; The benchmark program uses semihosting for inputs and outputs in the TERM.GATE window.
+; See dhry.h if you want to know details on what the benchmark program does.
+; See the target manual of the arm debugger (debugger_armv8.pdf) for more details about 'semihosting'.
+
+; Alternatively you could run the termdemo.axf application which demonstrates semihosting file I/O.
+; It outputs 'Hello World!' in the TERM.GATE window and offers you a menu to 
+; 'r' read and type an ascii file named test1 which needs to be in the current directory.
+; 'w' write the text 'Hello World!' in an ascii file named test2 in the current directory.
+; 'p' print 32 times the line 'Performance Test Text'.
+
+; The debugger is expected to be in UP state, therefore a target
+; specific start-up script will be needed to run first.
+;
+
+; start-up in case of simulator
+  if INTERFACE.SIM()
+  (
+    LOCAL &CPSR
+  
+    RESet
+    SYStem.CPU CortexA53                   // Amrv8-A AArch64 / AArch32 example
+    ; SYStem.CPU CortexA32                 // Amrv8-A AArch32 only example
+    ; SYStem.CPU CortexR52                 // Amrv8-R AArch32 only example
+    SYStem.Up
+    
+    Register.Set M 0x13
+  )
+
+  if (Register(cpsr)&0x10)==0x0
+  (
+    Dialog.OK "Processor is not in AArch32 mode!"
+    ENDDO
+  )
+
+; load demo application
+  Data.LOAD.ELF dhrystone.axf /spath /lpath /noclear
+
+; set breakpoint to SVC (SWI) vector
+  Break.Set 0x08
+
+; configure and open semihosting channel
+  TERM.HEAPINFO 0x80020000 0x80040000 0x80060000 0x80040000
+  TERM.METHOD armswi
+  TERM.Mode string
+
+; open some windows
+  WinCLEAR
+  WinPOS 0% 0% 100% 48%
+  List.auto
+  WinPOS 0% 50% 50% 48%
+  Frame /Locals /Caller
+  WinPOS 50% 50% 50% 48%
+  TERM.GATE
+
+  ENDDO
+  

@@ -1,0 +1,74 @@
+; --------------------------------------------------------------------------------
+; @Title: Editor Demo Menus and Toolbars
+; @Description: 
+;  This script shows how to program a menu in PRACTICE and add it to
+;  existing menus.
+;  Load the menu with MENU.ReProgram ~/demo/menu/editor.men
+; @Keywords:  menu, popup, buttons, menuitem, toolbar, toolitem
+; @Author: -
+; @Copyright: (C) 1989-2014 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: editor.men 7378 2014-07-08 14:36:25Z mschaeffner $
+
+add
+menu
+(
+  popup "&Edit"
+  (
+    menuitem "&Open File" "os.h textedit &"
+    menuitem "Open &Current File"
+    (
+      local &filename
+      &filename=y.sourcefile(track.address)
+      os.h textedit &filename &
+    )
+    menuitem "Open &PC File,F10"
+    (
+      local &filename
+      &filename=y.sourcefile(p:r(pp))
+      os.h textedit &filename &
+    )
+  )
+)
+
+toolbar
+(
+  toolitem "Edit PC Source" "edit"
+  (
+      local &filename
+      &filename=y.sourcefile(p:r(pp))
+      os.h textedit &filename &
+  )
+)
+
+buttons "d.l"
+(
+  menuitem "Edit PC"
+  (
+      local &filename
+      &filename=y.sourcefile(p:r(pp))
+      os.h textedit &filename &
+  )
+)
+
+menu "d.l"
+(
+  menuitem "Edit PC"
+  (
+      local &filename
+      &filename=y.sourcefile(p:r(pp))
+      os.h textedit &filename &
+  )
+)
+
+menu "data"
+(
+  menuitem "Edit by Textedit"
+  (
+      local &filename
+      &filename=y.sourcefile(track.address())
+      os.h textedit &filename &
+  )
+)
+
+

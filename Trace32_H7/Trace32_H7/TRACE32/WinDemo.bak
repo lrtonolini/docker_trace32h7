@@ -1,0 +1,26 @@
+MENU.ReProgram
+(
+  ADD
+  MENU
+  (
+    POPUP "DEbug GDB"
+    (
+      MENUITEM "T32ThreadDebug"
+      (
+        CD.DO "C:/T32/PortentaH7/demo/T32ThreadDebug/start.cmm" MODE=MANUAL
+      )
+
+      MENUITEM "T32ThreadDebugLogger"
+      (
+        CD.DO "C:/T32/PortentaH7/demo/T32ThreadDebugLogger/start.cmm" MODE=MANUAL
+      )
+
+      MENUITEM "T32ThreadDebugPrint"
+      (
+        CD.DO "C:/T32/PortentaH7/demo/T32ThreadDebugPrint/start.cmm" MODE=MANUAL
+      )
+    )
+  )
+)
+
+ENDDO

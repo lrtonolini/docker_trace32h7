@@ -1,0 +1,37 @@
+WinCLEAR
+; --------------------------------------------------------------------------------
+; initialize and start the debugger
+RESet
+SYStem.CPU STM32H747XI-CM7
+SYStem.Option DUALPORT ON
+SYStem.Up
+
+; --------------------------------------------------------------------------------
+; load demo program (uses internal RAM only)
+RUN "~~/demo/kernel/freertos/PreSave/Sieve/restore_1709028179.cmm"
+
+; --------------------------------------------------------------------------------
+; start program execution
+;Go.direct main
+;WAIT !STATE.RUN()
+
+; --------------------------------------------------------------------------------
+; open some windows
+;WinCLEAR
+;Mode.Hll
+;WinPOS 0. 0. 116. 26.
+;List.auto
+;WinPOS 120. 0. 100. 8.
+;Frame.view
+;WinPOS 120. 14.
+;Var.Watch
+;Var.AddWatch %SpotLight ast flags bug_a
+;WinPOS 120. 25.
+;Register.view /SpotLight
+;WinPOS 0. 32.
+;Var.DRAW %DEFault sinewave
+
+;Do "~~/menu.cmm"
+
+
+ENDDO

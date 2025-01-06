@@ -1,0 +1,725 @@
+; --------------------------------------------------------------------------------
+; @Title: STM32H7x Specific Menu
+; @Props: Released
+; @Author: DAS, JMI, DLI, KMB, KWI, RSA, NEJ
+; @Changelog: 2019-07-11 KMB
+;             2020-07-23 KWI
+;             2021-06-14 KWI
+;             2021-12-06 RSA
+;             2022-05-25 NEJ
+; @Manufacturer: STM - ST Microelectronics N.V.
+; @Core: Cortex-M7F, Cortex-M4F
+; @Chip: STM32H723VE, STM32H723VG, STM32H723ZE, STM32H723ZG, STM32H730AB,
+;        STM32H730IB, STM32H730VB, STM32H730ZB, STM32H733VG, STM32H733ZG,
+;        STM32H735AG, STM32H735IG, STM32H735RG, STM32H735VG, STM32H735ZG,
+;        STM32H742AG, STM32H742AI, STM32H742BG, STM32H742BI, STM32H742IG,
+;        STM32H742II, STM32H742VG, STM32H742VI, STM32H742XG, STM32H742XI,
+;        STM32H742ZG, STM32H742ZI, STM32H743AG, STM32H743AI, STM32H743BG,
+;        STM32H743BI, STM32H743IG, STM32H743II, STM32H743VG, STM32H743VI,
+;        STM32H743XG, STM32H743XI, STM32H743ZG, STM32H743ZI, STM32H745BG-CM4,
+;        STM32H745BG-CM7, STM32H745BI-CM4, STM32H745BI-CM7, STM32H745IG-CM4, STM32H745IG-CM7,
+;        STM32H745II-CM4, STM32H745II-CM7, STM32H745XG-CM4, STM32H745XG-CM7, STM32H745XI-CM4,
+;        STM32H745XI-CM7, STM32H745ZG-CM4, STM32H745ZG-CM7, STM32H745ZI-CM4, STM32H745ZI-CM7,
+;        STM32H747AG-CM4, STM32H747AG-CM7, STM32H747AI-CM4, STM32H747AI-CM7, STM32H747BG-CM4,
+;        STM32H747BG-CM7, STM32H747BI-CM4, STM32H747BI-CM7, STM32H747IG-CM4, STM32H747IG-CM7,
+;        STM32H747II-CM4, STM32H747II-CM7, STM32H747XG-CM4, STM32H747XG-CM7, STM32H747XI-CM4,
+;        STM32H747XI-CM7, STM32H747ZI-CM4, STM32H747ZI-CM7, STM32H750IB, STM32H750VB,
+;        STM32H750XB, STM32H753AI, STM32H753BI, STM32H753II, STM32H753VI,
+;        STM32H753XI, STM32H753ZI, STM32H755BI-CM4, STM32H755BI-CM7, STM32H755II-CM4,
+;        STM32H755II-CM7, STM32H755XI-CM4, STM32H755XI-CM7, STM32H755ZI-CM4, STM32H755ZI-CM7,
+;        STM32H757AI-CM4, STM32H757AI-CM7, STM32H757BI-CM4, STM32H757BI-CM7, STM32H757II-CM4,
+;        STM32H757II-CM7, STM32H757XI-CM4, STM32H757XI-CM7, STM32H757ZI-CM4, STM32H757ZI-CM7,
+;        STM32H7A3AG, STM32H7A3AI, STM32H7A3IG, STM32H7A3II, STM32H7A3LG,
+;        STM32H7A3LI, STM32H7A3NG, STM32H7A3NI, STM32H7A3RG, STM32H7A3RI,
+;        STM32H7A3VG, STM32H7A3VI, STM32H7A3ZG, STM32H7A3ZI, STM32H7B0AB,
+;        STM32H7B0IB, STM32H7B0RB, STM32H7B3AI, STM32H7B3II, STM32H7B3LI,
+;        STM32H7B3NI, STM32H7B3RI, STM32H7B0VB, STM32H7B3VI, STM32H7B0ZB,
+;        STM32H7B3ZI
+; @Copyright: (C) 2019-2023 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: menstm32h7x.men 16339 2023-07-03 13:30:14Z pegold $
+add
+menu
+(
+IF SOFTWARE.BUILD.BASE()>=69655.
+(
+popup "&CPU"
+(
+separator
+IF CPU.FEATURE(MMU)
+(
+popup "[:mmu]MMU"
+(
+menuitem "[:mmureg]MMU Control" "MMU.view"
+separator
+menuitem "[:mmu]MMU Table Dump" "MMU.DUMP.PageTable"
+menuitem "[:mmu]MMU Table List" "MMU.List.PageTable"
+separator
+IF CPU.FEATURE(ITLBDUMP)
+(
+menuitem "[:mmu]ITLB Dump" "MMU.DUMP.ITLB"
+)
+IF CPU.FEATURE(DTLBDUMP)
+(
+menuitem "[:mmu]DTLB Dump" "MMU.DUMP.DTLB"
+)
+IF CPU.FEATURE(TLB0DUMP)
+(
+menuitem "[:mmu]TLB0 Dump (Associative)" "MMU.DUMP.TLB0"
+)
+IF CPU.FEATURE(TLB1DUMP)
+(
+menuitem "[:mmu]TLB1 Dump (Lockable)" "MMU.DUMP.TLB1"
+)
+)
+)
+IF COMPonent.AVAILable("SMMU")
+(
+popup "[:mmu]SMMU"
+(
+menuitem "[:chip]SMMU1 Registers"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU1",0.))
+SMMU.Register.Global &(name)
+)
+menuitem "[:mmureg]SMMU1 StreamMapTable"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU1",0.))
+SMMU.StreamMapTable &(name)
+)
+IF COMPonent.AVAILable("SMMU2")
+(
+separator
+menuitem "[:chip]SMMU2 Registers"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU2",0.))
+SMMU.Register.Global &(name)
+)
+menuitem "[:mmureg]SMMU2 StreamMapTable"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU2",0.))
+SMMU.StreamMapTable &(name)
+)
+)
+IF COMPonent.AVAILable("SMMU3")
+(
+separator
+menuitem "[:chip]SMMU3 Registers"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU3",0.))
+SMMU.Register.Global &(name)
+)
+menuitem "[:mmureg]SMMU3 StreamMapTable"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU3",0.))
+SMMU.StreamMapTable &(name)
+)
+)
+IF COMPonent.AVAILable("SMMU4")
+(
+separator
+menuitem "[:chip]SMMU4 Registers"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU4",0.))
+SMMU.Register.Global &(name)
+)
+menuitem "[:mmureg]SMMU4 StreamMapTable"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU4",0.))
+SMMU.StreamMapTable &(name)
+)
+)
+IF COMPonent.AVAILable("SMMU5")
+(
+separator
+menuitem "[:chip]SMMU5 Registers"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU5",0.))
+SMMU.Register.Global &(name)
+)
+menuitem "[:mmureg]SMMU5 StreamMapTable"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU5",0.))
+SMMU.StreamMapTable &(name)
+)
+)
+IF COMPonent.AVAILable("SMMU6")
+(
+separator
+menuitem "[:chip]SMMU6 Registers"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU6",0.))
+SMMU.Register.Global &(name)
+)
+menuitem "[:mmureg]SMMU6 StreamMapTable"
+(
+PRIVATE &name
+&name=SMMU.COMPonentNAME(COMPonent.Base("SMMU6",0.))
+SMMU.StreamMapTable &(name)
+)
+)
+)
+)
+IF CPU.FEATURE(L1ICACHE)||CPU.FEATURE(L1DCACHE)||CPU.FEATURE(L2CACHE)
+(
+popup "[:cache]Cache"
+(
+IF CPU.FEATURE(L1ICACHEDUMP)
+(
+menuitem "[:cache]ICACHE Dump" "CACHE.DUMP IC"
+menuitem "[:cache]ICACHE List" "CACHE.List IC"
+menuitem "[:cache]ICACHE List Functions" "CACHE.ListFunc.IC"
+)
+IF CPU.FEATURE(L1DCACHEDUMP)
+(
+separator
+menuitem "[:cache]DCACHE Dump" "CACHE.DUMP DC"
+menuitem "[:cache]DCACHE List" "CACHE.List DC"
+menuitem "[:cache]DCACHE List Variables" "CACHE.ListVar.DC"
+)
+IF CPU.FEATURE(L2CACHEDUMP)
+(
+separator
+menuitem "[:cache]L2CACHE Dump" "CACHE.DUMP L2"
+menuitem "[:cache]L2CACHE List" "CACHE.List L2"
+menuitem "[:cache]L2CACHE List Variables" "CACHE.ListVar.L2"
+)
+)
+)
+)
+popup "&Trace"
+(
+separator
+IF COMPonent.AVAILable("ITM")
+(
+popup "ITM"
+(
+default
+menuitem "[:oconfig]ITM settings..." "ITM.state"
+separator
+menuitem "[:alist]ITMTrace List" "ITMTrace.List"
+)
+)
+IF COMPonent.AVAILable("STM")
+(
+popup "STM"
+(
+default
+menuitem "[:oconfig]STM settings..." "STM.state"
+separator
+menuitem "[:alist]STMTrace List" "STMTrace.List"
+)
+)
+IF COMPonent.AVAILable("HTM")
+(
+popup "HTM"
+(
+default
+menuitem "[:oconfig]HTM settings..." "HTM.state"
+separator
+menuitem "[:alist]HTMTrace List" "HTMTrace.List"
+)
+)
+IF COMPonent.AVAILable("TPIU")
+(
+menuitem "[:oconfig]TPIU settings..." "TPIU.state" 
+)
+IF COMPonent.AVAILable("ETR")
+(
+menuitem "[:oconfig]ETR settings..."
+(
+PRIVATE &pdd
+&pdd=OS.PDD()
+DO "&pdd/etc/embedded_trace_router/etr_utility.cmm"
+)
+)
+)
+popup "&Misc"
+(
+popup "Tools"
+(
+IF CPUIS64BIT()||CPU.FEATURE("SPR")
+(
+menuitem "ARM System Register Converter"
+(
+DO "~~/demo/arm/etc/systemregister/systemregister_converter.cmm"
+)
+)
+IF CPU.FEATURE("C15")
+(
+menuitem "ARM Coprocessor Converter"
+(
+DO "~~/demo/arm/etc/coprocessor/coprocessor_converter.cmm"
+)
+)
+)
+)
+popup "&Perf"
+(
+IF CPU.FEATURE(BMC)
+(
+before "Reset"
+menuitem "[:bmc]Benchmark Counters" "BMC.state"
+before "Reset"
+separator
+)
+)
+)
+popup "Peripherals"
+(
+if (CORENAME()=="CORTEXM4F")
+(
+popup "[:chip]Core Registers (Cortex-M4F)"
+(
+menuitem "[:chip]System Control"                                "per , ""Core Registers (Cortex-M4F),System Control"""
+menuitem "[:chip]MPU;Memory Protection Unit"                    "per , ""Core Registers (Cortex-M4F),Memory Protection Unit"""
+menuitem "[:chip]NVIC;Nested Vectored Interrupt Controller"     "per , ""Core Registers (Cortex-M4F),Nested Vectored Interrupt Controller"""
+menuitem "[:chip]FPU;Floating-point Unit"                       "per , ""Core Registers (Cortex-M4F),Floating-point Unit"""
+popup "[:chip]Debug"
+(
+menuitem "[:chip]Core Debug"                                "per , ""Core Registers (Cortex-M4F),Debug,Core Debug"""
+menuitem "[:chip]FPB;Flash Patch and Breakpoint Unit"       "per , ""Core Registers (Cortex-M4F),Debug,Flash Patch and Breakpoint Unit (FPB)"""
+menuitem "[:chip]DWT;Data Watchpoint and Trace Unit"        "per , ""Core Registers (Cortex-M4F),Debug,Data Watchpoint and Trace Unit (DWT)"""
+)
+)
+)
+else
+(
+popup "[:chip]Core Registers (Cortex-M7F)"
+(
+menuitem "[:chip]System Control"                                "per , ""Core Registers (Cortex-M7F),System Control"""
+menuitem "[:chip]MPU;Memory Protection Unit"                    "per , ""Core Registers (Cortex-M7F),Memory Protection Unit (MPU)"""
+menuitem "[:chip]NVIC;Nested Vectored Interrupt Controller"     "per , ""Core Registers (Cortex-M7F),Nested Vectored Interrupt Controller (NVIC)"""
+menuitem "[:chip]FPU;Floating-point Unit"                       "per , ""Core Registers (Cortex-M7F),Floating-point Unit (FPU)"""
+popup "[:chip]Debug"
+(
+menuitem "[:chip]Core Debug"                                "per , ""Core Registers (Cortex-M7F),Debug,Core Debug"""
+menuitem "[:chip]FPB;Flash Patch and Breakpoint Unit"       "per , ""Core Registers (Cortex-M7F),Debug,Flash Patch and Breakpoint Unit (FPB)"""
+menuitem "[:chip]DWT;Data Watchpoint and Trace Unit"        "per , ""Core Registers (Cortex-M7F),Debug,Data Watchpoint and Trace Unit (DWT)"""
+)
+)
+)
+separator
+menuitem "AC;Access Control"                                                    "per , ""AC (Access Control)"""
+popup "ADC (Analog to Digital Converter)"
+(
+menuitem "ADC1"                                                             "per , ""ADC (Analog to Digital Converter),ADC1"""
+menuitem "ADC2"                                                             "per , ""ADC (Analog to Digital Converter),ADC2"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "ADC3"                                                         "per , ""ADC (Analog to Digital Converter),ADC3"""
+menuitem "ADC3_COMMON"                                                  "per , ""ADC (Analog to Digital Converter),ADC3_COMMON"""
+)
+menuitem "ADC12_COMMON"                                                     "per , ""ADC (Analog to Digital Converter),ADC12_COMMON"""
+)
+if (cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "ART;Accelerator - Control Register (ART_CTR)"                     "per , ""ART (Accelerator - Control Register (ART_CTR)),ART"""
+)
+menuitem "AXI;AXI Interconnect Registers"                                       "per , ""AXI (AXI Interconnect Registers)"""
+if (cpuis("STM32H7B3*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*"))
+(
+popup "BDMA"
+(
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "BDMA"                                                     "per , ""BDMA,BDMA"""
+)
+if (cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "BDMA1"                                                    "per , ""BDMA,BDMA1"""
+menuitem "BDMA2"                                                    "per , ""BDMA,BDMA2"""
+)
+)
+)
+menuitem "CEC"                                                                  "per , ""CEC"""
+menuitem "COMP1"                                                                "per , ""COMP1"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "CORDIC"                                                           "per , ""CORDIC (CORDIC Register Block),CORDIC"""
+)
+menuitem "CRC;Cryptographic Processor"                                          "per , ""CRC (Cryptographic Processor),CRC"""
+menuitem "CRS"                                                                  "per , ""CRS,CRS"""
+if (cpuis("STM32H7B3*")||cpuis("STM32H73*")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7B0*"))
+(
+menuitem "CRYP;Cryptographic Processor"                                     "per , ""CRYP (Cryptographic Processor),CRYP"""
+)
+menuitem "DAC"                                                                  "per , ""DAC"""
+menuitem "DBGMCU;Microcontroller Debug Unit"                                    "per , ""DBGMCU (Microcontroller Debug Unit)"""
+menuitem "DCMI;Digital Camera Interface"                                        "per , ""DCMI (Digital Camera Interface)"""
+popup "DFSDM (Digital Filter For Sigma Delta Modulators)"
+(
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "DFSDM"              "per , ""DFSDM (Digital Filter For Sigma Delta Modulators),DFSDM"""
+)
+if (cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "DFSDM1"             "per , ""DFSDM (Digital Filter For Sigma Delta Modulators),DFSDM1"""
+menuitem "DFSDM2"             "per , ""DFSDM (Digital Filter For Sigma Delta Modulators),DFSDM2"""
+)
+)
+popup "DLYB (DELAY_Block_SDMMC1)"
+(
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "DELAY_BLOCK_OCTOSPI1"                      "per , ""DLYB (DELAY_Block_SDMMC1),DELAY_BLOCK_OCTOSPI1"""
+menuitem "DELAY_BLOCK_OCTOSPI2"                      "per , ""DLYB (DELAY_Block_SDMMC1),DELAY_BLOCK_OCTOSPI2"""
+)
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "DELAY_BLOCK_QUADSPI"                       "per , ""DLYB (DELAY_Block_SDMMC1),DELAY_BLOCK_QUADSPI"""
+)
+menuitem "DELAY_BLOCK_SDMMC1"                            "per , ""DLYB (DELAY_Block_SDMMC1),DELAY_BLOCK_SDMMC1"""
+menuitem "DELAY_BLOCK_SDMMC2"                            "per , ""DLYB (DELAY_Block_SDMMC1),DELAY_BLOCK_SDMMC2"""
+)
+popup "DMA (DMA Controller)"
+(
+menuitem "DMA1"                                              "per , ""DMA (DMA Controller),DMA1"""
+menuitem "DMA2"                                              "per , ""DMA (DMA Controller),DMA2"""
+)
+menuitem "DMA2D"                                                          "per , ""DMA2D"""
+popup "DMAMUX"
+(
+menuitem "DMAMUX1"                                                   "per , ""DMAMUX,DMAMUX1"""
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "DMAMUX2"                                               "per , ""DMAMUX,DMAMUX2"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "DMAMUX3"                                              "per , ""DMAMUX,DMAMUX3"""
+)
+)
+if (cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "DSIHOST"                                                  "per , ""DSIHOST,DSIHOST"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+popup "ETHERNET (ETH Register Block)"
+(
+if (cpuis("STM32H750*"))
+(
+menuitem "ETH"                                   "per , ""ETHERNET (ETH Register Block),ETH"""
+)
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H753*"))
+(
+menuitem "ETHERNET_DMA;Ethernet: DMA Mode Register (DMA)"           "per , ""ETHERNET (ETH Register Block),ETHERNET_DMA"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "ETHERNET_MAC;Ethernet: Media Access Control (MAC)"        "per , ""ETHERNET (ETH Register Block),ETHERNET_MAC"""
+)
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H753*"))
+(
+menuitem "ETHERNET_MTL;Ethernet: MTL Mode Register (MTL)"           "per , ""ETHERNET (ETH Register Block),ETHERNET_MTL"""
+)
+)
+)
+menuitem "EXTI;External Interrupt/Event Controller"                             "per , ""EXTI (External Interrupt/Event Controller)"""
+popup "FDCAN"
+(
+menuitem "CAN_CCU"                                                   "per , ""FDCAN,CAN_CCU"""
+if (cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "FDCAN"                                                 "per , ""FDCAN,FDCAN"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "FDCAN1"                                                "per , ""FDCAN,FDCAN1"""
+menuitem "FDCAN2"                                                "per , ""FDCAN,FDCAN2"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "FDCAN3"                                                "per , ""FDCAN,FDCAN3"""
+)
+if (cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "TT_FDCAN"                                              "per , ""FDCAN,TT_FDCAN"""
+)
+)
+menuitem "FLASH"                                                         "per , ""FLASH"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "FMAC"                                                      "per , ""FMAC,FMAC"""
+)
+menuitem "FMC"                                                              "per , ""FMC"""
+popup "FPU (FPU Control Peripheral)"
+(
+menuitem "FPU;Floting Point Unit"                                           "per , ""FPU (FPU Control Peripheral),FPU"""
+menuitem "FPU_CPACR;Floating Point Unit CPACR"                              "per , ""FPU (FPU Control Peripheral),FPU_CPACR"""
+)
+popup "GPIO (General Purpose I/O Ports And Peripheral I/O Lines)"
+(
+menuitem "GPIOA;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOA"""
+menuitem "GPIOB;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOB"""
+menuitem "GPIOC;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOC"""
+menuitem "GPIOD;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOD"""
+menuitem "GPIOE;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOE"""
+menuitem "GPIOF;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOF"""
+menuitem "GPIOG;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOG"""
+menuitem "GPIOH;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOH"""
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "GPIOI;GPIO"                                                   "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOI"""
+)
+menuitem "GPIOJ;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOJ"""
+menuitem "GPIOK;GPIO"                                                       "per , ""GPIO (General Purpose I/O Ports And Peripheral I/O Lines),GPIOK"""
+)
+if (cpuis("STM32H7B3*")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7B0*"))
+(
+menuitem "HASH;Hash Processor"                                              "per , ""HASH (Hash Processor),HASH"""
+)
+if (cpuis("STM32H7B3*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*"))
+(
+popup "HRTIM (High Resolution Timer: Common functions)"
+(
+menuitem "HRTIM_COMMON;High Resolution Timer: Common functions"         "per , ""HRTIM (High Resolution Timer: Common functions),HRTIM_COMMON"""
+menuitem "HRTIM_MASTER;High Resolution Timer: Master Timers"            "per , ""HRTIM (High Resolution Timer: Common functions),HRTIM_MASTER"""
+menuitem "HRTIM_TIMA;High Resolution Timer: TIMA"                       "per , ""HRTIM (High Resolution Timer: Common functions),HRTIM_TIMA"""
+menuitem "HRTIM_TIMB;High Resolution Timer: TIMB"                       "per , ""HRTIM (High Resolution Timer: Common functions),HRTIM_TIMB"""
+menuitem "HRTIM_TIMC;High Resolution Timer: TIMC"                       "per , ""HRTIM (High Resolution Timer: Common functions),HRTIM_TIMC"""
+menuitem "HRTIM_TIMD;High Resolution Timer: TIMD"                       "per , ""HRTIM (High Resolution Timer: Common functions),HRTIM_TIMD"""
+menuitem "HRTIM_TIME;High Resolution Timer: TIME"                       "per , ""HRTIM (High Resolution Timer: Common functions),HRTIM_TIME"""
+)
+)
+menuitem "HSEM"                                                                 "per , ""HSEM,HSEM"""
+popup "I2C (Inter-Integrated Circuit)"
+(
+menuitem "I2C1"                                                             "per , ""I2C (Inter-Integrated Circuit),I2C1"""
+menuitem "I2C2"                                                             "per , ""I2C (Inter-Integrated Circuit),I2C2"""
+menuitem "I2C3"                                                             "per , ""I2C (Inter-Integrated Circuit),I2C3"""
+menuitem "I2C4"                                                             "per , ""I2C (Inter-Integrated Circuit),I2C4"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "I2C5"                                                         "per , ""I2C (Inter-Integrated Circuit),I2C5"""
+)
+)
+popup "IWDG"
+(
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "IWDG"                                                         "per , ""IWDG,IWDG"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "IWDG1"                                                        "per , ""IWDG,IWDG1"""
+)
+if (cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "IWDG2"                                                        "per , ""IWDG,IWDG2"""
+)
+)
+if (cpuis("STM32H7B3*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*"))
+(
+menuitem "JPEG"                                                             "per , ""JPEG,JPEG"""
+)
+popup "LPTIM (Low Power Timer)"
+(
+menuitem "LPTIM1"                                           "per , ""LPTIM (Low power timer),LPTIM1"""
+menuitem "LPTIM2"                                           "per , ""LPTIM (Low power timer),LPTIM2"""
+menuitem "LPTIM3"                                           "per , ""LPTIM (Low power timer),LPTIM3"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "LPTIM4"                                       "per , ""LPTIM (Low power timer),LPTIM4"""
+menuitem "LPTIM5"                                       "per , ""LPTIM (Low power timer),LPTIM5"""
+)
+)
+menuitem "LPUART1"                                                              "per , ""LPUART (LPUART1)"""
+menuitem "LTDC;LCD-TFT Controller"                                              "per , ""LTDC (LCD-TFT Controller)"""
+menuitem "MDIOS;Management Data Input/Output Slave"                             "per , ""MDIOS (Management Data Input/Output Slave)"""
+menuitem "MDMA"                                                                 "per , ""MDMA"""
+menuitem "MPU;Memory Protection Unit"                                           "per , ""MPU (Memory Protection Unit)"""
+popup "NVIC (Nested Vectored Interrupt Controller)"
+(
+menuitem "NVIC"                                                             "per , ""NVIC (Nested Vectored Interrupt Controller),NVIC"""
+menuitem "NVIC_STIR"                                                        "per , ""NVIC (Nested Vectored Interrupt Controller),NVIC_STIR"""
+)
+if (cpuis("STM32H7B3*")||cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*"))
+(
+popup "OCTOSPI (OctoSPI)"
+(
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "OCTOSPI1"                                         "per , ""OCTOSPI (OctoSPI),OCTOSPI1"""
+)
+if (cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "OCTOSPI1_CONTROL_REGISTER"                        "per , ""OCTOSPI (OctoSPI),OCTOSPI1_CONTROL_REGISTER"""
+)
+menuitem "OCTOSPI2"                                             "per , ""OCTOSPI (OctoSPI),OCTOSPI2"""
+)
+menuitem "OCTOSPII_O_MANAGER"                                       "per , ""OCTOSPII_O_MANAGER (OctoSPI IO Manager),OCTOSPII_O_MANAGER"""
+)
+menuitem "OPAMP;Operational Amplifiers"                                         "per , ""OPAMP (Operational Amplifiers)"""
+if (cpuis("STM32H7B3*")||cpuis("STM32H73*")||cpuis("STM32H7B0*"))
+(
+popup "OTFDEC (On-The-Fly Decryption engine)"
+(
+menuitem "OTFDEC1"                         "per , ""OTFDEC (On-The-Fly Decryption engine),OTFDEC1"""
+menuitem "OTFDEC2"                         "per , ""OTFDEC (On-The-Fly Decryption engine),OTFDEC2"""
+)
+)
+menuitem "PF;Processor Features"                                                "per , ""PF (Processor Features)"""
+if (cpuis("STM32H723*")||cpuis("STM32H733*")||cpuis("STM32H725*")||cpuis("STM32H735*")||cpuis("STM32H730*"))
+(
+menuitem "PSSI"                                         "per , ""PSSI (PSSI Register Block),PSSI"""
+)
+menuitem "PWR"                                                              "per , ""PWR"""
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "QUADSPI"                                                  "per , ""QUADSPI,QUADSPI"""
+)
+popup "RAMECC"
+(
+if (cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "RAMECC"     "per , ""RAMECC,RAMECC"""
+)
+if (cpuis("STM32H72*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "RAMECC1"    "per , ""RAMECC,RAMECC1"""
+menuitem "RAMECC2"    "per , ""RAMECC,RAMECC2"""
+menuitem "RAMECC3"    "per , ""RAMECC,RAMECC3"""
+)
+)
+menuitem "RCC;Reset and Clock Control"                                          "per , ""RCC (Reset and Clock Control)"""
+menuitem "RNG;RNG"                                                              "per , ""RNG (Random Number Generator)"""
+menuitem "RTC;RTC"                                                              "per , ""RTC (Real-time Counter)"""
+popup "SAI"
+(
+menuitem "SAI1"                                                         "per , ""SAI,SAI1"""
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "SAI2"                                                     "per , ""SAI,SAI2"""
+)
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "SAI3"                                                     "per , ""SAI,SAI3"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "SAI4"                                                     "per , ""SAI,SAI4"""
+)
+)
+popup "SCB (System Control Block)"
+(
+menuitem "SCB"                                                              "per , ""SCB (System Control Block),SCB"""
+menuitem "SCB_ACTRL"                                                        "per , ""SCB (System Control Block),SCB_ACTRL"""
+)
+popup "SDMMC"
+(
+menuitem "SDMMC1"                                                           "per , ""SDMMC,SDMMC1"""
+menuitem "SDMMC2"                                                           "per , ""SDMMC,SDMMC2"""
+)
+menuitem "SPDIFRX;Receiver Interface"                                           "per , ""SPDIFRX (Receiver Interface)"""
+popup "SPI (Serial Peripheral Interface)"
+(
+menuitem "SPI1"                                 "per , ""SPI (Serial Peripheral Interface),SPI1"""
+menuitem "SPI2"                                 "per , ""SPI (Serial Peripheral Interface),SPI2"""
+menuitem "SPI3"                                 "per , ""SPI (Serial Peripheral Interface),SPI3"""
+menuitem "SPI4"                                 "per , ""SPI (Serial Peripheral Interface),SPI4"""
+menuitem "SPI5"                                 "per , ""SPI (Serial Peripheral Interface),SPI5"""
+menuitem "SPI6"                                 "per , ""SPI (Serial Peripheral Interface),SPI6"""
+)
+menuitem "STK;SysTick timer"                                                    "per , ""STK (SysTick timer)"""
+menuitem "SWPMI;Single Wire Protocol Master Interface"                          "per , ""SWPMI (Single Wire Protocol Master Interface)"""
+menuitem "SYSCFG;System Configuration Controller"                               "per , ""SYSCFG (System configuration Controller)"""
+popup "TIM (Advanced-timers)"
+(
+menuitem "TIM1"                                             "per , ""TIM (Advanced-timers),TIM1"""
+menuitem "TIM2"                                      "per , ""TIM (Advanced-timers),TIM2"""
+menuitem "TIM3"                                      "per , ""TIM (Advanced-timers),TIM3"""
+menuitem "TIM4"                                      "per , ""TIM (Advanced-timers),TIM4"""
+menuitem "TIM5"                                      "per , ""TIM (Advanced-timers),TIM5"""
+menuitem "TIM6"                                                "per , ""TIM (Advanced-timers),TIM6"""
+menuitem "TIM7"                                                "per , ""TIM (Advanced-timers),TIM7"""
+menuitem "TIM8"                                             "per , ""TIM (Advanced-timers),TIM8"""
+menuitem "TIM12"                                     "per , ""TIM (Advanced-timers),TIM12"""
+menuitem "TIM13"                                     "per , ""TIM (Advanced-timers),TIM13"""
+menuitem "TIM14"                                     "per , ""TIM (Advanced-timers),TIM14"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "TIM23"                                 "per , ""TIM (Advanced-timers),TIM23"""
+menuitem "TIM24"                                 "per , ""TIM (Advanced-timers),TIM24"""
+)
+)
+popup "TIMS (General purpose timers)"
+(
+menuitem "TIM15"                                     "per , ""TIMS (General purpose timers),TIM15"""
+menuitem "TIM16"                                     "per , ""TIMS (General purpose timers),TIM16"""
+menuitem "TIM17"                                     "per , ""TIMS (General purpose timers),TIM17"""
+)
+popup "USART (Universal Synchronous Asynchronous Receiver Transmitter)"
+(
+menuitem "UART4"              "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),UART4"""
+menuitem "UART5"              "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),UART5"""
+menuitem "UART7"              "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),UART7"""
+menuitem "UART8"              "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),UART8"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*"))
+(
+menuitem "UART9"          "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),UART9"""
+)
+menuitem "USART1"             "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),USART1"""
+menuitem "USART2"             "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),USART2"""
+menuitem "USART3"             "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),USART3"""
+menuitem "USART6"             "per , ""USART (Universal Synchronous Asynchronous Receiver Transmitter),USART6"""
+if (cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "USART9"         "per , ""USART,USART9"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "USART10"        "per , ""USART,USART10"""
+)
+)
+popup "USB_OTG_HS"
+(
+menuitem "OTG1_HS_DEVICE"                        "per , ""USB_OTG_HS,OTG1_HS_DEVICE"""
+menuitem "OTG1_HS_GLOBAL"                        "per , ""USB_OTG_HS,OTG1_HS_GLOBAL"""
+menuitem "OTG1_HS_HOST"                          "per , ""USB_OTG_HS,OTG1_HS_HOST"""
+menuitem "OTG1_HS_PWRCLK"                        "per , ""USB_OTG_HS,OTG1_HS_PWRCLK"""
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "OTG2_HS_DEVICE;USB 1 on the go high speed"                    "per , ""USB_OTG_HS (USB 1 on the go high speed),OTG2_HS_DEVICE"""
+)
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "OTG2_HS_GLOBAL;USB 1 on the go high speed"                    "per , ""USB_OTG_HS (USB 1 on the go high speed),OTG2_HS_GLOBAL"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "OTG2_HS_HOST;USB 1 on the go high speed"                      "per , ""USB_OTG_HS (USB 1 on the go high speed),OTG2_HS_HOST"""
+menuitem "OTG2_HS_PWRCLK;USB 1 on the go high speed"                    "per , ""USB_OTG_HS (USB 1 on the go high speed),OTG2_HS_PWRCLK"""
+)
+)
+menuitem "VREFBUF"                                                      "per , ""VREFBUF"""
+popup "WWDG"
+(
+if (cpuis("STM32H742*")||cpuis("STM32H743*")||cpuis("STM32H750*")||cpuis("STM32H753*")||cpuis("STM32H7A3*")||cpuis("STM32H7B0*")||cpuis("STM32H7B3*"))
+(
+menuitem "WWDG"                                                    "per , ""WWDG,WWDG"""
+)
+if (cpuis("STM32H723*")||cpuis("STM32H73*")||cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "WWDG1"                                                   "per , ""WWDG,WWDG1"""
+)
+if (cpuis("STM32H745??-CM4")||cpuis("STM32H745??-CM7")||cpuis("STM32H747??-CM4")||cpuis("STM32H747??-CM7")||cpuis("STM32H755??-CM4")||cpuis("STM32H755??-CM7")||cpuis("STM32H757??-CM4")||cpuis("STM32H757??-CM7"))
+(
+menuitem "WWDG2"                                                   "per , ""WWDG,WWDG2"""
+)
+)
+)
+)

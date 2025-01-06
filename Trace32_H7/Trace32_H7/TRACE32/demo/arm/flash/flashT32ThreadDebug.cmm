@@ -1,0 +1,83 @@
+; --------------------------------------------------------------------------------
+; @Title: Demo script for STM32H747 
+; @Description:
+;   Programs the sieve demo application into the processor internal flash and
+;   sets up a demo debug scenario.
+;   This script can be used as a template for flashing an application.
+;   Prerequisites:
+;    * Connect Debug Cable to CN9
+;      or
+;      Connect Combiprobe/uTrace to CN8
+; @Keywords: ARM, Cortex-M7, Flash
+; @Author: AME
+; @Board: PortentaH7
+; @Chip: STM32H7*
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; 
+
+WinCLEAR
+
+; --------------------------------------------------------------------------------
+; initialize and start the debugger
+RESet
+SYStem.RESet
+SYStem.CPU STM32H747XI-CM7
+SYStem.CONFIG.DEBUGPORTTYPE SWD
+Trace.METHOD.Onchip
+IF COMBIPROBE()||UTRACE()
+(
+  SYStem.CONFIG.CONNECTOR MIPI20T
+)
+SYStem.Option DUALPORT ON
+SYStem.MemAccess DAP
+SYStem.JtagClock CTCK 10MHz
+Trace.DISable
+SYStem.Option VECTRESET ON
+SYStem.Up
+
+; --------------------------------------------------------------------------------
+; Flash programming
+
+; prepare flash programming (declarations)
+DO ~~/demo/arm/flash/stm32h7.cmm PREPAREONLY
+
+; ReProgram Flash
+FLASH.ReProgram ALL
+Data.LOAD.Elf "~~/demo/T32ThreadDebug/T32ThreadDebug.ino.elf"
+FLASH.ReProgram OFF
+
+; --------------------------------------------------------------------------------
+; Reset the target again
+SYStem.Up
+
+WAIT 3.s
+
+
+; --------------------------------------------------------------------------------
+; start program execution
+Go.direct main
+WAIT !STATE.RUN()
+
+; ------------------------------------------------------------------------------
+; setup the RTOS awareness
+TASK.CONFIG ~~/demo/kernel/rtxarm/v5/rtx.t32
+MENU.ReProgram ~~/demo/kernel/rtxarm/v5/rtx.men
+
+; --------------------------------------------------------------------------------
+; open some windows
+WinCLEAR
+Mode.Hll
+WinPOS 0. 0. 116. 26.
+List.auto
+WinPOS 120. 0. 100. 8.
+Frame.view
+WinPOS 120. 14.
+Var.Watch
+Var.AddWatch %SpotLight flags
+WinPOS 120. 25.
+Register.view /SpotLight
+
+Do "~~/WinDemo.cmm"
+
+ENDDO

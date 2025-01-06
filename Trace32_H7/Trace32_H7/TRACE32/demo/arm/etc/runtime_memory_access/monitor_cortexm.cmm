@@ -1,0 +1,48 @@
+; --------------------------------------------------------------------------------
+; @Title: Runtime Memory Access Example for Cortex-M
+; @Description: 
+;   Cortex-M does not support communication via a Debug Communication Channel
+;   (DCC).
+;   Therefore TSMON3, PTMON3 or UDMON3 can not be used.
+;   But there is no need for it, because there is an even better way by using
+;   the DAP.
+;   The example assumes RAM at address 0.
+; @Author: STK
+; @Chip: Cortex-M?
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: monitor_cortexm.cmm 20804 2023-04-20 10:21:12Z bschroefel $
+
+
+; The debugger is expected to be in UP state, therefore a target
+; specific start-up script will be needed to run first.
+
+; After executing this script you need to run the application (-> 'Go').
+
+; start-up in case of simulator
+  if INTERFACE.SIM()
+  (
+    RESet
+    SYStem.CPU CORTEXM3
+    SYStem.Up
+  )
+
+  Register.RESet
+
+; load micro program
+  Data.Assemble ST:0x50 NOP NOP NOP NOP B 0x50
+  Register.Set PC 0x50
+
+; configure memory access to use the debug access port (DAP) when running
+  SYStem.MemAccess DAP
+
+; open some windows
+  WinCLEAR
+  WinPOS 0% 0% 100% 48%
+  List.auto
+  WinPOS 0% 50% 50% 48%
+  Data.dump E:0
+  WinPOS 50% 50% 50% 48%
+  PER , /DualPort
+
+  ENDDO

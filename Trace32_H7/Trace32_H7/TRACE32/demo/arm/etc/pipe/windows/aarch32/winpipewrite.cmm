@@ -1,0 +1,76 @@
+; --------------------------------------------------------------------------------
+; @Title: Mirror TERM.GATE window to windows pipe on Arm 64-bit core
+; @Description:
+; This script demonstrates, how a pipe can be used on Windows.
+; It will start a pipe server in a cmd shell and wait for a client to connect.
+; The client is TRACE32 running a dhrystone example with semi-hosting to
+; demonstrate how the output in TERM.GATE can be mirrored to the cmd shell.
+; Run this script in the TRACE32 Instruction Set Simulator for Arm 64-bit.
+;
+; @Keywords: pipe, terminal, term
+; @Author: BES
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: winpipewrite.cmm 20803 2023-04-20 09:33:18Z bschroefel $
+
+IF INTERFACE.SIM()
+(
+  LOCAL &CPSR
+  
+  RESet
+  SYStem.CPU CortexA53                  ; Any Arm 64-bit CPU selection with AArch32 will work
+  SYStem.Up
+    
+  Register.Set M 0x13                    ; Ensure AArch32 mode
+  Register.REFRESH
+)
+
+; ------------------------------------------------------------------------------
+; Load dhrysone demo application for terminal output
+Data.LOAD.Elf  ~~~~/dhrystone.axf /spath /lpath /noclear
+
+; Set breakpoint to SVC (SWI) vector
+Break.Set 0x08
+
+; ------------------------------------------------------------------------------
+; Configure and open semihosting channel for TERM.GATE
+TERM.HEAPINFO 0x80010000 0x80020000 0x80030000 0x80020000
+TERM.METHOD armswi
+TERM.Mode string
+
+; ------------------------------------------------------------------------------
+; Open some windows
+WinCLEAR
+WinPOS 0% 0% 100% 48%
+List.auto
+WinPOS 0% 50% 50% 48%
+Frame /Locals /Caller
+WinPOS 50% 50% 50% 48%
+TERM.GATE #1                            ; Terminal for semi-hosting, channel #1
+
+; ------------------------------------------------------------------------------  
+; Start pipe server "win_pipe_example.exe" to create "my_pipe" and connect
+; TERM.GATE to the pipe
+(
+  PRIVATE &ppd
+   
+  &ppd=OS.PresentPracticeDirectory()    ; Current directory of this script
+  &ppd="&ppd"+"\..\app\"
+  OS.Command "&ppd\win_pipe_example.exe"
+  WAIT 1.0s                             ; Wait for pipe to be created
+)
+
+TERM.PIPEWrite #1 \\.\pipe\my_pipe      ; Connect channel #1 to pipe for write only
+Go.direct                               ; Execute dhrystone example to create output in TERM.GATE and pipe
+  
+WAIT !STATE.RUN() 5.0s
+Break.direct
+  
+; At this point, you can enter an input in "TERM.GATE".
+; The input will also be mirrored to the pipe
+  
+; If you close the terminal here, the example pipe will also be terminated
+// TERM.CLOSE #1                         ; Close channel again
+  
+ENDDO
+

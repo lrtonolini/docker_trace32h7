@@ -1,0 +1,1096 @@
+; --------------------------------------------------------------------------------
+; @Title: Ramdump generation script for bare-metal
+; @Description:
+;   This is a generic script to create a ramdump of a bare-metal debug/trace
+;   scenario.
+;   Please note that OS specific variants may be available as well, check
+;     ~~/demo/<arch>/kernel/<os>/...
+;   .
+;
+;   The resulting scripts can be used to restore the scenario in the TRACE32 
+;   instruction set simulator.
+;
+;   Usage:
+;   - Interactive:
+;     DO <path_to>/ramdump.cmm
+;     Edit the settings in the dialog and then hit "STORE".
+;   - Script based:
+;     DO <path_to>/ramdump.cmm \
+;       MEM="<comma separated list of absolute memory ranges>" \
+;       SYMBOLFILE="<path to symbolfile>" \
+;       TRACESAVE=<0|1> \
+;       STOREFORMAT=<0|1>
+;
+;   Example:
+;   - Interactive:
+;       DO ramdump.cmm
+;   - Script based: store 0x0--0xffff & 0x20000000++0xfff
+;       DO ramdump.cmm MEM="AD:0x0--0xffff,AD:0x20000000++0xfff"
+;
+;   Parameters:
+;   - MEM="<string>"
+;     comma separated list of absolute memory ranges
+;     AD:<start>--<end>,AD:<start>..<end>,AD:<start>++<size>
+;   - SYMBOLFILE="<string>"
+;     path to the used symbolfile
+;   - TRACESAVE=<0|1>
+;     enable/disable storage of the off-/onchip trace, default: 0
+;   - STOREFORMAT=<0|1>
+;     0: binary (zipped), 1: SRecord (robust against busfaults), default: 0
+;
+; @Keywords: RAMDump
+; @Author: AME
+; @Copyright: (C) 1989-2023 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: ramdump.cm 9324 2023-08-03 06:49:05Z amerkle $
+
+PRIVATE &sArguments
+PRIVATE &bDialog &sMemoryRanges &sSymbolFile &bTraceSave &nStoreFormat
+ENTRY %LINE &sArguments
+
+GOSUB checkSanity
+
+GOSUB parseArguments "&sArguments"
+RETURNVALUES &bDialog &sMemoryRanges &sSymbolFile &bTraceSave &nStoreFormat
+
+IF (&bDialog)
+(
+  GOSUB showDialog
+  ENDDO
+)
+
+PRIVATE &nTime &i &sRestoreCmm &sRange &sTmp &sFilename &sFilename2 &sProgressText
+
+; check arguments - function does only return on success
+GOSUB checkArguments "&sMemoryRanges" "&nStoreFormat"
+
+; the real magic starts here
+&nTime=DATE.UnixTime()
+
+SPRINTF &sRestoreCmm "./restore_%u.cmm" &nTime
+IF OS.FILE("&sRestoreCmm")
+  DEL "&sRestoreCmm"
+
+SPRINTF &sProgressText "Step: deployments will be saved to %s, %u_*" "&sRestoreCmm" &nTime
+GOSUB progress "&sProgressText"
+
+&sTmp=OS.PPF()
+SPRINTF &sTmp "; Created by %s %s - %s" "Ramdump" OS.FILE.NAME("&sTmp") "$Id: ramdump.cm 9324 2023-08-03 06:49:05Z amerkle $"
+APPEND "&sRestoreCmm" "&sTmp"
+SPRINTF &sTmp "; %s on %s" DATE.DATE() OS.NAME()
+APPEND "&sRestoreCmm" "&sTmp"
+APPEND "&sRestoreCmm" ""
+
+APPEND "&sRestoreCmm" "IF !SIMULATOR()"
+APPEND "&sRestoreCmm" "("
+APPEND "&sRestoreCmm" "  PRINT %ERROR ""Please execute this script in a TRACE32 Simulator!"""
+APPEND "&sRestoreCmm" "  ENDDO"
+APPEND "&sRestoreCmm" ")"
+APPEND "&sRestoreCmm" ""
+
+APPEND "&sRestoreCmm" "RESet"
+APPEND "&sRestoreCmm" "SYStem.RESet"
+APPEND "&sRestoreCmm" "SYStem.CPU " CPU()
+IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MMUSPACES)
+(
+  IF SYStem.Option.MMUSPACES()
+    APPEND "&sRestoreCmm" "SYStem.Option MMUSPACES ON"
+)
+IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.ZONESPACES)
+(
+  IF SYStem.Option.ZONESPACES()
+    APPEND "&sRestoreCmm" "SYStem.Option ZONESPACES ON"
+)
+IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MACHINESPACES)
+(
+  IF SYStem.Option.MACHINESPACES()
+    APPEND "&sRestoreCmm" "SYStem.Option MACHINESPACES ON"
+)
+IF CONFIGNUMBER()>1.
+(
+  GOSUB getCoreAssignment
+  RETURNVALUES &sTmp
+  APPEND "&sRestoreCmm" "CORE.ASSIGN &sTmp"
+)
+APPEND "&sRestoreCmm" "SYStem.Up"
+APPEND "&sRestoreCmm" ""
+
+GOSUB progress "Step: flush caches"
+GOSUB cacheClean
+IF CORE.NUMBER()>1.
+  CORE.select 0.
+
+APPEND "&sRestoreCmm" "; Restore memory contents"
+&i=0.
+&sRange=STRing.TOKEN("&sMemoryRanges",",;",&i)
+WHILE ("&sRange"!="")
+(
+  IF (STRing.ComPare(STRing.LoWeR("&sRange"),"<symbol.list.section>")&&(sYmbol.List.SECtion.COUNT()!=0.))
+  (
+    PRIVATE &j
+    SPRINTF &sProgressText "Step: save memory ranges based on Section Table"
+    GOSUB progress "&sProgressText"
+    &j=1.
+    RePeaT sYmbol.List.SECtion.COUNT()
+    (
+      IF (sYmbol.List.SECtion.SIZE(&j)>0.)
+      (
+        SPRINTF &sRange "%#!A++0x%X" sYmbol.List.SECtion.BEGIN(&j) sYmbol.List.SECtion.SIZE(&j)-1.
+        SPRINTF &sProgressText "Step: save section %s memory range %s" STRing.SPLIT(sYmbol.List.SECtion.PATH(&j),"\",-1.) "&sRange"
+        GOSUB progress "&sProgressText"
+        GOSUB storeMemoryRange "&sRestoreCmm" "&nTime" "&nStoreFormat" "&sRange"
+      )
+      &j=&j+1.
+    )
+  )
+  ELSE
+  (
+    SPRINTF &sProgressText "Step: save memory range %s" "&sRange"
+    GOSUB progress "&sProgressText"
+    GOSUB storeMemoryRange "&sRestoreCmm" "&nTime" "&nStoreFormat" "&sRange"
+  )
+  &i=&i+1.
+  &sRange=STRing.TOKEN("&sMemoryRanges",",;",&i)
+)
+APPEND "&sRestoreCmm" ""
+
+APPEND "&sRestoreCmm" "; Restore registers per logical core"
+&i=0.
+RePeaT CORE.NUMBER()
+(
+  PRIVATE &sPerfile &sTree &sCoreText
+  IF CORE.NUMBER()>1.
+  (
+    CORE.select &i
+    APPEND "&sRestoreCmm" "CORE.select &i"
+    SPRINTF &sCoreText "Core %2u/%-2u: " &i CORE.NUMBER()-1.
+  )
+  SPRINTF &sProgressText "Step: %sstore GPRs" "&sCoreText"
+  GOSUB progress "&sProgressText"
+  SPRINTF &sFilename "%u_reg_core%u.cmm" &nTime &i
+  STOre "./&(sFilename)" Register
+  APPEND "&sRestoreCmm" "DO ~~~~/&(sFilename)"
+
+  GOSUB getCorePerfilePath
+  RETURNVALUES &sPerfile &sTree
+
+  IF "&sPerfile"!=""
+  (
+    PRIVATE &sPerFilterList
+    &sPerFilterList="*"
+    IF CPU.FEATURE(C15)||CPU.FEATURE(SPR)
+    (
+      ; -A/-R profile
+      ; switch to highest required PL and store
+      PRIVATE &nRegM &sMode
+      &nRegM=Register(M)
+      IF !CPU.FEATURE(SPR)
+      (
+        ; AARCH32
+        IF SYStem.Option.ZONESPACES()
+        (
+          Register.Set M 0x16 // mon
+          SPRINTF &sTmp "Register.Set M %#x /CORE %u" 0x16 &i
+          APPEND "&sRestoreCmm" "&sTmp"
+        )
+        ELSE IF SYStem.Option.MACHINESPACES()
+        (
+          Register.Set M 0x1a // hyp
+          SPRINTF &sTmp "Register.Set M %#x /CORE %u" 0x1a &i
+          APPEND "&sRestoreCmm" "&sTmp"
+        )
+      )
+      ELSE
+      (
+        ; AARCH64
+        PRIVATE &nHighestEl &nEl
+        &nHighestEl=&nRegM
+        &nEl=&nRegM
+
+        IF CPU.FEATURE(NONSECURE)&&CPU.FEATURE(SECURE)
+          &nHighestEl=0xD // EL3
+        ELSE IF CPU.FEATURE(HYPERVISOR)
+          &nHighestEl=0x9 // EL2
+
+        IF SYStem.Option.ZONESPACES()
+          &nEl=0xD // EL3
+        ELSE IF SYStem.Option.MACHINESPACES()||(ARMARCHVERSION()>=0x81)
+          &nEl=0x9 // EL2
+
+        IF (&nEl>&nHighestEl)
+          &nEl=&nHighestEl
+
+        Register.Set M &nEl
+        SPRINTF &sTmp "Register.Set M %#x /CORE %u" &nEl &i
+        APPEND "&sRestoreCmm" "&sTmp"
+      )
+      GOSUB getModeString "Register(M)"
+      RETURNVALUES &sMode
+      GOSUB getPerFilter "Register(M)" "FALSE()"
+      RETURNVALUES &sPerFilterList
+      SPRINTF &sProgressText "Step: %sstore SPR/C15 registers, Mode %s" "&sCoreText" "&sMode"
+      GOSUB progress "&sProgressText"
+      SPRINTF &sFilename2 "%u_spr_core%u_%s.orig.cmm" &nTime &i "&sMode"
+      SPRINTF &sFilename  "%u_spr_core%u_%s.cmm" &nTime &i "&sMode"
+      IF (CPU.FEATURE(C15)&&CPU.FEATURE(SPR))
+      (
+        IF ((Register(M)&0x10)==0)
+          PER.STOre "./&(sFilename2)" "&(sPerfile)" "AArch64" /CORE &i
+        ELSE
+          PER.STOre "./&(sFilename2)" "&(sPerfile)" "AArch32" /CORE &i
+      )
+      ELSE
+      (
+        PER.STOre "./&(sFilename2)" "&(sPerfile)" /CORE &i
+      )
+      GOSUB perStoreFilter "&sFilename2" "&sFilename" "&sPerFilterList"
+      APPEND "&sRestoreCmm" "DO ~~~~/&(sFilename)"
+      Register.Set M &nRegM /CORE &i
+      SPRINTF &sTmp "Register.Set M %#x /CORE %u" &nRegM &i
+      APPEND "&sRestoreCmm" "&sTmp"
+
+      ; in current EL store AArch registers again
+      GOSUB getModeString "Register(M)"
+      RETURNVALUES &sMode
+      GOSUB getPerFilter "Register(M)" "TRUE()"
+      RETURNVALUES &sPerFilterList
+      SPRINTF &sProgressText "Step: %sstore SPR/C15 registers, Mode %s" "&sCoreText" "&sMode"
+      GOSUB progress "&sProgressText"
+      SPRINTF &sFilename2 "%u_spr_core%u_%s.orig.cmm" &nTime &i "current"
+      SPRINTF &sFilename  "%u_spr_core%u_%s.cmm" &nTime &i "current"
+    )
+    ELSE
+    (
+      ; -M profile
+      SPRINTF &sProgressText "Step: %sstore PPB registers, Mode %s" "&sCoreText" "&sMode"
+      GOSUB progress "&sProgressText"
+      SPRINTF &sFilename2 "%u_ppb_core%u_%s.orig.cmm" &nTime &i "current"
+      SPRINTF &sFilename  "%u_ppb_core%u_%s.cmm" &nTime &i "current"
+    )
+    IF (CPU.FEATURE(C15)&&CPU.FEATURE(SPR))
+    (
+      IF (Register(M)&0x10)==0
+        PER.STOre "./&(sFilename2)" "&(sPerfile)" "AArch64" /CORE &i
+      ELSE
+        PER.STOre "./&(sFilename2)" "&(sPerfile)" "AArch32" /CORE &i
+    )
+    ELSE
+    (
+      PER.STOre "./&(sFilename2)" "&(sPerfile)" /CORE &i
+    )
+    GOSUB perStoreFilter "&sFilename2" "&sFilename" "&sPerFilterList"
+    APPEND "&sRestoreCmm" "DO ~~~~/&(sFilename)"
+
+    SPRINTF &sFilename "%u_reg_core%u.cmm" &nTime &i
+    APPEND "&sRestoreCmm" "DO ~~~~/&(sFilename)"
+  )
+  ELSE
+  (
+    PRIVATE &sText
+    SPRINTF &sText "Error: No core-perfile detected for CPU=%s. Please contact support@lauterbach.com ." CPU()
+    GOSUB progress "&sText"
+  )
+  APPEND "&sRestoreCmm" ""
+  &i=&i+1.
+)
+IF CORE.NUMBER()>1.
+(
+  CORE.select 0.
+  APPEND "&sRestoreCmm" "CORE.select 0."
+  APPEND "&sRestoreCmm" ""
+)
+
+
+IF CORE.NUMBER()>1.
+  CORE.select 0.
+
+IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MACHINESPACES)
+(
+  IF SYStem.Option.MACHINESPACES()
+  (
+    APPEND "&sRestoreCmm" "; Storing of iAMP/Hypervisor environments is not yet supported."
+    APPEND "&sRestoreCmm" "; The stored MMU.<>, TRANSlation.<>, TASK.<> commands will be incomplete and/or misleading!"
+    APPEND "&sRestoreCmm" "; Sorry for the inconvenience."
+  )
+)
+
+IF ("&sSymbolFile"!="")
+(
+  GOSUB progress "Step: handle sYmbol files"
+  PRIVATE &sFormat &sParameters
+  GOSUB getDataLoadParameters "&sSymbolFile"
+  RETURNVALUES &sFormat &sParameters
+  APPEND "&sRestoreCmm" "Data.LOAD.&(sFormat) ""&(sSymbolFile)"" &(sParameters) /NoCODE"
+  APPEND "&sRestoreCmm" ""
+)
+
+
+IF (&bTraceSave)&&(Trace.METHOD.Analyzer()||Trace.METHOD.CAnalyzer()||Trace.METHOD.Onchip())&&(Trace.RECORDS()>=256.)
+(
+  GOSUB progress "Step: store flowtrace"
+  APPEND "&sRestoreCmm" "; Restore flowtrace"
+  SPRINTF &sFilename "%u_trace.ad" &nTime
+  Trace.SAVE "./&(sFilename)"
+  APPEND "&sRestoreCmm" "Trace.LOAD ~~~~/&(sFilename)"
+  APPEND "&sRestoreCmm" ""
+)
+
+APPEND "&sRestoreCmm" "ENDDO"
+PRINT "Step: FINISHED"
+ENDDO "&sRestoreCmm"
+
+; --------------------------------------------------------------------------------
+; Subroutines
+; --------------------------------------------------------------------------------
+
+checkSanity: ;()
+(
+  IF (VERSION.BUILD()<158636.)
+  (
+    PRINT %ERROR "Software version too old. Please use more recent software. Exiting..."
+    ENDDO
+  )
+  IF ((ARMARCHVERSION()<7.)&&!((ARMARCHVERSION()==6.)&&STRing.ComPare(CORENAME(),"CORTEXM*")))
+  (
+    PRINT %ERROR "Feature is only supported for ARM Architecture v6m/v7 onwards. Exiting..."
+    ENDDO
+  )
+  IF (TASK.CONFIGFILE()+TASK.ORTIFILE()!="")
+  (
+    PRINT %WARNING "OS awareness loaded - please use OS specific ramdump script"
+  )
+)
+
+; --------------------------------------------------------------------------------
+
+parseArguments: ;(args)
+(
+  PRIVATE &sArguments &bDialog &sMemoryRanges &sSymbolFile &bTraceSave &sTmp &nStoreFormat
+  PARAMETERS &sArguments
+
+  &bDialog=("&sArguments"=="")
+  &bDialog=&bDialog||(STRing.SCAN("&sArguments","/DIALOG",0.)>=0.)
+  &sMemoryRanges=STRing.SCANAndExtract("&sArguments","MEM=","")
+  &sMemoryRanges=STRing.Replace("&sMemoryRanges","""","",0.)
+  &sSymbolFile=STRing.SCANAndExtract("&sArguments","SYMBOLFILE=","")
+  &sSymbolFile=STRing.Replace("&sSymbolFile","""","",0.)
+  &bTraceSave=STRing.SCANAndExtract("&sArguments","TRACESAVE=","0")!="0"
+  &sTmp=STRing.SCANAndExtract("&sArguments","STOREFORMAT=","0")
+  EVAL &sTmp
+  IF EVAL.TYPE()==(0x4||0x8)
+    &nStoreFormat=&sTmp+0.
+
+  RETURN "&bDialog" "&sMemoryRanges" "&sSymbolFile" "&bTraceSave" "&nStoreFormat"
+)
+
+; --------------------------------------------------------------------------------
+
+checkArguments: ;(memoryRanges, storeFormat)
+(
+  PRIVATE &sMemoryRanges &nStoreFormat &i &sRange
+  PARAMETERS &sMemoryRanges &nStoreFormat
+  ; sanity check - memory ranges
+  &i=0.
+  &sRange=STRing.TOKEN("&sMemoryRanges",",;",&i)
+  WHILE ("&sRange"!="")
+  (
+    LOCAL &bRangeValid
+    &bRangeValid=TRUE()
+    IF (STRing.ComPare("&sRange","<*>"))
+    (
+      &bRangeValid=(&bRangeValid)&&STRing.ComPare(STRing.LoWeR("&sRange"),"<symbol.list.section>")
+    )
+    ELSE
+    (
+      ON ERROR GOSUB
+      (
+        &bRangeValid=FALSE()
+        RETURN
+      )
+      &bRangeValid=(&bRangeValid)&&ADDRESS.isPHYSICAL(ADDRESS.RANGE.BEGIN(&sRange))
+      ON ERROR inherit
+    )
+    IF !(&bRangeValid)
+    (
+      DIALOG.OK "Invalid Range *&sRange* detected."+CONVERT.CHAR(0xa)+"Valid formats: A:<start>--<end>, A:<start>++<size>"+CONVERT.CHAR(0xa)+"e.g. A:0x80000000++0x1fffffff"
+      ENDDO ""
+    )
+    &i=&i+1.
+    &sRange=STRing.TOKEN("&sMemoryRanges",",;",&i)
+  )
+  ; sanity check - store format
+  IF (&nStoreFormat!=(0.||1.))
+  (
+    DIALOG.OK "Invalid argument detected."
+    ENDDO ""
+  )
+  RETURN
+)
+
+; --------------------------------------------------------------------------------
+
+showDialog:
+(
+  PMACRO.LOCK
+  (
+    PRIVATE &sPpfDialog
+    &sPpfDialog=OS.PPF()
+
+    DIALOG.view
+    (&+
+        HEADER "RAMDUMP"
+        NAME "DLGRAMDUMP"
+
+        POS  1.  1. 16.
+        TEXT "Memory Range(s):"
+        POS 17.  1. 39. 5.
+MEMR:   MEDIT "" "DIALOG.ENABLE START"
+        POS 58.  1.  5. 1.
+GUESS:  BUTTON "guess"
+        (&-
+          PRIVATE &sRanges
+
+          DIALOG.SET MEMR "&sRanges"
+          IF ("&sRanges"=="")
+          (
+            GOSUB updateProgress "Failed to guess memory ranges. Please set ranges manually."
+            DIALOG.OK "Failed to guess memory ranges. Please set ranges manually."
+          )
+          ELSE
+          (
+            DIALOG.ENABLE START
+            IF STRing.ComPare(STRing.LoWeR("&sRanges"),"*<symbol.list.section>*")
+            (
+              DIALOG.OK "Too many sections detected."+CONV.CHAR(0xa)+"The placeholder ""<sYmbol.List.SECtion>"" will store all sections part of the sYmbol.List.SECtion window."
+              GOSUB updateProgress "Warning: Detected too many sections while guess memory ranges."
+              GOSUB updateProgress "Placeholder ""<sYmbol.List.SECtion>"" will store all sections."
+            )
+            ELSE
+            (
+              DIALOG.OK "Please check if the guessed memory range(s) are correct."
+              GOSUB updateProgress "Succeeded to guess memory ranges."
+            )
+          )
+        )
+
+        POS  1.  7. 16.
+        TEXT "Kernel Symbol File:"
+        POS 17.  7. 42.
+SYM:    EDIT "" ""
+        POS 61.  7. 2.
+        BUTTON "..."
+        (&-
+          PRIVATE &sTmp
+          &sTmp=DIALOG.STRing(SYM)
+          &sTmp=OS.FILE.PATH("&sTmp")
+          IF "&sTmp"!=""
+          (
+            &sTmp=OS.FILE.JOINPATH("&sTmp","*.*")
+          )
+          DIALOG.File "&sTmp"
+          ENTRY %LINE &sTmp
+          IF "&sTmp"!=""
+          (
+            &sTmp="&sTmp"
+            DIALOG.Set SYM "&sTmp"
+          )
+        )
+
+        POS  1.  9. 15.
+        TEXT "Save dump to:"
+        POS 17.  9. 42.
+CMM:    EDIT "./" ""
+        POS 61.  9. 2.
+        BUTTON "..."
+        (&-
+          PRIVATE &sDir
+          DIALOG.DIR
+          ENTRY &sDir
+          IF "&sDir"!=""
+            DIALOG.Set CMM "&sDir"
+        )
+
+        POS  1. 11. 1.
+TBOX:   CHECKBOX "" ""
+        POS  3. 11. 10.
+        TEXT "Store Flowtrace"
+
+        POS 16. 11. 10.
+        TEXT "Store format:"
+        POS 26.  11.  16.
+SFMT:   PULLDOWN "Binary,S3Record (ECC robust)" ""
+
+        POS 53. 11. 10. 1.
+START:  BUTTON "STORE"
+        (
+          PRIVATE &sPpf
+          &sPpf="&sPpfDialog"
+          (&-
+            PRIVATE &sMemoryRanges &sSymbolFile &sDestinationPath &nStoreFormat &sArguments &sReturn
+            &sMemoryRanges=STRing.Replace(DIALOG.STRing(MEMR),""+CONVert.CHAR(0xa),",",0.)
+            &sSymbolFile=DIALOG.STRing(SYM)
+            &sDestinationPath=DIALOG.STRing(CMM)
+            &nStoreFormat=0.
+            IF (DIALOG.STRing(SFMT)=="S3Record (ECC robust)")
+            (
+              &nStoreFormat=1.
+            )
+            IF (!OS.DIR("&sDestinationPath"))
+            (
+              DIALOG.OK "Destination path doesn't exist."
+              GOSUB updateProgress "Destination path doesn't exist."
+              ENDDO
+            )
+            SPRINTF &sArguments "MEM=""%s"" SYMBOLFILE=""%s"" TRACESAVE=%u STOREFORMAT=%u" "&sMemoryRanges" "&sSymbolFile" CONVERT.BOOLTOINT(DIALOG.BOOLEAN(TBOX)) &nStoreFormat
+            GOSUB updateProgress "Generate ramdump... this might take a while"
+            GOSUB updateProgress "run: CD ""&sDestinationPath"""
+            GOSUB updateProgress "run: DO ""&sPpf"" &sArguments"
+            CD "&sDestinationPath"
+            DO "&sPpf" &sArguments
+            RETURNVALUES &sReturn
+            IF ("&sReturn"!="")
+            (
+              GOSUB updateProgress "Generate ramdump...succeeded."
+              GOSUB updateProgress "Please run script ""&sReturn"" in TRACE32 Simulator."
+            )
+            ELSE
+            (
+              GOSUB updateProgress "Start to generate ramdump...failed."
+            )
+          )
+        )
+
+        POS 1. 13. 61. 5.
+ITEXT:  INFOTEXT "" GR SI
+
+        INIT
+        (&-
+          DIALOG.STORAGE.define &sLog
+          PRIVATE &sSymbolFile &sWelcomeText
+
+          DIALOG.DISable START
+          DIALOG.DISable GUESS
+
+          IF !((Trace.METHOD.Analyzer()||Trace.METHOD.CAnalyzer()||Trace.METHOD.Onchip())&&(Trace.RECORDS()>=256.))
+          (
+            DIALOG.DISable TBOX
+          )
+          IF sYmbol.List.PROGRAM.COUNT()==1.
+          (
+            DIALOG.Set SYM sYmbol.List.PROGRAM.FILE(1.)
+          )
+          &sWelcomeText="Welcome to Ramdump Generator for "+"bare-metal"+"."
+          GOSUB updateProgress "&sWelcomeText"
+          GOSUB updateProgress "OS specific variants may be available."
+        )
+        CLOSE
+        (&-
+          DIALOG.END
+        )
+
+        SUBROUTINE updateProgress
+        (&-
+          PRIVATE &sPrefix &sText
+          PARAMETERS &sText
+          SPRINTF &sPrefix "[%02u:%02u:%02u]: " DATE.SECONDS()/60./60. (DATE.SECONDS()/60.)%60.  DATE.SECONDS()%60.
+          &sLog=STRing.MID("&sLog",0.,2048.-STRing.LENgth("&(sPrefix)&(sText)")-1.)
+          &sLog="&(sPrefix)&(sText)"+CONV.CHAR(0xa)+"&(sLog)"
+          DIALOG.SET ITEXT "&sLog"
+          RETURN
+        )
+
+    )
+  )
+  PMACRO.UNLOCK
+  RETURN
+)
+
+; --------------------------------------------------------------------------------
+
+progress: ;(sText)
+(
+  PARAMETERS &sText
+  PRINT "&sText"
+  IF WINdow.EXIST(DLGRAMDUMP)
+  (
+    DIALOG.SELect DLGRAMDUMP
+    GOSUB updateProgress "&sText"
+  )
+)
+
+; --------------------------------------------------------------------------------
+
+getCoreAssignment: ;()
+(
+  PRIVATE &sAssignment &i
+  &sAssignment=""
+  &i=0.
+  RePeaT CORE.NUMBER()
+  (
+    SPRINTF &sAssignment "%s%u. " "&sAssignment" CORE.LOGICALTOPHYSICAL(&i)
+    &i=&i+1.
+  )
+  &sAssignment=STRing.TRIM("&sAssignment")
+  RETURN "&sAssignment"
+)
+
+; --------------------------------------------------------------------------------
+
+cacheClean: ;()
+(
+  PRIVATE &i
+  &i=0.
+  IF PRACTICE.CoMmanD.AVAILable(CACHE.FLUSH.FULL)
+  (
+    IF CORE.NUMBER()>1.
+      CORE.select &i
+    CACHE.FLUSH FULL
+    &i=&i+1.
+  )
+  ELSE
+  (
+    &i=0.
+    IF PRACTICE.CoMmanD.AVAILable(CACHE.FLUSH.DC)
+    (
+      RePeaT CORE.NUMBER()
+      (
+        IF CORE.NUMBER()>1.
+          CORE.select &i
+        CACHE.FLUSH DC
+        &i=&i+1.
+      )
+    )
+    &i=0.
+    IF PRACTICE.CoMmanD.AVAILable(CACHE.FLUSH.L2)
+    (
+      RePeaT CORE.NUMBER()
+      (
+        IF CORE.NUMBER()>1.
+          CORE.select &i
+
+        CACHE.FLUSH L2
+        &i=&i+1.
+      )
+    )
+    &i=0.
+    IF PRACTICE.CoMmanD.AVAILable(CACHE.FLUSH.L3)
+    (
+      RePeaT CORE.NUMBER()
+      (
+        IF CORE.NUMBER()>1.
+          CORE.select &i
+        CACHE.FLUSH L3
+        &i=&i+1.
+      )
+    )
+  )
+  IF CORE.NUMBER()>1.
+    CORE.select 0.
+
+  RETURN
+)
+
+storeMemoryRange: ; (file, time, format, range)
+(
+  PRIVATE &sRestoreCmm &nTime &nStoreFormat &sRange &sFilename
+  PARAMETERS &sRestoreCmm &nTime &nStoreFormat &sRange
+  IF (&nStoreFormat==0.)
+  (
+    IF (ADDRESS.RANGE.SIZE(&sRange)>16384.)
+    (
+      SPRINTF &sFilename "%u_mem_%s.bin.gz" &nTime STRing.Replace(STRing.LoWeR("&sRange"),":","_",0.)
+      SILENT.Data.SAVE.Binary "./&(sFilename)" &(sRange) /ZIP
+      APPEND "&sRestoreCmm" "Data.LOAD.Binary ~~~~/&(sFilename) &(sRange) /UNZIP /NosYmbol"
+    )
+    ELSE
+    (
+      SPRINTF &sFilename "%u_mem_%s.bin" &nTime STRing.Replace(STRing.LoWeR("&sRange"),":","_",0.)
+      SILENT.Data.SAVE.Binary "./&(sFilename)" &(sRange)
+      APPEND "&sRestoreCmm" "Data.LOAD.Binary ~~~~/&(sFilename) &(sRange) /NosYmbol"
+    )
+  )
+  ELSE IF (&nStoreFormat==1.)
+  (
+    SPRINTF &sFilename "%u_mem_%s.srec" &nTime STRing.Replace(STRing.LoWeR("&sRange"),":","_",0.)
+    SILENT.Data.SAVE.S3Record "./&(sFilename)" &(sRange) /SkipErrors
+    APPEND "&sRestoreCmm" "Data.LOAD.S3Record ~~~~/&(sFilename) &(sRange) /NosYmbol"
+  )
+  RETURN
+)
+
+; --------------------------------------------------------------------------------
+
+getDataLoadParameters: ;(file)
+(
+  PRIVATE &sSymbolFile &i &bFound
+  PRIVATE &sDataLoadFormat &sLoadOptions
+  PARAMETERS &sSymbolFile
+  &sDataLoadFormat="auto"
+
+  IF (sYmbol.List.PROGRAM.COUNT()==0.)
+    RETURN "&sDataLoadFormat" ""
+
+  IF ("&sSymbolFile"=="")
+    RETURN "&sDataLoadFormat" ""
+
+  &i=0.
+  &bFound=FALSE()
+  RePeaT
+  (
+    PRIVATE &sFile
+    &i=&i+1.
+    &sFile=sYmbol.List.Program.FILE(&i)
+    &bFound=(OS.FILE.ABSPATH("&sFile")==OS.FILE.ABSPATH("&sSymbolFile"))
+  )
+  WHILE (!&bFound&&((&i+1.)<=sYmbol.List.PROGRAM.COUNT()))
+  IF (&bFound)
+  (
+    PRIVATE &sFormat &sCommand &sToken &bOptionFound
+
+    &sCommand=sYmbol.List.PROGRAM.COMMAND(&i)
+    &sFormat=sYmbol.List.PROGRAM.FORMAT(&i)
+
+    IF (STRing.ComPare("&sFormat","ELF/*"))
+      &sDataLoadFormat="Elf"
+    ELSE IF (STRing.ComPare("&sFormat","EXE/*"))
+      &sDataLoadFormat="eXe"
+
+    &i=2.
+    &bOptionFound=FALSE()
+    &sToken=STRing.TOKEN("&sCommand"," ",&i,"QUOTEDSTRINGS=ON")
+    WHILE ("&sToken"!="")
+    (
+      &bOptionFound=&(bOptionFound)||STRing.ComPare("&sToken","/*")
+      IF ((&i==(2.||3.))&&!&bOptionFound)
+      (
+        ; it's an offset/address/accessclass
+        EVAL &sToken
+        IF (EVAL.TYPE()==(0x2||0x4||0x8)) ; binary/hex/decimal
+        (
+          SPRINTF &sLoadOptions "%s %#x" "&sLoadOptions" &sToken
+        )
+        ELSE IF (EVAL.TYPE()==(0x80||0x200)) ; numeric range/address range
+        (
+          ; evaluate possibly embedded functions in token
+          ; accidentally converts numeric range to address range C:<range>
+          &sToken=&sToken
+
+          SPRINTF &sLoadOptions "%s %#!R" "&sLoadOptions" &sToken
+        )
+        ELSE IF (EVAL.TYPE()==0x100) ; address
+        (
+          ; evaluate possibly embedded functions in token
+          &sToken=&sToken
+
+          SPRINTF &sLoadOptions "%s %#!A" "&sLoadOptions" &sToken
+        )
+        ELSE IF STRing.ComPare("&(sToken)","*?:")
+        (
+          ; only access class? e.g. NS:
+          EVAL &(sToken)0
+          IF (EVAL.TYPE()==0x100)
+          (
+            SPRINTF &sLoadOptions "%s %#!A" "&sLoadOptions" &(sToken)0
+          )
+        )
+      )
+      ELSE IF STRing.ComPare("&sToken","/*")
+      (
+        ; it's an option
+        PRIVATE &bOptionNoParam &bOptionWithParam
+        &bOptionNoParam=STRing.ComPare(",/GNU,/GHS,/RVCT,/DWARF,/DWARF2,/STABS,",STRing.UPper("*,&(sToken),*"))
+        &bOptionWithParam=STRing.ComPare(",/NAME,/ABI,",STRing.UPper("*,&(sToken),*"))
+
+        IF (&bOptionNoParam)
+        (
+          SPRINTF &sLoadOptions "%s %s" "&sLoadOptions" "&sToken"
+        )
+        ELSE IF (&bOptionWithParam)
+        (
+          SPRINTF &sLoadOptions "%s %s" "&sLoadOptions" "&sToken"
+          &i=&i+1.
+          &sToken=STRing.TOKEN("&sCommand"," ",&i,"QUOTEDSTRINGS=ON")
+          SPRINTF &sLoadOptions "%s %s" "&sLoadOptions" "&sToken"
+        )
+      )
+      &i=&i+1.
+      &sToken=STRing.TOKEN("&sCommand"," ",&i,"QUOTEDSTRINGS=ON")
+    )
+  )
+
+  RETURN "&sDataLoadFormat" "&sLoadOptions"
+)
+
+; --------------------------------------------------------------------------------
+
+perStoreFilter: ;(sInFile, sOutFile)
+(
+  PRIVATE &sInFile &sOutFile &sFilter &nHandle &sHandle &sLine
+  PARAMETERS &sInFile &sOutFile &sFilter
+  
+  ; detect available filehandle
+  &nHandle=0.
+  RePeaT
+  (
+    &nHandle=&nHandle+1.
+  )
+  WHILE FILE.OPEN(&nHandle)
+  SPRINTF &sHandle "#%u" &nHandle
+  
+  ; count lines, detect maximum length
+  PRIVATE &nLineCount &nLineLength
+  &nLineCount=0.
+  &nLineLength=0.
+  OPEN &sHandle "&sInFile" /Read
+  READ &sHandle %LINE &sLine
+  WHILE !FILE.EOF(&nHandle)
+  (
+    PRIVATE &nLength
+    &nLength=STRing.LENgth("&sLine")
+    IF (&nLineLength<&nLength)
+      &nLineLength=&nLength
+    &nLineCount=&nLineCount+1.
+
+    READ &sHandle %LINE &sLine
+  )
+  CLOSE &sHandle
+
+  IF (&nLineCount==0)
+    RETURN
+
+  ; read all lines into an hll-array
+  PRIVATE &nLineCount2 &nLineLength2
+  &nLineCount2=&nLineCount+1.
+  &nLineLength2=&nLineLength+1.
+  Var.NEWLOCAL char[&nLineCount2][&nLineLength2] \ppLines
+  Var.NEWLOCAL int \i
+  OPEN &sHandle "&sInFile" /Read
+  READ &sHandle %LINE &sLine
+  Var.Assign \i = 0
+  RePeaT &nLineCount
+  (
+    Var.Assign \ppLines[\i++] = "&sLine"
+
+    READ &sHandle %LINE &sLine
+  )
+  CLOSE &sHandle
+
+  ; apply semicolon separated filters to register names
+  PRIVATE &j &sFilterToken
+  &j=0.
+  IF ("&sFilter"=="")
+    &sFilter="*"
+  RePeaT
+  (
+    &sFilterToken=STRing.TOKEN("&sFilter",";",&j)
+    IF ("&sFilterToken"!="")
+      GOSUB perStoreFilter_process "&sOutFile" "\ppLines" "&nLineCount" "&sFilterToken"
+
+    &j=&j+1.
+  )
+  WHILE ("&sFilterToken"!="")
+  RETURN
+)
+
+; --------------------------------------------------------------------------------
+
+perStoreFilter_process: ;(sOutFile, sHllLines, nLineCount, sCompareExpr)
+(
+  PRIVATE &sOutFile &sHllLines &nLineCount &sFilter
+  PARAMETERS &sOutFile &sHllLines &nLineCount &sFilter
+  PRIVATE &sLine &sLineOut &bHeading &bRoRegister &bOnErrorInheritPending
+  Var.NEWLOCAL int \i
+  Var.Assign \i = 0
+  &bHeading=FALSE()
+  &bRoRegister=FALSE()
+  &bOnErrorInheritPending=FALSE()
+  &sLineOut=""
+  Var.WHILE \i<&nLineCount
+  (
+    &sLine=Var.STRing(&sHllLines[\i])
+    IF ("&sLine"=="")
+    (
+      ; empty line - nothing todo
+    )
+    ELSE IF STRing.ComPare("&sLine","// *")
+    (
+      ; a heading / tree is signaled via a comment line without an indent
+      ; e.g. `// Virtualization Extensions`
+      &sLineOut="&sLine"
+      &bHeading=TRUE()
+    )
+    ELSE
+    (
+      PRIVATE &sLineTrim &sComment &sRegisterName &sReason
+      ; example lines:
+      ; `PER.Set.simple SPR:0x34111 %Quad 0x8  // MDCR_EL2`
+      ; `// PER.Set.simple SPR:0x30012 %Quad 0x17011099  // ID_DFR0_EL1; reason=read-only`
+      ; `// PER.Set.simple SPR:0x34316 %Quad 0x0  // HAFGRTR_EL2; reason=access_error`
+      &sLineTrim=STRing.TRIM("&sLine")
+      &sComment=STRing.TRIM(STRing.TOKEN("&sLineTrim","//",-1.,"DELIMITER=STRING"))
+      &sRegisterName=STRing.TRIM(STRing.TOKEN("&sComment","; ",0.))
+      &sReason=STRing.SCANAndExtract("&sComment","reason=","")
+      IF STRing.ComPare("&sRegisterName","&(sFilter)")
+      (
+        &bRoRegister=("&sReason"=="read-only")
+        IF (&bRoRegister)
+        (
+          ; remove comment markers from `reason=read-only` registers
+          ; - try to restore them but ignore errors
+          &sLineOut="  "+STRing.TRIM(STRing.CUT("&sLineTrim",2.))
+        )
+        ELSE
+        (
+          &sLineOut="  &sLineTrim"
+        )
+      )
+    )
+    IF ("&sLineOut"!="")
+    (
+      IF ((&bRoRegister)&&(!&bOnErrorInheritPending))
+        APPEND "&sOutFile" "  ON ERROR CONTinue"
+      ELSE IF ((&bOnErrorInheritPending)&&(!&bRoRegister))
+        APPEND "&sOutFile" "  ON ERROR inherit"
+      APPEND "&sOutFile" "&sLineOut"
+      &bOnErrorInheritPending=&bRoRegister
+ 
+      IF (!&bHeading)
+        Var.Assign &sHllLines[\i] = ""
+      &bHeading=FALSE()
+      &bRoRegister=FALSE()
+      &sLineOut=""
+    )
+    Var.Assign \i++
+  )
+  
+  IF (&bOnErrorInheritPending)
+    APPEND "&sOutFile" "  ON ERROR inherit"
+
+  RETURN
+)
+
+; --------------------------------------------------------------------------------
+
+getModeString: ;(regM)
+(
+  PRIVATE &nRegM &sStr
+  PARAMETERS &nRegM
+  Var.NEWLOCAL char[32][5] \ppModes
+  Var.Assign \ppModes[0]="EL0t"
+  Var.Assign \ppModes[1]="EL0h"
+  Var.Assign \ppModes[2]="0x2"
+  Var.Assign \ppModes[3]="0x3"
+  Var.Assign \ppModes[4]="EL1t"
+  Var.Assign \ppModes[5]="EL1h"
+  Var.Assign \ppModes[6]="0x6"
+  Var.Assign \ppModes[7]="0x7"
+  Var.Assign \ppModes[8]="EL2t"
+  Var.Assign \ppModes[9]="EL2h"
+  Var.Assign \ppModes[10]="0xa"
+  Var.Assign \ppModes[11]="0xb"
+  Var.Assign \ppModes[12]="EL3t"
+  Var.Assign \ppModes[13]="EL3h"
+  Var.Assign \ppModes[14]="0xe"
+  Var.Assign \ppModes[15]="0xf"
+  Var.Assign \ppModes[16]="Usr"
+  Var.Assign \ppModes[17]="Fiq"
+  Var.Assign \ppModes[18]="Irq"
+  Var.Assign \ppModes[19]="Svc"
+  Var.Assign \ppModes[20]="0x14"
+  Var.Assign \ppModes[21]="0x15"
+  Var.Assign \ppModes[22]="Mon"
+  Var.Assign \ppModes[23]="Abt"
+  Var.Assign \ppModes[24]="0x18"
+  Var.Assign \ppModes[25]="0x19"
+  Var.Assign \ppModes[26]="Hyp"
+  Var.Assign \ppModes[27]="Und"
+  Var.Assign \ppModes[28]="0x1c"
+  Var.Assign \ppModes[29]="0x1d"
+  Var.Assign \ppModes[30]="0x1e"
+  Var.Assign \ppModes[31]="Sys"
+  &nRegM=&nRegM
+  &sStr=Var.STRing(\ppModes[&nRegM])
+  RETURN "&sStr"
+)
+
+; --------------------------------------------------------------------------------
+
+getPerFilter: ;(regM, current)
+(
+  PRIVATE &nRegM &bCurrent &sFilter
+  PARAMETERS &nRegM &bCurrent
+  
+  IF ((&nRegM&0x10)!=0x0) // Aarch32?
+    RETURN "*"
+  IF !(CPU.FEATURE(C15)||CPU.FEATURE(SPR)) // -A/-R profile?
+    RETURN "*"
+  
+  &sFilter=""
+  IF (&nRegM>=(0xc)) // EL3t, EL3h
+    &sFilter=OS.FILE.JOINPATH("&sFilter","*?_EL3")
+  IF (&nRegM>=(0x8)) // EL2t, EL2h
+    &sFilter=OS.FILE.JOINPATH("&sFilter","*?_EL2","*?_EL12","*?_EL02")
+  IF (&nRegM>=(0x4)) // EL1t, EL1h
+    &sFilter=OS.FILE.JOINPATH("&sFilter","*?_EL1")
+  &sFilter=OS.FILE.JOINPATH("&sFilter","*?_EL0")
+  IF (!&bCurrent)
+    &sFilter=OS.FILE.JOINPATH("&sFilter","*")
+  
+  &sFilter=STRing.Replace("&sFilter","/",";",0.)
+  &sFilter=STRing.Replace("&sFilter","\",";",0.)
+    
+  RETURN "&sFilter"
+)
+
+
+; --------------------------------------------------------------------------------
+
+getCorePerfilePath: ;()
+(
+  PRIVATE &sFile &sTree &sPath &c0 &c1
+  GOSUB getCorePerfile
+  RETURNVALUES &sFile &sTree
+  
+  &c0=STRing.MID("&sFile",0.,1.)
+  &c1=STRing.MID("&sFile",1.,1.)
+  IF ("&c0"=="")
+    &sPath=""
+  ELSE IF ("&c0"=="~")||("&c0"=="/")||("&c1"==":")||(("&c0"=="\")&&("&c1"=="\"))
+    &sPath="&sFile"
+  ELSE
+    &sPath="~~/&(sFile)"
+
+  RETURN "&sPath" "&sTree"
+)
+
+getCorePerfile: ;()
+(
+  PRIVATE &i &sFile &sCsvFileList
+  &i=0.
+  &sCsvFileList=PER.FILENAME()
+  IF (PRACTICE.FUNCtion.AVAILable(CPU.FILELIST))
+    &sCsvFileList="&(sCsvFileList),"+CPU.FILELIST("PER")
+
+  &sFile=STRing.TOKEN("&sCsvFileList",",",&i)
+  WHILE ("&sFile"!="")
+  (
+    IF STRing.ComPare(OS.FILE.BASENAME("&sFile"),"percortex*")
+      RETURN "&sFile" ""
+    IF STRing.ComPare(OS.FILE.BASENAME("&sFile"),"perneoverse*")
+      RETURN "&sFile" ""
+    &i=&i+1.
+    &sFile=STRing.TOKEN("&sCsvFileList",",",&i)
+  )
+
+  IF ((ARMARCHVERSION("major")>=8.)&&CPU.FEATURE("MMU")&&!CPU.FEATURE("MPU")&&(CPU.FEATURE("C15")||CPU.FEATURE("SPR")))
+  (
+    ; A- profile
+    IF (ARMARCHVERSION("minor")==0.)
+      SPRINTF &sFile "perarmv%ua.per" ARMARCHVERSION("major")
+    ELSE
+      SPRINTF &sFile "perarmv%xa.per" ARMARCHVERSION()
+    RETURN "&sFile" ""
+  )
+
+  RETURN "" ""
+)

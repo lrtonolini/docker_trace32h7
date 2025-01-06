@@ -1,0 +1,480 @@
+; --------------------------------------------------------------------------------
+; @Title: Script for displaying predefined TRACE32 icons
+; @Description:
+;   This script displays all built-in TRACE32 icons which
+;   can be used in definitions of own buttons and menu items.
+; @Keywords: built-in, icon, icons, internal, predefined
+; @Author: MSC, SME
+; @Copyright: (C) 1989-2014 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: internal_icons.cmm 21125 2023-07-10 09:56:05Z mschaeffner $
+
+
+
+;   This is the list of predefined internal TRACE32 icons,
+;   which can be used to define buttons and menu items for own purposes
+;   inside a menu, dialog programming and tool bar.
+;
+;   usage examples:
+;       MENUITEM "[:<internal_iconname>] text"   "<command>"
+;       MENUITEM "[:list]List &Source"           "List.auto"
+;
+;       BUTTON   "[:<internal_iconname>]"        "<command>"
+;       BUTTON   "[:reg]"                        "Register.view"
+;
+;       MENU.AddTool "tooltip"        "shorttext,<internal_iconname>" "<command>"
+;       MENU.AddTool "register view"  "r,reg"                         "Register.view"
+
+
+DIALOG
+(
+    HEADER "Predefined TRACE32 icons"
+
+    POS    0. 0. 4. 1.25
+    BUTTON "[:abookmark]"       "DIALOG.Set IconName ""[:abookmark]"""
+    BUTTON "[:achart]"          "DIALOG.Set IconName ""[:achart]"""
+    BUTTON "[:achartnest]"      "DIALOG.Set IconName ""[:achartnest]"""
+    BUTTON "[:aconfig]"         "DIALOG.Set IconName ""[:aconfig]"""
+    BUTTON "[:adraw]"           "DIALOG.Set IconName ""[:adraw]"""
+    BUTTON "[:advdown]"         "DIALOG.Set IconName ""[:advdown]"""
+    BUTTON "[:advleft]"         "DIALOG.Set IconName ""[:advleft]"""
+    BUTTON "[:advright]"        "DIALOG.Set IconName ""[:advright]"""
+    BUTTON "[:advup]"           "DIALOG.Set IconName ""[:advup]"""
+    BUTTON "[:afind]"           "DIALOG.Set IconName ""[:afind]"""
+    BUTTON "[:afocus]"          "DIALOG.Set IconName ""[:afocus]"""
+
+    POS    4. 0.
+    BUTTON "[:afocuseye]"       "DIALOG.Set IconName ""[:afocuseye]"""
+    BUTTON "[:ajumpto]"         "DIALOG.Set IconName ""[:ajumpto]"""
+    BUTTON "[:alist]"           "DIALOG.Set IconName ""[:alist]"""
+    BUTTON "[:alistcts]"        "DIALOG.Set IconName ""[:alistcts]"""
+    BUTTON "[:alistnest]"       "DIALOG.Set IconName ""[:alistnest]"""
+    BUTTON "[:alistvar]"        "DIALOG.Set IconName ""[:alistvar]"""
+    BUTTON "[:ameasure]"        "DIALOG.Set IconName ""[:ameasure]"""
+    BUTTON "[:aprochart]"       "DIALOG.Set IconName ""[:aprochart]"""
+    BUTTON "[:aprofile]"        "DIALOG.Set IconName ""[:aprofile]"""
+    BUTTON "[:aprostat]"        "DIALOG.Set IconName ""[:aprostat]"""
+    BUTTON "[:apubreak]"        "DIALOG.Set IconName ""[:apubreak]"""
+
+    POS    8. 0.
+    BUTTON "[:apubrk]"          "DIALOG.Set IconName ""[:apubrk]"""
+    BUTTON "[:apuchip]"         "DIALOG.Set IconName ""[:apuchip]"""
+    BUTTON "[:apudump]"         "DIALOG.Set IconName ""[:apudump]"""
+    BUTTON "[:apugo]"           "DIALOG.Set IconName ""[:apugo]"""
+    BUTTON "[:apulist]"         "DIALOG.Set IconName ""[:apulist]"""
+    BUTTON "[:apureg]"          "DIALOG.Set IconName ""[:apureg]"""
+    BUTTON "[:apustep]"         "DIALOG.Set IconName ""[:apustep]"""
+    BUTTON "[:area]"            "DIALOG.Set IconName ""[:area]"""
+    BUTTON "[:atiming]"         "DIALOG.Set IconName ""[:atiming]"""
+    BUTTON "[:atrigger]"        "DIALOG.Set IconName ""[:atrigger]"""
+    BUTTON "[:aview]"           "DIALOG.Set IconName ""[:aview]"""
+
+    POS    12. 0.
+    BUTTON "[:backtree]"        "DIALOG.Set IconName ""[:backtree]"""
+    BUTTON "[:bmc]"             "DIALOG.Set IconName ""[:bmc]"""
+    BUTTON "[:bookmark]"        "DIALOG.Set IconName ""[:bookmark]"""
+    BUTTON "[:bothedge]"        "DIALOG.Set IconName ""[:bothedge]"""
+    BUTTON "[:break]"           "DIALOG.Set IconName ""[:break]"""
+    BUTTON "[:breakconfig]"     "DIALOG.Set IconName ""[:breakconfig]"""
+    BUTTON "[:breaknew]"        "DIALOG.Set IconName ""[:breaknew]"""
+    BUTTON "[:breaknewadv]"     "DIALOG.Set IconName ""[:breaknewadv]"""
+    BUTTON "[:brk]"             "DIALOG.Set IconName ""[:brk]"""
+    BUTTON "[:brkc]"            "DIALOG.Set IconName ""[:brkc]"""
+    BUTTON "[:bsdl]"            "DIALOG.Set IconName ""[:bsdl]"""
+
+    POS    16. 0.
+    BUTTON "[:btnapply]"        "DIALOG.Set IconName ""[:btnapply]"""
+    BUTTON "[:btncancel]"       "DIALOG.Set IconName ""[:btncancel]"""
+    BUTTON "[:btngo]"           "DIALOG.Set IconName ""[:btngo]"""
+    BUTTON "[:btnhelp]"         "DIALOG.Set IconName ""[:btnhelp]"""
+    BUTTON "[:btnoff]"          "DIALOG.Set IconName ""[:btnoff]"""
+    BUTTON "[:btnok]"           "DIALOG.Set IconName ""[:btnok]"""
+    BUTTON "[:btnon]"           "DIALOG.Set IconName ""[:btnon]"""
+    BUTTON "[:btnsearch]"       "DIALOG.Set IconName ""[:btnsearch]"""
+    BUTTON "[:btntry]"          "DIALOG.Set IconName ""[:btntry]"""
+    BUTTON "[:cache]"           "DIALOG.Set IconName ""[:cache]"""
+    BUTTON "[:cachereg]"        "DIALOG.Set IconName ""[:cachereg]"""
+
+    POS    20. 0.
+    BUTTON "[:camera]"          "DIALOG.Set IconName ""[:camera]"""
+    BUTTON "[:cconfig]"         "DIALOG.Set IconName ""[:cconfig]"""
+    BUTTON "[:chip]"            "DIALOG.Set IconName ""[:chip]"""
+    BUTTON "[:clock]"           "DIALOG.Set IconName ""[:clock]"""
+    BUTTON "[:coloraqua]"       "DIALOG.Set IconName ""[:coloraqua]"""
+    BUTTON "[:colorblack]"      "DIALOG.Set IconName ""[:colorblack]"""
+    BUTTON "[:colorblue]"       "DIALOG.Set IconName ""[:colorblue]"""
+    BUTTON "[:colorfuchsia]"    "DIALOG.Set IconName ""[:colorfuchsia]"""
+    BUTTON "[:colorgreen]"      "DIALOG.Set IconName ""[:colorgreen]"""
+    BUTTON "[:colorgrey]"       "DIALOG.Set IconName ""[:colorgrey]"""
+    BUTTON "[:colorlime]"       "DIALOG.Set IconName ""[:colorlime]"""
+
+    POS    24. 0.
+    BUTTON "[:colormaroon]"     "DIALOG.Set IconName ""[:colormaroon]"""
+    BUTTON "[:colornavy]"       "DIALOG.Set IconName ""[:colornavy]"""
+    BUTTON "[:colornone]"       "DIALOG.Set IconName ""[:colornone]"""
+    BUTTON "[:colorolive]"      "DIALOG.Set IconName ""[:colorolive]"""
+    BUTTON "[:colorpurple]"     "DIALOG.Set IconName ""[:colorpurple]"""
+    BUTTON "[:colorred]"        "DIALOG.Set IconName ""[:colorred]"""
+    BUTTON "[:colors]"          "DIALOG.Set IconName ""[:colors]"""
+    BUTTON "[:colorsilver]"     "DIALOG.Set IconName ""[:colorsilver]"""
+    BUTTON "[:colorteal]"       "DIALOG.Set IconName ""[:colorteal]"""
+    BUTTON "[:colorwhite]"      "DIALOG.Set IconName ""[:colorwhite]"""
+    BUTTON "[:coloryellow]"     "DIALOG.Set IconName ""[:coloryellow]"""
+
+    POS    28. 0.
+    BUTTON "[:combobox]"        "DIALOG.Set IconName ""[:combobox]"""
+    BUTTON "[:compound]"        "DIALOG.Set IconName ""[:compound]"""
+    BUTTON "[:config]"          "DIALOG.Set IconName ""[:config]"""
+    BUTTON "[:copy]"            "DIALOG.Set IconName ""[:copy]"""
+    BUTTON "[:correlate]"       "DIALOG.Set IconName ""[:correlate]"""
+    BUTTON "[:coverage]"        "DIALOG.Set IconName ""[:coverage]"""
+    BUTTON "[:coveragenew]"     "DIALOG.Set IconName ""[:coveragenew]"""
+    BUTTON "[:cts]"             "DIALOG.Set IconName ""[:cts]"""
+    BUTTON "[:ctscache]"        "DIALOG.Set IconName ""[:ctscache]"""
+    BUTTON "[:ctsconfig]"       "DIALOG.Set IconName ""[:ctsconfig]"""
+    BUTTON "[:ctsprocess]"      "DIALOG.Set IconName ""[:ctsprocess]"""
+
+    POS    32. 0.
+    BUTTON "[:cut]"             "DIALOG.Set IconName ""[:cut]"""
+    BUTTON "[:ddraw]"           "DIALOG.Set IconName ""[:ddraw]"""
+    BUTTON "[:down]"            "DIALOG.Set IconName ""[:down]"""
+    BUTTON "[:down3d]"          "DIALOG.Set IconName ""[:down3d]"""
+    BUTTON "[:downpage]"        "DIALOG.Set IconName ""[:downpage]"""
+    BUTTON "[:downpage1]"       "DIALOG.Set IconName ""[:downpage1]"""
+    BUTTON "[:downpage2]"       "DIALOG.Set IconName ""[:downpage2]"""
+    BUTTON "[:downpagea1]"      "DIALOG.Set IconName ""[:downpagea1]"""
+    BUTTON "[:downpagea2]"      "DIALOG.Set IconName ""[:downpagea2]"""
+    BUTTON "[:downpageb1]"      "DIALOG.Set IconName ""[:downpageb1]"""
+    BUTTON "[:downpageb2]"      "DIALOG.Set IconName ""[:downpageb2]"""
+
+    POS    36. 0.
+    BUTTON "[:downs]"           "DIALOG.Set IconName ""[:downs]"""
+    BUTTON "[:downtree]"        "DIALOG.Set IconName ""[:downtree]"""
+    BUTTON "[:dump]"            "DIALOG.Set IconName ""[:dump]"""
+    BUTTON "[:ecomp]"           "DIALOG.Set IconName ""[:ecomp]"""
+    BUTTON "[:ecompshow]"       "DIALOG.Set IconName ""[:ecompshow]"""
+    BUTTON "[:econfig]"         "DIALOG.Set IconName ""[:econfig]"""
+    BUTTON "[:edit]"            "DIALOG.Set IconName ""[:edit]"""
+    BUTTON "[:eload]"           "DIALOG.Set IconName ""[:eload]"""
+    BUTTON "[:email]"           "DIALOG.Set IconName ""[:email]"""
+    BUTTON "[:empty]"           "DIALOG.Set IconName ""[:empty]"""
+    BUTTON "[:equitclose]"      "DIALOG.Set IconName ""[:equitclose]"""
+
+    POS    40. 0.
+    BUTTON "[:esave]"           "DIALOG.Set IconName ""[:esave]"""
+    BUTTON "[:esaveas]"         "DIALOG.Set IconName ""[:esaveas]"""
+    BUTTON "[:esaveclose]"      "DIALOG.Set IconName ""[:esaveclose]"""
+    BUTTON "[:esavecomp]"       "DIALOG.Set IconName ""[:esavecomp]"""
+    BUTTON "[:esavecompshow]"   "DIALOG.Set IconName ""[:esavecompshow]"""
+    BUTTON "[:esavedo]"         "DIALOG.Set IconName ""[:esavedo]"""
+    BUTTON "[:exit]"            "DIALOG.Set IconName ""[:exit]"""
+    BUTTON "[:fallingedge]"     "DIALOG.Set IconName ""[:fallingedge]"""
+    BUTTON "[:fdx]"             "DIALOG.Set IconName ""[:fdx]"""
+    BUTTON "[:fdxmeter]"        "DIALOG.Set IconName ""[:fdxmeter]"""
+    BUTTON "[:find]"            "DIALOG.Set IconName ""[:find]"""
+
+    POS    44. 0.
+    BUTTON "[:first]"           "DIALOG.Set IconName ""[:first]"""
+    BUTTON "[:flag]"            "DIALOG.Set IconName ""[:flag]"""
+    BUTTON "[:flash]"           "DIALOG.Set IconName ""[:flash]"""
+    BUTTON "[:flashauto]"       "DIALOG.Set IconName ""[:flashauto]"""
+    BUTTON "[:flashcancel]"     "DIALOG.Set IconName ""[:flashcancel]"""
+    BUTTON "[:flasherase]"      "DIALOG.Set IconName ""[:flasherase]"""
+    BUTTON "[:flashfile]"       "DIALOG.Set IconName ""[:flashfile]"""
+    BUTTON "[:flashlock]"       "DIALOG.Set IconName ""[:flashlock]"""
+    BUTTON "[:flashnew]"        "DIALOG.Set IconName ""[:flashnew]"""
+    BUTTON "[:flashprogram]"    "DIALOG.Set IconName ""[:flashprogram]"""
+    BUTTON "[:flashreprogram]"  "DIALOG.Set IconName ""[:flashreprogram]"""
+
+    POS    48. 0.
+    BUTTON "[:flashreset]"      "DIALOG.Set IconName ""[:flashreset]"""
+    BUTTON "[:flashstate]"      "DIALOG.Set IconName ""[:flashstate]"""
+    BUTTON "[:flashunlock]"     "DIALOG.Set IconName ""[:flashunlock]"""
+    BUTTON "[:folder]"          "DIALOG.Set IconName ""[:folder]"""
+    BUTTON "[:folderadd]"       "DIALOG.Set IconName ""[:folderadd]"""
+    BUTTON "[:folderrem]"       "DIALOG.Set IconName ""[:folderrem]"""
+    BUTTON "[:foldersearch]"    "DIALOG.Set IconName ""[:foldersearch]"""
+    BUTTON "[:fpureg]"          "DIALOG.Set IconName ""[:fpureg]"""
+    BUTTON "[:full]"            "DIALOG.Set IconName ""[:full]"""
+    BUTTON "[:fulldown3d]"      "DIALOG.Set IconName ""[:fulldown3d]"""
+    BUTTON "[:fullup3d]"        "DIALOG.Set IconName ""[:fullup3d]"""
+
+    POS    52. 0.
+    BUTTON "[:go]"              "DIALOG.Set IconName ""[:go]"""
+    BUTTON "[:gobackc]"         "DIALOG.Set IconName ""[:gobackc]"""
+    BUTTON "[:gobackentryc]"    "DIALOG.Set IconName ""[:gobackentryc]"""
+    BUTTON "[:gobacktillc]"     "DIALOG.Set IconName ""[:gobacktillc]"""
+    BUTTON "[:goc]"             "DIALOG.Set IconName ""[:goc]"""
+    BUTTON "[:gonext]"          "DIALOG.Set IconName ""[:gonext]"""
+    BUTTON "[:gonextc]"         "DIALOG.Set IconName ""[:gonextc]"""
+    BUTTON "[:gonextx]"         "DIALOG.Set IconName ""[:gonextx]"""
+    BUTTON "[:goreturn]"        "DIALOG.Set IconName ""[:goreturn]"""
+    BUTTON "[:goreturnc]"       "DIALOG.Set IconName ""[:goreturnc]"""
+    BUTTON "[:goreturnx]"       "DIALOG.Set IconName ""[:goreturnx]"""
+
+    POS    56. 0.
+    BUTTON "[:gotill]"          "DIALOG.Set IconName ""[:gotill]"""
+    BUTTON "[:gotillc]"         "DIALOG.Set IconName ""[:gotillc]"""
+    BUTTON "[:gotillx]"         "DIALOG.Set IconName ""[:gotillx]"""
+    BUTTON "[:gotomodel]"       "DIALOG.Set IconName ""[:gotomodel]"""
+    BUTTON "[:goup]"            "DIALOG.Set IconName ""[:goup]"""
+    BUTTON "[:goupc]"           "DIALOG.Set IconName ""[:goupc]"""
+    BUTTON "[:goupx]"           "DIALOG.Set IconName ""[:goupx]"""
+    BUTTON "[:group]"           "DIALOG.Set IconName ""[:group]"""
+    BUTTON "[:help]"            "DIALOG.Set IconName ""[:help]"""
+    BUTTON "[:helpc]"           "DIALOG.Set IconName ""[:helpc]"""
+    BUTTON "[:helpw]"           "DIALOG.Set IconName ""[:helpw]"""
+
+    POS    60. 0.
+    BUTTON "[:here]"            "DIALOG.Set IconName ""[:here]"""
+    BUTTON "[:idump]"           "DIALOG.Set IconName ""[:idump]"""
+    BUTTON "[:ilist]"           "DIALOG.Set IconName ""[:ilist]"""
+    BUTTON "[:image]"           "DIALOG.Set IconName ""[:image]"""
+    BUTTON "[:index]"           "DIALOG.Set IconName ""[:index]"""
+    BUTTON "[:info]"            "DIALOG.Set IconName ""[:info]"""
+    BUTTON "[:init]"            "DIALOG.Set IconName ""[:init]"""
+    BUTTON "[:iview]"           "DIALOG.Set IconName ""[:iview]"""
+    BUTTON "[:java]"            "DIALOG.Set IconName ""[:java]"""
+    BUTTON "[:jtagsequence]"    "DIALOG.Set IconName ""[:jtagsequence]"""
+    BUTTON "[:jumpto]"          "DIALOG.Set IconName ""[:jumpto]"""
+
+    POS    64. 0.
+    BUTTON "[:keyboard]"        "DIALOG.Set IconName ""[:keyboard]"""
+    BUTTON "[:last]"            "DIALOG.Set IconName ""[:last]"""
+    BUTTON "[:left]"            "DIALOG.Set IconName ""[:left]"""
+    BUTTON "[:left3d]"          "DIALOG.Set IconName ""[:left3d]"""
+    BUTTON "[:leftpage]"        "DIALOG.Set IconName ""[:leftpage]"""
+    BUTTON "[:leftpage1]"       "DIALOG.Set IconName ""[:leftpage1]"""
+    BUTTON "[:leftpage2]"       "DIALOG.Set IconName ""[:leftpage2]"""
+    BUTTON "[:lefts]"           "DIALOG.Set IconName ""[:lefts]"""
+    BUTTON "[:less]"            "DIALOG.Set IconName ""[:less]"""
+    BUTTON "[:list]"            "DIALOG.Set IconName ""[:list]"""
+    BUTTON "[:listordump]"      "DIALOG.Set IconName ""[:listordump]"""
+
+    POS    68. 0.
+    BUTTON "[:load]"            "DIALOG.Set IconName ""[:load]"""
+    BUTTON "[:log]"             "DIALOG.Set IconName ""[:log]"""
+    BUTTON "[:manual]"          "DIALOG.Set IconName ""[:manual]"""
+    BUTTON "[:map]"             "DIALOG.Set IconName ""[:map]"""
+    BUTTON "[:mapnew]"          "DIALOG.Set IconName ""[:mapnew]"""
+    BUTTON "[:mmu]"             "DIALOG.Set IconName ""[:mmu]"""
+    BUTTON "[:mmureg]"          "DIALOG.Set IconName ""[:mmureg]"""
+    BUTTON "[:mode]"            "DIALOG.Set IconName ""[:mode]"""
+    BUTTON "[:more]"            "DIALOG.Set IconName ""[:more]"""
+    BUTTON "[:name]"            "DIALOG.Set IconName ""[:name]"""
+    BUTTON "[:namenew]"         "DIALOG.Set IconName ""[:namenew]"""
+
+    POS    72. 0.
+    BUTTON "[:newbookmark]"     "DIALOG.Set IconName ""[:newbookmark]"""
+    BUTTON "[:newgroup]"        "DIALOG.Set IconName ""[:newgroup]"""
+    BUTTON "[:objects]"         "DIALOG.Set IconName ""[:objects]"""
+    BUTTON "[:oconfig]"         "DIALOG.Set IconName ""[:oconfig]"""
+    BUTTON "[:off]"             "DIALOG.Set IconName ""[:off]"""
+    BUTTON "[:oinfo]"           "DIALOG.Set IconName ""[:oinfo]"""
+    BUTTON "[:on]"              "DIALOG.Set IconName ""[:on]"""
+    BUTTON "[:osexecute]"       "DIALOG.Set IconName ""[:osexecute]"""
+    BUTTON "[:paste]"           "DIALOG.Set IconName ""[:paste]"""
+    BUTTON "[:pbreakblue]"      "DIALOG.Set IconName ""[:pbreakblue]"""
+    BUTTON "[:pbreakcomp]"      "DIALOG.Set IconName ""[:pbreakcomp]"""
+
+    POS    76. 0.
+    BUTTON "[:pbreakgray]"      "DIALOG.Set IconName ""[:pbreakgray]"""
+    BUTTON "[:pbreaklist]"      "DIALOG.Set IconName ""[:pbreaklist]"""
+    BUTTON "[:pbreakred]"       "DIALOG.Set IconName ""[:pbreakred]"""
+    BUTTON "[:pbreakset]"       "DIALOG.Set IconName ""[:pbreakset]"""
+    BUTTON "[:pconfig]"         "DIALOG.Set IconName ""[:pconfig]"""
+    BUTTON "[:pend]"            "DIALOG.Set IconName ""[:pend]"""
+    BUTTON "[:penddo]"          "DIALOG.Set IconName ""[:penddo]"""
+    BUTTON "[:perf]"            "DIALOG.Set IconName ""[:perf]"""
+    BUTTON "[:pfind]"           "DIALOG.Set IconName ""[:pfind]"""
+    BUTTON "[:pgo]"             "DIALOG.Set IconName ""[:pgo]"""
+    BUTTON "[:pgotill]"         "DIALOG.Set IconName ""[:pgotill]"""
+
+    POS    80. 0.
+    BUTTON "[:phere]"           "DIALOG.Set IconName ""[:phere]"""
+    BUTTON "[:pinclear]"        "DIALOG.Set IconName ""[:pinclear]"""
+    BUTTON "[:pinset]"          "DIALOG.Set IconName ""[:pinset]"""
+    BUTTON "[:plist]"           "DIALOG.Set IconName ""[:plist]"""
+    BUTTON "[:plus]"            "DIALOG.Set IconName ""[:plus]"""
+    BUTTON "[:pmacro]"          "DIALOG.Set IconName ""[:pmacro]"""
+    BUTTON "[:pod]"             "DIALOG.Set IconName ""[:pod]"""
+    BUTTON "[:pperf]"           "DIALOG.Set IconName ""[:pperf]"""
+    BUTTON "[:practice]"        "DIALOG.Set IconName ""[:practice]"""
+    BUTTON "[:preset]"          "DIALOG.Set IconName ""[:preset]"""
+    BUTTON "[:printer]"         "DIALOG.Set IconName ""[:printer]"""
+
+    POS    84. 0.
+    BUTTON "[:profile]"         "DIALOG.Set IconName ""[:profile]"""
+    BUTTON "[:program]"         "DIALOG.Set IconName ""[:program]"""
+    BUTTON "[:pskip]"           "DIALOG.Set IconName ""[:pskip]"""
+    BUTTON "[:pstep]"           "DIALOG.Set IconName ""[:pstep]"""
+    BUTTON "[:pstepout]"        "DIALOG.Set IconName ""[:pstepout]"""
+    BUTTON "[:pstepover]"       "DIALOG.Set IconName ""[:pstepover]"""
+    BUTTON "[:pstop]"           "DIALOG.Set IconName ""[:pstop]"""
+    BUTTON "[:pulsehigh]"       "DIALOG.Set IconName ""[:pulsehigh]"""
+    BUTTON "[:pulselow]"        "DIALOG.Set IconName ""[:pulselow]"""
+    BUTTON "[:pulserect]"       "DIALOG.Set IconName ""[:pulserect]"""
+    BUTTON "[:range]"           "DIALOG.Set IconName ""[:range]"""
+
+    POS    88. 0.
+    BUTTON "[:redo]"            "DIALOG.Set IconName ""[:redo]"""
+    BUTTON "[:refresh]"         "DIALOG.Set IconName ""[:refresh]"""
+    BUTTON "[:reg]"             "DIALOG.Set IconName ""[:reg]"""
+    BUTTON "[:remove]"          "DIALOG.Set IconName ""[:remove]"""
+    BUTTON "[:removeall]"       "DIALOG.Set IconName ""[:removeall]"""
+    BUTTON "[:report]"          "DIALOG.Set IconName ""[:report]"""
+    BUTTON "[:right]"           "DIALOG.Set IconName ""[:right]"""
+    BUTTON "[:right3d]"         "DIALOG.Set IconName ""[:right3d]"""
+    BUTTON "[:rightleftdrag]"   "DIALOG.Set IconName ""[:rightleftdrag]"""
+    BUTTON "[:rightleftdrag1]"  "DIALOG.Set IconName ""[:rightleftdrag1]"""
+    BUTTON "[:rightleftdrag2]"  "DIALOG.Set IconName ""[:rightleftdrag2]"""
+
+    POS    92. 0.
+    BUTTON "[:rightleftdrag3]"  "DIALOG.Set IconName ""[:rightleftdrag3]"""
+    BUTTON "[:rightleftdrag4]"  "DIALOG.Set IconName ""[:rightleftdrag4]"""
+    BUTTON "[:rightpage]"       "DIALOG.Set IconName ""[:rightpage]"""
+    BUTTON "[:rightpage1]"      "DIALOG.Set IconName ""[:rightpage1]"""
+    BUTTON "[:rightpage2]"      "DIALOG.Set IconName ""[:rightpage2]"""
+    BUTTON "[:rights]"          "DIALOG.Set IconName ""[:rights]"""
+    BUTTON "[:risingedge]"      "DIALOG.Set IconName ""[:risingedge]"""
+    BUTTON "[:save]"            "DIALOG.Set IconName ""[:save]"""
+    BUTTON "[:scanresume]"      "DIALOG.Set IconName ""[:scanresume]"""
+    BUTTON "[:scanstart]"       "DIALOG.Set IconName ""[:scanstart]"""
+    BUTTON "[:scanstop]"        "DIALOG.Set IconName ""[:scanstop]"""
+
+    POS    96. 0.
+    BUTTON "[:screenshot]"      "DIALOG.Set IconName ""[:screenshot]"""
+    BUTTON "[:searchdown]"      "DIALOG.Set IconName ""[:searchdown]"""
+    BUTTON "[:searchup]"        "DIALOG.Set IconName ""[:searchup]"""
+    BUTTON "[:setref]"          "DIALOG.Set IconName ""[:setref]"""
+    BUTTON "[:setuppdebug]"     "DIALOG.Set IconName ""[:setuppdebug]"""
+    BUTTON "[:setzero]"         "DIALOG.Set IconName ""[:setzero]"""
+    BUTTON "[:snapshot]"        "DIALOG.Set IconName ""[:snapshot]"""
+    BUTTON "[:specialkeys]"     "DIALOG.Set IconName ""[:specialkeys]"""
+    BUTTON "[:statichigh]"      "DIALOG.Set IconName ""[:statichigh]"""
+    BUTTON "[:staticlow]"       "DIALOG.Set IconName ""[:staticlow]"""
+    BUTTON "[:step]"            "DIALOG.Set IconName ""[:step]"""
+
+    POS    100. 0.
+    BUTTON "[:stepback]"        "DIALOG.Set IconName ""[:stepback]"""
+    BUTTON "[:stepbackc]"       "DIALOG.Set IconName ""[:stepbackc]"""
+    BUTTON "[:stepbackoverc]"   "DIALOG.Set IconName ""[:stepbackoverc]"""
+    BUTTON "[:stepc]"           "DIALOG.Set IconName ""[:stepc]"""
+    BUTTON "[:stepdiverge]"     "DIALOG.Set IconName ""[:stepdiverge]"""
+    BUTTON "[:stepdivergec]"    "DIALOG.Set IconName ""[:stepdivergec]"""
+    BUTTON "[:stepdivergex]"    "DIALOG.Set IconName ""[:stepdivergex]"""
+    BUTTON "[:stepover]"        "DIALOG.Set IconName ""[:stepover]"""
+    BUTTON "[:stepoverc]"       "DIALOG.Set IconName ""[:stepoverc]"""
+    BUTTON "[:stepoverx]"       "DIALOG.Set IconName ""[:stepoverx]"""
+    BUTTON "[:stepx]"           "DIALOG.Set IconName ""[:stepx]"""
+
+    POS    104. 0.
+    BUTTON "[:stop]"            "DIALOG.Set IconName ""[:stop]"""
+    BUTTON "[:stopdis]"         "DIALOG.Set IconName ""[:stopdis]"""
+    BUTTON "[:symbols]"         "DIALOG.Set IconName ""[:symbols]"""
+    BUTTON "[:syslog]"          "DIALOG.Set IconName ""[:syslog]"""
+    BUTTON "[:t32]"             "DIALOG.Set IconName ""[:t32]"""
+    BUTTON "[:t32s]"            "DIALOG.Set IconName ""[:t32s]"""
+    BUTTON "[:term]"            "DIALOG.Set IconName ""[:term]"""
+    BUTTON "[:text]"            "DIALOG.Set IconName ""[:text]"""
+    BUTTON "[:time]"            "DIALOG.Set IconName ""[:time]"""
+    BUTTON "[:trash]"           "DIALOG.Set IconName ""[:trash]"""
+    BUTTON "[:tree]"            "DIALOG.Set IconName ""[:tree]"""
+
+    POS    108. 0.
+    BUTTON "[:treehide]"        "DIALOG.Set IconName ""[:treehide]"""
+    BUTTON "[:treehideall]"     "DIALOG.Set IconName ""[:treehideall]"""
+    BUTTON "[:treeshow]"        "DIALOG.Set IconName ""[:treeshow]"""
+    BUTTON "[:treeshowall]"     "DIALOG.Set IconName ""[:treeshowall]"""
+    BUTTON "[:trigger]"         "DIALOG.Set IconName ""[:trigger]"""
+    BUTTON "[:tronchip]"        "DIALOG.Set IconName ""[:tronchip]"""
+    BUTTON "[:undo]"            "DIALOG.Set IconName ""[:undo]"""
+    BUTTON "[:up]"              "DIALOG.Set IconName ""[:up]"""
+    BUTTON "[:up3d]"            "DIALOG.Set IconName ""[:up3d]"""
+    BUTTON "[:updowndrag]"      "DIALOG.Set IconName ""[:updowndrag]"""
+    BUTTON "[:updowndrag1]"     "DIALOG.Set IconName ""[:updowndrag1]"""
+
+    POS    112. 0.
+    BUTTON "[:updowndrag2]"     "DIALOG.Set IconName ""[:updowndrag2]"""
+    BUTTON "[:updowndrag3]"     "DIALOG.Set IconName ""[:updowndrag3]"""
+    BUTTON "[:updowndrag4]"     "DIALOG.Set IconName ""[:updowndrag4]"""
+    BUTTON "[:updowndraga1]"    "DIALOG.Set IconName ""[:updowndraga1]"""
+    BUTTON "[:updowndragb1]"    "DIALOG.Set IconName ""[:updowndragb1]"""
+    BUTTON "[:uppage]"          "DIALOG.Set IconName ""[:uppage]"""
+    BUTTON "[:uppage1]"         "DIALOG.Set IconName ""[:uppage1]"""
+    BUTTON "[:uppage2]"         "DIALOG.Set IconName ""[:uppage2]"""
+    BUTTON "[:uppagea1]"        "DIALOG.Set IconName ""[:uppagea1]"""
+    BUTTON "[:uppagea2]"        "DIALOG.Set IconName ""[:uppagea2]"""
+    BUTTON "[:uppageb1]"        "DIALOG.Set IconName ""[:uppageb1]"""
+
+    POS    116. 0.
+    BUTTON "[:uppageb2]"        "DIALOG.Set IconName ""[:uppageb2]"""
+    BUTTON "[:ups]"             "DIALOG.Set IconName ""[:ups]"""
+    BUTTON "[:usbbtn]"          "DIALOG.Set IconName ""[:usbbtn]"""
+    BUTTON "[:usbconfigure]"    "DIALOG.Set IconName ""[:usbconfigure]"""
+    BUTTON "[:usberror]"        "DIALOG.Set IconName ""[:usberror]"""
+    BUTTON "[:usbfind]"         "DIALOG.Set IconName ""[:usbfind]"""
+    BUTTON "[:usbgreen]"        "DIALOG.Set IconName ""[:usbgreen]"""
+    BUTTON "[:usbgreenlite]"    "DIALOG.Set IconName ""[:usbgreenlite]"""
+    BUTTON "[:usbgrey]"         "DIALOG.Set IconName ""[:usbgrey]"""
+    BUTTON "[:usbhelp]"         "DIALOG.Set IconName ""[:usbhelp]"""
+    BUTTON "[:usbred]"          "DIALOG.Set IconName ""[:usbred]"""
+
+    POS    120. 0.
+    BUTTON "[:usbresall]"       "DIALOG.Set IconName ""[:usbresall]"""
+    BUTTON "[:usbreset]"        "DIALOG.Set IconName ""[:usbreset]"""
+    BUTTON "[:usbselect]"       "DIALOG.Set IconName ""[:usbselect]"""
+    BUTTON "[:var]"             "DIALOG.Set IconName ""[:var]"""
+    BUTTON "[:varchain]"        "DIALOG.Set IconName ""[:varchain]"""
+    BUTTON "[:varconfig]"       "DIALOG.Set IconName ""[:varconfig]"""
+    BUTTON "[:vardump]"         "DIALOG.Set IconName ""[:vardump]"""
+    BUTTON "[:varframe]"        "DIALOG.Set IconName ""[:varframe]"""
+    BUTTON "[:varlocal]"        "DIALOG.Set IconName ""[:varlocal]"""
+    BUTTON "[:varmodifyex]"     "DIALOG.Set IconName ""[:varmodifyex]"""
+    BUTTON "[:varobject]"       "DIALOG.Set IconName ""[:varobject]"""
+
+    POS    124. 0.
+    BUTTON "[:varpattern]"      "DIALOG.Set IconName ""[:varpattern]"""
+    BUTTON "[:varref]"          "DIALOG.Set IconName ""[:varref]"""
+    BUTTON "[:varsetex]"        "DIALOG.Set IconName ""[:varsetex]"""
+    BUTTON "[:vartab]"          "DIALOG.Set IconName ""[:vartab]"""
+    BUTTON "[:vartree]"         "DIALOG.Set IconName ""[:vartree]"""
+    BUTTON "[:varviewex]"       "DIALOG.Set IconName ""[:varviewex]"""
+    BUTTON "[:varwatch]"        "DIALOG.Set IconName ""[:varwatch]"""
+    BUTTON "[:varwatchex]"      "DIALOG.Set IconName ""[:varwatchex]"""
+    BUTTON "[:vdraw]"           "DIALOG.Set IconName ""[:vdraw]"""
+    BUTTON "[:view]"            "DIALOG.Set IconName ""[:view]"""
+    BUTTON "[:viewchain]"       "DIALOG.Set IconName ""[:viewchain]"""
+
+    POS    128. 0.
+    BUTTON "[:viewtab]"         "DIALOG.Set IconName ""[:viewtab]"""
+    BUTTON "[:vpureg]"          "DIALOG.Set IconName ""[:vpureg]"""
+    BUTTON "[:wconfig]"         "DIALOG.Set IconName ""[:wconfig]"""
+    BUTTON "[:welcome]"         "DIALOG.Set IconName ""[:welcome]"""
+    BUTTON "[:winarrange]"      "DIALOG.Set IconName ""[:winarrange]"""
+    BUTTON "[:wincascade]"      "DIALOG.Set IconName ""[:wincascade]"""
+    BUTTON "[:winpage]"         "DIALOG.Set IconName ""[:winpage]"""
+    BUTTON "[:wintilehor]"      "DIALOG.Set IconName ""[:wintilehor]"""
+    BUTTON "[:wintilevert]"     "DIALOG.Set IconName ""[:wintilevert]"""
+    BUTTON "[:wpagecreate]"     "DIALOG.Set IconName ""[:wpagecreate]"""
+    BUTTON "[:wpagedelete]"     "DIALOG.Set IconName ""[:wpagedelete]"""
+
+    POS    132. 0.
+    BUTTON "[:zoomfull]"        "DIALOG.Set IconName ""[:zoomfull]"""
+    BUTTON "[:zoomfullx]"       "DIALOG.Set IconName ""[:zoomfullx]"""
+    BUTTON "[:zoomfullxy]"      "DIALOG.Set IconName ""[:zoomfullxy]"""
+    BUTTON "[:zoomin]"          "DIALOG.Set IconName ""[:zoomin]"""
+    BUTTON "[:zoominx]"         "DIALOG.Set IconName ""[:zoominx]"""
+    BUTTON "[:zoominxy]"        "DIALOG.Set IconName ""[:zoominxy]"""
+    BUTTON "[:zoomout]"         "DIALOG.Set IconName ""[:zoomout]"""
+    BUTTON "[:zoomoutx]"        "DIALOG.Set IconName ""[:zoomoutx]"""
+    BUTTON "[:zoomoutxy]"       "DIALOG.Set IconName ""[:zoomoutxy]"""
+    BUTTON "[:empty]"           "DIALOG.Set IconName ""currently unused"""
+    BUTTON "[:empty]"           "DIALOG.Set IconName ""currently unused"""
+
+    POS    1.  14.  8.5  1.
+    TEXT "Icon name:"
+    POS    10. 14.  16.  1.
+    IconName: INFOTEXT "<click an icon>" WHite SUnken
+)
+ENDDO

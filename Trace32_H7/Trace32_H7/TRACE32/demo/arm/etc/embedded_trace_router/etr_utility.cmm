@@ -1,0 +1,997 @@
+; --------------------------------------------------------------------------------
+; @Title: Script File for Configuring the ARM CoreSight Embedded Trace Router (ETR)
+; @Description:
+;
+;   Provides a dialog with setting and command line tool to setup the ETR.
+;
+;   Version History
+;    V1.0 - dialog, read and write settings
+;    V1.3 - dialog can cycle through cores, write to ETRx.n accesses only address for core n
+;    V1.4 - consider SOC600 AXICTRL register layout
+;
+; @Author: MAZ
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: etr_utility.cmm 19915 2022-10-10 13:12:47Z alintner $
+
+
+goto start
+help:
+print "usage:"
+print " "
+print "do etr_utility"
+print "   opens dialog"
+print " "
+print "do etr_utility <ETR> set <PROPERTY> <VALUE> [<MASK>]"
+print "   set the passed property"
+print " "
+print "    properties:"
+print "       DAB       - set 64 AXI destination address (DABLO, DABHI)"
+print "       DABHI     - set upper 32 bit of AXI destination address (DABHI)"
+print "       DABLO     - set lower 32 bit of AXI destination address (DABLO)"
+print "       AXICTL    - set AXICTL register, <MASK> possible"
+print "       RSZ       - set RSZ register"
+print " "
+area
+if &FILEOPEN==1.
+  close #1
+ENDDO
+
+
+start:
+
+
+local &COMPPARAM &CMD &PAR1 &PAR2 &PAR3 &PPF &PTD &FILEOPEN &SCRIPTVERSION &SCRIPTNAME &CORE &COMPNAME &SOCVERSION
+entry &COMPPARAM &CMD &PAR1 &PAR2 &PAR3
+
+//Soc 600 AXI CTRL Cache settings
+local &C_DEV_NB &C_DEV_B &C_NOR_NC_NB &C_NOR_NC_B &C_WT_NA &C_WT_RA &C_WT_WA &C_WT_RA_WA &C_WB_NA &C_WB_RA &C_WB_WA &C_WB_WA_RA &C_RESERVED
+&C_DEV_NB="Device Non-bufferable"
+&C_DEV_B="Device Bufferable"
+&C_NOR_NC_NB="Normal Non-cachable Non-bufferable"
+&C_NOR_NC_B="Normal Non-cachable Bufferable"
+&C_WT_NA="Write-through No-allocate"
+&C_WT_RA="Write-through Read-allocate"
+&C_WT_WA="Write-through Write-allocate"
+&C_WT_RA_WA="Write-through Read and Write-allocate"
+&C_WB_NA="Write-back No-allocate"
+&C_WB_RA="Write-back Read-allocate"
+&C_WB_WA="Write-back Write-allocate"
+&C_WB_WA_RA="Write-back Read and Write-allocate"
+&C_RESERVED="Reserved"
+
+
+&PPF=OS.PPF()
+&PTD=OS.PTD()
+&FILEOPEN=0.
+&SCRIPTVERSION="V1.4"
+&SCRIPTNAME="etr_utility"
+&SOCVERSION=0.
+
+if STRing.SCAN("&COMPPARAM",".",0)!=-1
+(
+  &CORE=STRing.SPLIT("&COMPPARAM",".",1)
+  &COMPNAME=STRing.SPLIT("&COMPPARAM",".",0)
+)
+else
+(
+  &CORE=""
+  &COMPNAME="&COMPPARAM"
+)
+
+if "&CMD"=="DIALOG_CLOSE"
+(
+   dialog.end
+   ENDDO
+)
+
+if "&CMD"=="DIALOG_SET"
+(
+  gosub dialogset
+  enddo
+)
+if "&CMD"=="DIALOG_GET"
+(
+  gosub dialogget
+  enddo
+)
+if "&CMD"=="DIALOG_SET_INIT"
+  goto dialogsetinit
+if "&CMD"=="DIALOG_REGISTERS"
+  goto showregisters
+if "&CMD"=="DIALOG_PREV_CORE"
+  goto prevcore  
+if "&CMD"=="DIALOG_NEXT_CORE"
+  goto nextcore
+if "&CMD"=="DIALOG_SHOWPROGRAMMING"
+  goto showprogramming
+
+if "&CMD"=="set"
+(
+  if !comp.available("&COMPNAME")
+  (
+    print %error "&SCRIPTNAME: ETR <&COMPNAME> not available"
+    goto help;
+  )
+  if "&PAR1"=="DAB64"
+  (
+    local &LO &HI
+    &LO=(&PAR2)&0xFFFFFFFF
+    if ((&(LO)&0xF)!=0x0)
+      print %WARNING "&SCRIPTNAME: DAB should be aligned to 16 byte addresses."
+    &HI=(&PAR2)>>32.
+    gosub writereg64 0x118 &PAR2 0xFFFFFFFFFFFFFFFF
+    if (&(LO)==0x0&&&(HI)==0x0)
+      print %WARNING "&SCRIPTNAME: the onchip trace kept in OFF state with a DAB value of 0x0."
+    ENDDO
+  )
+  if "&PAR1"=="DAB"
+  (
+    local &LO &HI
+    &LO=(&PAR2)&0xFFFFFFFF
+    if ((&(LO)&0xF)!=0x0)
+      print %WARNING "&SCRIPTNAME: DAB should be aligned to 16 byte addresses."
+    &HI=(&PAR2)>>32.
+    gosub writereg 0x118 &LO 0xFFFFFFFF
+    gosub writereg 0x11C &HI 0xFFFFFFFF
+    if (&(LO)==0x0&&&(HI)==0x0)
+      print %WARNING "&SCRIPTNAME: the onchip trace kept in OFF state with a DAB value of 0x0."
+    ENDDO
+  )
+  if "&PAR1"=="DABLO"
+  (
+    local &LO
+    &LO=(&PAR2)&0xFFFFFFFF
+    if ((&(LO)&0xF)!=0x0)
+      print %WARNING "&SCRIPTNAME: DAB should be aligned to 16 byte addresses."
+    gosub writereg 0x118 &LO 0xFFFFFFFF
+    ENDDO
+  )
+  if "&PAR1"=="DABHI"
+  (
+    local &HI
+    &HI=(&PAR2)&0xFFFFFFFF
+    gosub writereg 0x11C &HI 0xFFFFFFFF
+    ENDDO
+  )
+  if "&PAR1"=="RSZ"
+  (
+    local &RSZ
+    &RSZ=(&PAR2)&0xFFFFFFFF
+    if ((&(PAR2)&0x3)!=0x0)
+      print %WARNING "&SCRIPTNAME: RSZ should be aligned to 16 byte addresses."
+    gosub writereg 0x4 &RSZ 0xFFFFFFFF
+    ENDDO
+  )
+  if "&PAR1"=="AXICTL"
+  (
+    if "&PAR3"==""
+      gosub writereg 0x110 &PAR2 0xFFFFFFFF
+    else
+      gosub writereg 0x110 &PAR2 &PAR3
+    ENDDO
+  )
+  print "unkown property <&PAR1>"
+  goto help
+)
+
+if "&CMD"!=""
+(
+  print %error "&SCRIPTNAME: unknown command &CMD"
+  goto help;
+)
+
+if ("&COMPNAME"!="")&&!comp.available("&COMPNAME")
+(
+  print %error "&SCRIPTNAME: ETR <&COMPNAME> not available"
+  goto help;
+)
+
+if "&COMPNAME"==""
+(
+  if comp.available("ETR1")
+    &COMPNAME="ETR1"
+  else if comp.available("ETR2")
+    &COMPNAME="ETR2"
+  else if comp.available("ETR3")
+    &COMPNAME="ETR3"
+  else if comp.available("ETR4")
+    &COMPNAME="ETR4"
+  else if comp.available("ETR5")
+    &COMPNAME="ETR5"
+  else
+  (
+    print %error "&SCRIPTNAME: no ETR available, use SYStem.CONFIG.ETR.Base !"
+    goto help
+    ENDDO
+  )
+)
+
+if "&CMD"==""
+  goto createdialog
+
+print %error "&SCRIPTNAME: unknown command: &CMD"
+goto help
+ENDDO
+
+checkaccess:
+if !comp.available("&COMPNAME")
+(
+  print %error "&SCRIPTNAME: ETR <&COMPNAME> not available"
+  goto help;
+)
+if "&CORE"!=""
+(
+  if &CORE>=CORE.NUMBER()
+  (
+    print %error "&SCRIPTNAME: Core index exceeds CORE.NUMBER()"	
+    goto help;
+  )
+)
+if !SYStem.up()||run()
+(
+  print %error "&SCRIPTNAME: CPU must be in debug mode"
+  goto help
+)
+return
+
+checkversion:
+local &id0 &id1 &id2 &id3 &devid &soc
+&soc=0.
+if &SOCVERSION==0.
+(
+	gosub checkaccess
+	gosub readreg 0xfe0
+	entry &id0
+	gosub readreg 0xfe4
+	entry &id1
+	gosub readreg 0xfe8
+	entry &id2
+	gosub readreg 0xfec
+	entry &id3
+	if ((&id0==0x61)&&(&id1==0xb9)&&((&id2&0x0f)==0x0b))
+		&soc=400.
+	else if (((&id0==0xea)||(&id0==0xe8)||(&id0==0xe9))&&(&id1==0xb9)&&(&id2&0x0f)==0x0b)
+		&soc=600.
+	else
+	(
+		print &error "&SCRIPTNAME: unknown Coresight ID id0 &id0 id1 &id1 id2 &id2 id3 &id3"
+		goto help
+	)
+	gosub readreg 0xfc8
+	entry &devid
+	if ((&devid>>6.)&0x3)!=0x1
+	(
+		print &error "&SCRIPTNAME: DEVID does not match to ETR"
+		goto help
+	)
+	&SOCVERSION=&soc		
+)
+return
+
+readreg:
+local &OFFSET &i &RES &OLDCORE &NEWCORE
+entry &OFFSET
+
+gosub checkaccess
+&OLDCORE=core()
+if "&CORE"!=""
+  &NEWCORE=&CORE
+else
+  &NEWCORE=core()
+if address.offset(comp.base("&COMPNAME",&NEWCORE))==0x0
+(
+  print %error "&SCRIPTNAME: no address set for &COMPNAME.&NEWCORE"	
+  goto help;
+)
+if &NEWCORE!=&OLDCORE
+  core &NEWCORE
+&RES=data.long(comp.base("&COMPNAME",&NEWCORE)+&OFFSET)
+if &NEWCORE!=&OLDCORE
+  core &OLDCORE
+return &RES
+
+readreg64:
+local &OFFSET &i &RES &OLDCORE &NEWCORE
+entry &OFFSET
+
+gosub checkaccess
+&OLDCORE=core()
+if "&CORE"!=""
+  &NEWCORE=&CORE
+else
+  &NEWCORE=core()
+if address.offset(comp.base("&COMPNAME",&NEWCORE))==0x0
+(
+  print %error "&SCRIPTNAME: no address set for &COMPNAME.&NEWCORE"	
+  goto help;
+)
+if &NEWCORE!=&OLDCORE
+  core &NEWCORE
+&RES=data.quad(comp.base("&COMPNAME",&NEWCORE)+&OFFSET)
+if &NEWCORE!=&OLDCORE
+  core &OLDCORE
+return &RES
+
+writereg:
+local &OFFS &VALUE &MASK &NEWVALUE &READVALUE &OLDCORE &NEWCORE
+entry &OFFS &VALUE &MASK
+
+gosub checkaccess
+
+&OLDCORE=core()
+if "&CORE"!=""
+  &NEWCORE="&CORE"
+else
+  &NEWCORE=0.
+
+writeregreadcore:
+  if address.offset(comp.base("&COMPNAME",&NEWCORE))==0x0
+  (
+    if "&CORE"!=""
+    (
+      print %error "&SCRIPTNAME: no address set for &COMPNAME.&NEWCORE"	
+      goto help;
+    )
+  )
+  else
+  (
+    if &NEWCORE!=core()
+      core &NEWCORE
+    &NEWVALUE=&VALUE
+    if "&MASK"!=""
+    (
+      if (&MASK!=0xFFFFFFFF)
+      (
+        &READVALUE=data.long(comp.base("&COMPNAME",&NEWCORE)+&OFFS)
+        &NEWVALUE=(&READVALUE&~(&MASK))|((&VALUE)&(&MASK))
+      )
+    )
+    data.set comp.base("&COMPNAME", &NEWCORE)+&OFFS %long &NEWVALUE /verify
+  )
+  if "&CORE"==""
+  (
+    &NEWCORE=&NEWCORE+1.
+    if &NEWCORE<CORE.NUMBER()
+      goto writeregreadcore
+  )
+
+if &OLDCORE!=core()
+  core &OLDCORE
+return
+
+writereg64:
+local &OFFS &VALUE &MASK &NEWVALUE &READVALUE &OLDCORE &NEWCORE
+entry &OFFS &VALUE &MASK
+
+gosub checkaccess
+
+&OLDCORE=core()
+if "&CORE"!=""
+  &NEWCORE="&CORE"
+else
+  &NEWCORE=0.
+
+writeregreadcore64:
+  if address.offset(comp.base("&COMPNAME",&NEWCORE))==0x0
+  (
+    if "&CORE"!=""
+    (
+      print %error "&SCRIPTNAME: no address set for &COMPNAME.&NEWCORE"	
+      goto help;
+    )
+  )
+  else
+  (
+    if &NEWCORE!=core()
+      core &NEWCORE
+    &NEWVALUE=&VALUE
+    if "&MASK"!=""
+    (
+      if (&MASK!=0xFFFFFFFFFFFFFFFF)
+      (
+        &READVALUE=data.quad(comp.base("&COMPNAME",&NEWCORE)+&OFFS)
+        &NEWVALUE=(&READVALUE&~(&MASK))|((&VALUE)&(&MASK))
+      )
+    )
+    data.set comp.base("&COMPNAME", &NEWCORE)+&OFFS %quad &NEWVALUE /verify
+  )
+  if "&CORE"==""
+  (
+    &NEWCORE=&NEWCORE+1.
+    if &NEWCORE<CORE.NUMBER()
+      goto writeregreadcore64
+  )
+
+if &OLDCORE!=core()
+  core &OLDCORE
+return
+
+
+; ------------------------------------------------------------------------------------------
+; ----------------------------------------- SOC400 -----------------------------------------
+; ------------------------------------------------------------------------------------------
+
+createdialog400:
+
+dialog
+(&+
+header "ETR Utility &SCRIPTVERSION"
+
+pos 1. 0. 18. 1.
+text "ETR Name"
+posx 1. 11. 1.
+val.CompName:	edit "" ""
+posx -30. 1. 1.
+
+posy 1. 14. 1.
+text "Core"
+posx 1. 3. 1.
+BUTTON "<" "do ""&PPF"" NONE DIALOG_PREV_CORE"
+posx 1. 11. 1.
+val.Core:	edit "" ""
+posx 1. 3. 1.
+BUTTON ">" "do ""&PPF"" NONE DIALOG_NEXT_CORE"
+posx -34. 1. 1.
+
+posy 1. 18. 1.
+text "AXIBase"
+posx 1. 18. 1.
+val.AXIBase:	edit "" ""
+posx -37. 1. 1.
+
+posy 1. 18. 1.
+text "Size (bytes)"
+posx 1. 11. 1.
+val.Size:	edit "" ""
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "BurstLen"
+posx 1. 11. 1.
+val.BurstLen400: PULLDOWN "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "ScatterGatherMode"
+posx 1. 11. 1.
+val.ScatterGatherMode400: PULLDOWN "Disabled,Enabled"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "CacheAllocateOnWrites"
+posx 1. 11. 1.
+val.CacheAllocateOnWrites400: PULLDOWN "Disabled,Enabled"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "CacheAllocateOnReads"
+posx 1. 11. 1.
+val.CacheAllocateOnReads400: PULLDOWN "Disabled,Enabled"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "Cacheable"
+posx 1. 11. 1.
+val.Cacheable400: PULLDOWN "No,Yes"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "Bufferable"
+posx 1. 11. 1.
+val.Bufferable400: PULLDOWN "No,Yes"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "SecureAccess"
+posx 1. 11. 1.
+val.SecureAccess400: PULLDOWN "Yes,No"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "PrivilegedAccess"
+posx 1. 11. 1.
+val.PrivilegedAccess400: PULLDOWN "No,Yes"
+(
+)
+posx -30. 1. 1.
+
+posy 2. 10. 1.
+BUTTON "Get" "do ""&PPF"" NONE DIALOG_GET"
+posx 1. 10. 1.
+BUTTON "Set" "do ""&PPF"" NONE DIALOG_SET"
+posx 1. 10. 1.
+BUTTON "Set && Init" "do ""&PPF"" NONE DIALOG_SET_INIT"
+
+posx -32. 1. 1.
+
+posy 1. 10. 1.
+BUTTON "Register" "do ""&PPF"" NONE DIALOG_REGISTERS"
+posx 1. 10. 1.
+BUTTON "Show Programming" "do ""&PPF"" NONE DIALOG_SHOWPROGRAMMING"
+posx 1. 10. 1.
+BUTTON "CLOSE" "do ""&PPF"" NONE DIALOG_CLOSE"
+
+)
+
+return
+
+; ------------------------------------------------------------------------------------------
+; ----------------------------------------- SOC600 -----------------------------------------
+; ------------------------------------------------------------------------------------------
+
+createdialog600:
+
+dialog
+(&+
+header "ETR Utility &SCRIPTVERSION"
+
+pos 1. 0. 18. 1.
+text "ETR Name"
+posx 1. 11. 1.
+val.CompName:	edit "" ""
+posx -30. 1. 1.
+
+posy 1. 14. 1.
+text "Core"
+posx 1. 3. 1.
+BUTTON "<" "do ""&PPF"" NONE DIALOG_PREV_CORE"
+posx 1. 11. 1.
+val.Core:	edit "" ""
+posx 1. 3. 1.
+BUTTON ">" "do ""&PPF"" NONE DIALOG_NEXT_CORE"
+posx -34. 1. 1.
+
+posy 1. 18. 1.
+text "AXIBase"
+posx 1. 18. 1.
+val.AXIBase:	edit "" ""
+posx -37. 1. 1.
+
+posy 1. 18. 1.
+text "Size (bytes)"
+posx 1. 11. 1.
+val.Size:	edit "" ""
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "BurstLen"
+posx 1. 11. 1.
+val.BurstLen600: PULLDOWN "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16"
+(
+)
+posx -30. 1. 1.
+
+
+posy 1. 18. 1.
+text "Cache"
+posx 1. 18. 1.
+val.Cache600: PULLDOWN "&C_DEV_NB,&C_DEV_B,&C_NOR_NC_NB,&C_NOR_NC_B,&C_WT_NA,&C_WT_RA,&C_WT_WA,&C_WT_RA_WA,&C_WB_NA,&C_WB_RA,&C_WB_WA,&C_WB_WA_RA,&C_RESERVED"
+(
+)
+posx -37. 1. 1.
+
+
+posy 1. 18. 1.
+text "PrivilegedAccess"
+posx 1. 11. 1.
+val.ProtCtrlBit0600: PULLDOWN "No,Yes"
+(
+)
+posx -30. 1. 1.
+
+posy 1. 18. 1.
+text "SecureAccess"
+posx 1. 11. 1.
+val.ProtCtrlBit1600: PULLDOWN "No,Yes"
+(
+)
+posx -30. 1. 1.
+
+
+posy 2. 10. 1.
+BUTTON "Get" "do ""&PPF"" NONE DIALOG_GET"
+posx 1. 10. 1.
+BUTTON "Set" "do ""&PPF"" NONE DIALOG_SET"
+posx 1. 10. 1.
+BUTTON "Set && Init" "do ""&PPF"" NONE DIALOG_SET_INIT"
+
+posx -32. 1. 1.
+
+posy 1. 10. 1.
+BUTTON "Register" "do ""&PPF"" NONE DIALOG_REGISTERS"
+posx 1. 10. 1.
+BUTTON "Show Programming" "do ""&PPF"" NONE DIALOG_SHOWPROGRAMMING"
+posx 1. 10. 1.
+BUTTON "CLOSE" "do ""&PPF"" NONE DIALOG_CLOSE"
+
+)
+
+return
+
+createdialog:
+gosub checkversion
+if &SOCVERSION==400.
+	gosub createdialog400
+else if &SOCVERSION==600.
+	gosub createdialog600
+	
+dialog.set val.CompName "&COMPNAME"
+dialog.set val.AXIBase "0x0"
+dialog.set val.Size "0x0"
+dialog.set val.Core "&CORE"
+if system.up()&&!run()
+  gosub dialogget
+ENDDO
+
+updatecompnameandcore:
+&COMPNAME=dialog.string(val.CompName)
+&CORE=dialog.string(val.Core)
+if "&CORE"!=""&&(STRing.SCAN("&CORE", "x", 0)==-1)&&(STRing.SCAN("&CORE", ".", 0)==-1)
+  &CORE="&CORE."
+return
+
+nextcore:
+local &newcore
+gosub updatecompnameandcore
+;if SYStem.up()&&!run()
+;  gosub dialogset
+&newcore="&CORE"
+nextcoretry:
+  if "&newcore"==""
+    &newcore=0.
+  else
+    &newcore=&newcore+1.
+  if &newcore<core.number()
+  (
+    if address.offset(comp.base("&COMPNAME",&newcore))==0x0
+      goto nextcoretry
+  )
+  else
+    &newcore=""
+if "&newcore"!=""
+(
+  &CORE=&newcore
+  dialog.set val.Core "&CORE"
+  if SYStem.up()&&!run()
+	gosub dialogget
+)
+enddo
+
+prevcore:
+local &newcore
+gosub updatecompnameandcore
+;if SYStem.up()&&!run()
+;  gosub dialogset
+&newcore="&CORE"
+if "&newcore"==""
+  enddo
+nextcoretry:
+    &newcore=&newcore-1.
+    if &newcore>=0
+    (
+      if address.offset(comp.base("&COMPNAME",&newcore))==0x0
+        goto nextcoretry
+    )
+  if &newcore>=0
+    &CORE=&newcore
+  else
+    &CORE=""
+  dialog.set val.Core "&CORE"
+  if SYStem.up()&&!run()
+	gosub dialogget
+enddo
+
+showregisters:
+gosub updatecompnameandcore
+if !comp.available("&COMPNAME")
+(
+  print %error "ETR <&COMPNAME> not available"
+  goto help;
+)
+local &COMPADDR
+if "&CORE"==""
+(
+  &COMPADDR="comp.base(""&COMPNAME"",-1)"
+  &COMPADDR=&COMPADDR
+  per "~~/percoresight.per" &COMPADDR /DP
+)
+else
+(
+  &COMPADDR="comp.base(""&COMPNAME"",&CORE)"
+  &COMPADDR=&COMPADDR
+  per "~~/percoresight.per" &COMPADDR /DP /Core &CORE
+)
+ENDDO
+
+setorshow:
+local &tmp &tmp2 &tmp3 &AXIREG &AXIREGMASK &COMPELEMENT
+gosub checkversion
+&tmp=dialog.string(val.AXIBase)
+&tmp=&tmp&~0xF
+dialog.set val.AXIBase "0x"+Format.Hex(16.,&tmp)
+
+&COMPELEMENT="&COMPNAME"
+if "&CORE"!=""
+  &COMPELEMENT="&COMPNAME."+Format.Decimal(0.,&CORE)
+&WRITEOREXECUTE DO "&WRITEOREXECUTEPATH" &COMPELEMENT set DAB &tmp
+&tmp3=dialog.string(val.Size)
+&tmp3=&tmp3&~0xF
+dialog.set val.Size "&tmp3"
+&tmp="0x"+Format.Hex(0,&tmp3)
+&tmp2=&tmp>>2.
+&WRITEOREXECUTE DO "&WRITEOREXECUTEPATH" &COMPELEMENT set RSZ &tmp2
+&AXIREG=0x0
+&AXIREGMASK=0x0
+
+if &SOCVERSION==400.
+(
+	&tmp=dialog.string(val.BurstLen400)+"."
+	&AXIREG=&AXIREG|((&tmp-1.)<<8.)
+	&AXIREGMASK=&AXIREGMASK|(0xF<<8.)
+	if dialog.string(val.ScatterGatherMode400)=="Enabled"
+	  &AXIREG=&AXIREG|(1.<<7.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<7.)
+	if dialog.string(val.CacheAllocateOnWrites400)=="Enabled"
+	  &AXIREG=&AXIREG|(1.<<5.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<5.)
+	if dialog.string(val.CacheAllocateOnReads400)=="Enabled"
+	  &AXIREG=&AXIREG|(1.<<4.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<4.)
+	if dialog.string(val.Cacheable400)=="Yes"
+	  &AXIREG=&AXIREG|(1.<<3.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<3.)
+	if dialog.string(val.Bufferable400)=="Yes"
+	  &AXIREG=&AXIREG|(1.<<2.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<2.)
+	if dialog.string(val.SecureAccess400)=="No"
+	  &AXIREG=&AXIREG|(1.<<1.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<1.)
+	if dialog.string(val.PrivilegedAccess400)=="Yes"
+	  &AXIREG=&AXIREG|(1.<<0.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<0.)
+)
+else if &SOCVERSION==600.
+(
+	local &ARCACHE &AWCACHE &CACHEVALUE
+	&ARCACHE = 0.
+	&AWCACHE = 0.
+	&CACHEVALUE=dialog.string(val.Cache600)
+
+	if "&C_DEV_NB"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y0000
+		&AWCACHE=0y0000
+	)
+	else if "&C_DEV_B"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y0001
+		&AWCACHE=0y0001
+	)
+	else if "&C_NOR_NC_NB"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y0010
+		&AWCACHE=0y0010
+	)
+	else if "&C_NOR_NC_B"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y0011
+		&AWCACHE=0y0011
+	)
+	else if "&C_WT_NA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1010
+		&AWCACHE=0y0110
+	)
+	else if "&C_WT_RA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1110
+		&AWCACHE=0y0110
+	)
+	else if "&C_WT_WA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1010
+		&AWCACHE=0y1010
+	)
+	else if "&C_WT_RA_WA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1110
+		&AWCACHE=0y1110
+	)
+	else if "&C_WB_NA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1011
+		&AWCACHE=0y0111
+	)
+	else if "&C_WB_RA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1111
+		&AWCACHE=0y1110
+	)
+	else if "&C_WB_WA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1011
+		&AWCACHE=0y1011
+	)
+	else if "&C_WB_WA_RA"=="&CACHEVALUE"
+	(
+		&ARCACHE=0y1111
+		&AWCACHE=0y1111
+	)
+	&AXIREG=&AXIREG|((&AWCACHE)<<2.)
+	&AXIREGMASK=&AXIREGMASK|(0xF<<2.)
+	&AXIREG=&AXIREG|((&ARCACHE)<<16.)
+	&AXIREGMASK=&AXIREGMASK|(0xF<<16.)
+
+	&tmp=dialog.string(val.BurstLen600)+"."
+	&AXIREG=&AXIREG|((&tmp-1.)<<8.)
+	&AXIREGMASK=&AXIREGMASK|(0xF<<8.)
+
+	if dialog.string(val.ProtCtrlBit1600)=="No"
+	  &AXIREG=&AXIREG|(1.<<1.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<1.)
+
+	if dialog.string(val.ProtCtrlBit0600)=="Yes"
+	  &AXIREG=&AXIREG|(1.<<0.)
+	&AXIREGMASK=&AXIREGMASK|(1.<<0.)
+)
+&tmp2="0x"+Format.Hex(8,&AXIREG)
+&tmp3="0x"+Format.Hex(8,&AXIREGMASK)
+
+&WRITEOREXECUTE DO "&WRITEOREXECUTEPATH" &COMPELEMENT set AXICTL &tmp2 &tmp3
+return
+
+showprogramming:
+gosub updatecompnameandcore
+local &WRITEOREXECUTE &WRITEOREXECUTEPATH
+private &PSD
+&WRITEOREXECUTEPATH="&PPF"
+&PSD=OS.FILE.JOINPATH(OS.PSD())
+IF OS.NAME()=="Windows"
+(
+  &WRITEOREXECUTEPATH=STRing.Replace("&WRITEOREXECUTEPATH","\","/",0)
+  &PSD=STRing.Replace("&PSD","\","/",0)
+)
+IF STRing.ComPare("&WRITEOREXECUTEPATH","&PSD/*")
+  &WRITEOREXECUTEPATH=STRing.Replace("&WRITEOREXECUTEPATH","&PSD","~~",1)
+&WRITEOREXECUTE="gosub showprogramming_writeline"
+&FILEOPEN=1.
+open #1 "&PTD/etrprogramming.cmm" /CREATE
+write #1 ";Created by ETR Utility &SCRIPTVERSION"
+;write #1 "if !SYStem.up()||run()"
+;write #1 "("
+;write #1 "  print %error ""CPU must be in debug mode"""
+;write #1 "  plist"
+;write #1 "  stop"
+;write #1 ")"
+write #1 "Onchip.DISable"
+gosub setorshow
+write #1 "Onchip.TraceCONNECT &COMPNAME"
+write #1 "Trace.METHOD Onchip"
+write #1 "Onchip.Init"
+write #1 "Onchip"
+write #1 "ENDDO"
+close #1
+pedit "&PTD/etrprogramming.cmm"
+ENDDO
+
+showprogramming_writeline:
+local &cmd
+entry %line &cmd
+write #1 "&cmd"
+return
+
+dialogset:
+gosub updatecompnameandcore
+local &WRITEOREXECUTE &WRITEOREXECUTEPATH
+&WRITEOREXECUTE=""
+&WRITEOREXECUTEPATH="&PPF"
+onchip.disable
+gosub setorshow
+return
+
+dialogsetinit:
+gosub updatecompnameandcore
+local &WRITEOREXECUTE &WRITEOREXECUTEPATH
+&WRITEOREXECUTE=""
+&WRITEOREXECUTEPATH="&PPF"
+onchip.disable
+gosub setorshow
+onchip.traceconnect &COMPNAME
+onchip.init
+trace.method onchip
+onchip
+ENDDO
+
+dialogget:
+gosub updatecompnameandcore
+gosub checkversion
+
+local &DBALO &DBAHI
+gosub readreg 0x118
+entry &DBALO
+gosub readreg 0x11C
+entry &DBAHI
+dialog.set val.AXIBase "0x"+Format.Hex(16.,(&DBAHI<<32.|&DBALO))
+local &RSZ
+gosub readreg 0x4
+entry &RSZ
+dialog.set val.Size "0x"+Format.Hex(0.,&RSZ*4)
+local &AXICTL
+gosub readreg 0x110
+entry &AXICTL
+
+if &SOCVERSION==400.
+(
+	dialog.set val.BurstLen400 Format.Decimal(0.,((&AXICTL>>8.)&0xF)+1.)
+	gosub dialogsetbool ((&AXICTL>>7.)&0x1)==0x1  ScatterGatherMode400 Disabled Enabled
+	gosub dialogsetbool ((&AXICTL>>5.)&0x1)==0x1  CacheAllocateOnWrites400 Disabled Enabled
+	gosub dialogsetbool ((&AXICTL>>4.)&0x1)==0x1  CacheAllocateOnReads400 Disabled Enabled
+	gosub dialogsetbool ((&AXICTL>>3.)&0x1)==0x1  Cacheable400 No Yes
+	gosub dialogsetbool ((&AXICTL>>2.)&0x1)==0x1  Bufferable400 No Yes
+	gosub dialogsetbool ((&AXICTL>>1.)&0x1)==0x1  SecureAccess400 Yes No
+	gosub dialogsetbool ((&AXICTL>>0.)&0x1)==0x1  PrivilegedAccess400 No Yes
+)
+else if &SOCVERSION==600.
+(
+	dialog.set val.BurstLen600 Format.Decimal(0.,((&AXICTL>>8.)&0xF)+1.)
+
+	local &CACHEVALUE &AWCACHE &ARCACHE
+	&CACHEVALUE="&C_RESERVED"
+	&AWCACHE=(&AXICTL>>2.)&0xF
+	&ARCACHE=(&AXICTL>>16.)&0xF
+	if (&ARCACHE==0y0000)&&(&AWCACHE==0y0000)
+		&CACHEVALUE="&C_DEV_NB"
+	else if (&ARCACHE==0y0001)&&(&AWCACHE==0y0001)
+		&CACHEVALUE="&C_DEV_B"
+	else if (&ARCACHE==0y0010)&&(&AWCACHE==0y0010)
+		&CACHEVALUE="&C_NOR_NC_NB"
+	else if (&ARCACHE==0y0011)&&(&AWCACHE==0y0011)
+		&CACHEVALUE="&C_NOR_NC_B"
+	else if (&ARCACHE==0y1010)&&(&AWCACHE==0y0110)
+		&CACHEVALUE="&C_WT_NA"
+	else if ((&ARCACHE==0y1110)||(&ARCACHE==0y0110))&&(&AWCACHE==0y0110)
+		&CACHEVALUE="&C_WT_RA"
+	else if (&ARCACHE==0y1010)&&((&AWCACHE==0y1110)||(&AWCACHE==0y1010))
+		&CACHEVALUE="&C_WT_WA"
+	else if (&ARCACHE==0y1110)&&(&AWCACHE==0y1110)
+		&CACHEVALUE="&C_WT_RA_WA"
+	else if (&ARCACHE==0y1011)&&(&AWCACHE==0y0111)
+		&CACHEVALUE="&C_WB_NA"
+	else if ((&ARCACHE==0y1111)||(&ARCACHE==0y0111))&&(&AWCACHE==0y1110)
+		&CACHEVALUE="&C_WB_RA"
+	else if (&ARCACHE==0y1011)&&((&AWCACHE==0y1111)||(&AWCACHE==0y1011))
+		&CACHEVALUE="&C_WB_WA"
+	else if (&ARCACHE==0y1111)&&(&AWCACHE==0y1111)
+		&CACHEVALUE="&C_WB_WA_RA"
+	dialog.set val.Cache600 "&CACHEVALUE"
+	gosub dialogsetbool ((&AXICTL>>1.)&0x1)==0x1  ProtCtrlBit1600 Yes No
+	gosub dialogsetbool ((&AXICTL>>0.)&0x1)==0x1  ProtCtrlBit0600 No Yes
+)
+
+
+return
+
+dialogsetbool:
+local &VAL &NAME &FALSENAME &TRUENAME &VAL2
+entry &VAL &NAME &FALSENAME &TRUENAME
+&VAL2=&VAL
+if &VAL2
+  dialog.set val.&NAME "&TRUENAME"
+else
+  dialog.set val.&NAME "&FALSENAME"
+return

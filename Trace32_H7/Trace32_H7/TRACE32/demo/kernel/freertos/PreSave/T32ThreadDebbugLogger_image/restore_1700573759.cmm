@@ -1,0 +1,32 @@
+; Created by FreeRTOS ramdump.cmm - $Id: ramdump.cm 8179 2022-11-11 06:41:18Z amerkle $
+; 21. Nov 2023 on Windows
+
+IF !SIMULATOR()
+(
+  PRINT %ERROR "Please execute this script in a TRACE32 Simulator!"
+  ENDDO
+)
+
+RESet
+SYStem.RESet
+SYStem.CPU STM32H747XI-CM7
+SYStem.Up
+List
+
+; Restore memory contents
+Data.LOAD.Binary ~~~~/1700573759_mem_ad_0x8040000--0x806a2bf.bin.gz AD:0x8040000--0x806a2bf /UNZIP /NosYmbol
+Data.LOAD.Binary ~~~~/1700573759_mem_ad_0x24000000--0x24014737.bin.gz AD:0x24000000--0x24014737 /UNZIP /NosYmbol
+Data.LOAD.Binary ~~~~/1700573759_mem_ad_0x30000000--0x30043fff.bin.gz AD:0x30000000--0x30043fff /UNZIP /NosYmbol
+Data.LOAD.Binary ~~~~/1700573759_mem_ad_0x38000000--0x3800fbff.bin.gz AD:0x38000000--0x3800fbff /UNZIP /NosYmbol
+
+; Restore registers per logical core
+DO ~~~~/1700573759_reg_core0.cmm
+DO ~~~~/1700573759_spr_core0_current.cmm
+DO ~~~~/1700573759_reg_core0.cmm
+
+Data.LOAD.Elf "~~/demo/T32ThreadDebugLogger/T32ThreadDebugLogger.ino.elf"  /NoCODE
+
+TASK.CONFIG "~~/demo/kernel/rtxarm/v5/rtx.t32" 
+MENU.ReProgram "~~/demo/kernel/rtxarm/v5/rtx.men"
+
+ENDDO

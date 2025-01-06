@@ -1,0 +1,5 @@
+Cortex-M does not support communication via a Debug Communication Channel (DCC) and has no swi instruction to be attached to the t32swi.c translation.
+Therefore this semihosting method can not be used.
+
+The semihosting_arm_syscalls sample uses the BUFFERE method to communicate via dual port memory. The translation is done by replacing the system calls of the Std C lib.
+

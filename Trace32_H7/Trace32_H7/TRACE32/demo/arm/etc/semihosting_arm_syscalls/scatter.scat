@@ -1,0 +1,35 @@
+#! armcc -E
+
+#define RAM_BASE    0x04000100
+#define CODE_SIZE   0x10000
+#define DATA_SIZE   0x1000
+#define HEAP_SIZE   0x20000
+#define STACK_SIZE  0x10000
+
+#define HEAP_BASE   (RAM_BASE+DATA_SIZE+CODE_SIZE)
+#define STACK_BASE  (HEAP_BASE+HEAP_SIZE+STACK_SIZE)
+#define DATA_BASE   (RAM_BASE+CODE_SIZE)
+#define RWDATA_SIZE (DATA_SIZE+HEAP_SIZE+STACK_SIZE)
+#define TOTAL_SIZE  (CODE_SIZE+DATA_SIZE+HEAP_SIZE)
+
+SDRAM RAM_BASE TOTAL_SIZE
+{
+	RO_CODE +0
+	{ * (+RO-CODE) }            ; Application RO code (.text)
+
+	RO_DATA +0
+	{ * (+RO-DATA) }            ; Application RO data (.constdata)
+
+	RW_DATA +0
+	{ * (+RW) }                 ; Application RW data (.data)
+
+	ZI_DATA +0
+	{ * (+ZI) }                 ; Application ZI data (.bss)
+
+	ARM_LIB_HEAP  HEAP_BASE EMPTY  HEAP_SIZE ; Application heap
+	{ }
+
+	ARM_LIB_STACK STACK_BASE EMPTY -STACK_SIZE ; Application (SVC mode) stack
+	{ }
+}
+

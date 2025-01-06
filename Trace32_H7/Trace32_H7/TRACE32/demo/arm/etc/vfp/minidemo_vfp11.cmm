@@ -1,0 +1,56 @@
+; --------------------------------------------------------------------------------
+; @Title: Example Script for VFP11 Operation on ARM Integrator Core Module CM1136JF-S
+; @Description: 
+;   Example script file for VFP11 operation on ARM Integrator Core Module 
+;   CM1136JF-S
+; @Keywords: floating, FPU
+; @Author: PEG
+; @Board: Integrator Core Module
+; @Chip: ARM1136JF-S
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: minidemo_vfp11.cmm 20985 2023-06-09 09:41:11Z aabdellatif $
+
+;   January 2008, PEG
+
+; start-up debugger
+  SYStem.RESet
+  SYStem.CPU ARM1136JF
+  SYStem.Option ResBreak OFF
+; deprecated   SYStem.MultiCore IRPRE 4
+; deprecated   SYStem.MultiCore DRPRE 1
+  SYStem.CONFIG.IRPRE 4
+  SYStem.CONFIG.DRPRE 1
+  SYStem.Up
+
+; load demo application
+  Data.LOAD.Elf minidemo_vfp11.axf
+  Register.Set CPSR 0xd3
+  Register.Set R13 0x10000
+
+; enable VFP coprocessor access CP10, CP11
+  Data.Set C15:0x0201 %Long 0x00f00000
+
+; enable VFP and clear exception flag
+  FPU.Set FPEXC 0x40000000
+
+; patch the result (HEAPINFO) which normally needs to be provided by a SWI routine
+  Go.direct 0x08 /Program /Onchip
+  WAIT 0.5s
+  IF STATE.RUN()||Register(pc)!=0x08
+    STOP "not reached swi"
+  Data.Set Data.Long(D:Register(R1))+0x08 %Long 0x0f800
+  Data.Set Data.Long(D:Register(R1))+0x0c %Long 0x10000
+  Register.Set PC Register(R14)
+
+  Go.direct main
+
+; open some windows
+  WinCLEAR
+  WinPOS 0% 0% 50% 50%
+  List.auto
+  WinPOS 50% 0% 50% 100%
+  FPU.view
+  
+  ENDDO
+

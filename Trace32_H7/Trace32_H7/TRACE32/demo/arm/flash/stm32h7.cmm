@@ -1,0 +1,292 @@
+; --------------------------------------------------------------------------------
+; @Title: Flash declaration for ST STM32H7 series internal flash
+; @Description:
+;   Script arguments:
+;     DO stm32h7 [PREPAREONLY] [CPU=<cpu>]
+;       PREPAREONLY    only declares flash but does not execute flash programming
+;       CPU=<cpu>      selects CPU derivative <cpu>
+;   Example:
+;     DO ~~/demo/arm/flash/stm32h7 PREPAREONLY CPU=STM32H743BI
+;   Note:
+;     This file must NOT be modified.
+;     This file is intended to stay within TRACE32 installation.
+;     Usage examples are available in the ~~/demo/arm/hardware/... subdirectories.
+;
+;
+;   List of STM32H7 derivatives and their configuration:
+;     CPU-Type          Program Flash
+;                          [Byte]
+; --------------------------------------------------------------------------------
+;     
+;   STM32H72xE:            512KB
+;     STM32H723VE
+;     STM32H723ZE
+;     STM32H725AE
+;     STM32H725IE
+;     STM32H725RE
+;     STM32H725VE
+;     STM32H725ZE
+;   STM32H72xG:            1M
+;     STM32H723VG
+;     STM32H723ZG
+;     STM32H725AG
+;     STM32H725IG
+;     STM32H725RG
+;     STM32H725VG
+;     STM32H725ZG
+;   STM32H73xB:            128KB
+;     STM32H730AB
+;     STM32H730IB
+;     STM32H730VB
+;     STM32H730ZB
+;   STM32H73xG:            1M
+;     STM32H733VG
+;     STM32H733ZG
+;     STM32H735AG
+;     STM32H735IG
+;     STM32H735RG
+;     STM32H735VG
+;     STM32H735ZG
+;   STM32H742xG:            1M
+;     STM32H742VG
+;     STM32H742ZG
+;     STM32H742IG
+;     STM32H742BG
+;     STM32H742XG
+;     STM32H742AG
+;   STM32H742xI:            2M
+;     STM32H742VI
+;     STM32H742ZI
+;     STM32H742II
+;     STM32H742BI
+;     STM32H742XI
+;     STM32H742AI
+;   STM32H743xG:            1M
+;     STM32H743VG
+;     STM32H743ZG
+;     STM32H743IG
+;     STM32H743BG
+;     STM32H743XG
+;     STM32H743AG
+;   STM32H743xI:            2M
+;     STM32H743VI
+;     STM32H743ZI
+;     STM32H743II
+;     STM32H743BI
+;     STM32H743XI
+;     STM32H743AI
+;   STM32H745xG:            1M
+;     STM32H745BG
+;     STM32H745IG
+;     STM32H745XG
+;     STM32H745ZG
+;   STM32H745xI:            2M
+;     STM32H745ZI
+;     STM32H745II
+;     STM32H745BI
+;     STM32H745XI
+;   STM32H747xG:            1M
+;     STM32H747AG
+;     STM32H747BG
+;     STM32H747IG
+;     STM32H747XG
+;   STM32H747xI:            2M
+;     STM32H747AI
+;     STM32H747BI
+;     STM32H747II
+;     STM32H747XI
+;     STM32H747ZI
+;   STM32H750xB:            128K
+;     STM32H750VB
+;     STM32H750IB
+;     STM32H750XB
+;   STM32H753xI:            2M
+;     STM32H753AI
+;     STM32H753BI
+;     STM32H753II
+;     STM32H753VI
+;     STM32H753XI
+;     STM32H753ZI
+;   STM32H755xI:            2M
+;     STM32H755BI
+;     STM32H755II
+;     STM32H755XI
+;     STM32H755ZI
+;   STM32H757xI:            2M
+;     STM32H757AI
+;     STM32H757BI
+;     STM32H757II
+;     STM32H757XI
+;     STM32H757ZI
+;   STM32H7A3xG:            1M
+;     STM32H7A3AG
+;     STM32H7A3IG
+;     STM32H7A3LG
+;     STM32H7A3NG
+;     STM32H7A3RG
+;     STM32H7A3VG
+;     STM32H7A3ZG
+;   STM32H7A3xI:            2M
+;     STM32H7A3AI
+;     STM32H7A3II
+;     STM32H7A3LI
+;     STM32H7A3NI
+;     STM32H7A3RI
+;     STM32H7A3VI
+;     STM32H7A3ZI
+;   STM32H7B0xB:            128K
+;     STM32H7B0AB
+;     STM32H7B0IB
+;     STM32H7B0RB
+;     STM32H7B0VB
+;     STM32H7B0ZB
+;   STM32H7B3xI:            2M
+;     STM32H7B3AI
+;     STM32H7B3II
+;     STM32H7B3LI
+;     STM32H7B3NI
+;     STM32H7B3RI
+;     STM32H7B3VI
+;     STM32H7B3ZI
+;
+; @Author: AME BWR PHI
+; @Chip: STM32H7*
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: stm32h7.cmm 10516 2022-02-02 11:39:30Z bschroefel $
+
+LOCAL &parameters &param_prepareonly &param_cpu
+ENTRY %LINE &parameters
+&param_prepareonly=(STRing.SCAN(STRing.UPpeR("&parameters"),"PREPAREONLY",0)!=-1)
+&param_cpu=STRing.SCANAndExtract(STRing.UPpeR("&parameters"),"CPU=","")
+
+; --------------------------------------------------------------------------------
+; check Prerequisites
+
+IF VERSION.BUILD()<91169.
+(
+  DIALOG.OK "Please use more recent software!"
+  ENDDO
+)
+
+; ------------------------------------------------------------------------------
+; Start debugging
+
+IF !SYStem.Up()
+(
+  SYStem.RESet
+
+  IF "&param_cpu"!=""
+    SYStem.CPU &param_cpu
+  IF !CPUIS(STM32H7*)
+    SYStem.CPU STM32H7*
+
+  IF CABLE.TWOWIRE()
+    SYStem.CONFIG DEBUGPORTTYPE SWD
+  ELSE
+    SYStem.CONFIG DEBUGPORTTYPE JTAG
+
+  ; Trace infrastructure is clock-gated per default
+  Trace.DISable
+  ETM.OFF
+  ITM.OFF
+
+  SYStem.Up
+)
+
+; ------------------------------------------------------------------------------
+; Flash declaration
+FLASH.RESet
+GOSUB FlashDeclaration
+
+;Flash script ends here if called with parameter PREPAREONLY
+IF &param_prepareonly
+  ENDDO PREPAREDONE
+
+; ------------------------------------------------------------------------------
+; Flash programming example
+
+DIALOG.YESNO "Program flash memory?"
+LOCAL &progflash
+ENTRY &progflash
+IF &progflash
+(
+  FLASH.ReProgram.ALL
+  Data.LOAD.auto *
+  FLASH.ReProgram.off
+  SYStem.Up
+)
+
+ENDDO
+
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+
+; --------------------------------------------------------------------------------
+; Flash declaration depending on selected CPU
+;
+;   Please do NOT modify the TRACE32 flash declaration.
+;
+;   Modifications can result in unpredictable behavior.
+;   Please contact support@lauterbach.com for any changes.
+FlashDeclaration: ;()
+(
+  PRIVATE &FlashSize &SectorSize &FlashDualBank &FlashDriver
+
+  IF CPUIS(STM32H7???I*)
+  (
+    &FlashSize=0x200000
+    &FlashDualBank=TRUE()
+  )
+  ELSE IF CPUIS(STM32H72??G*)||CPUIS(STM32H73??G*)
+  (
+    &FlashSize=0x100000
+    &FlashDualBank=FALSE()
+  )
+  ELSE IF CPUIS(STM32H7???G*)
+  (
+    &FlashSize=0x100000
+    &FlashDualBank=TRUE()
+  )
+  ELSE IF CPUIS(STM32H7???E*)
+  (
+    &FlashSize=0x80000
+    &FlashDualBank=FALSE()
+  )
+  ELSE IF CPUIS(STM32H7???B*)
+  (
+    &FlashSize=0x20000
+    &FlashDualBank=FALSE()
+  )
+  ELSE
+  (
+    PRINT %ERROR "CPU not supported!"
+    ENDDO
+  )
+
+  IF CPUIS(STM32H7A*)||CPUIS(STM32H7B*)
+  (
+    &SectorSize = 0x2000
+    &FlashDriver="stm32h7ab.bin"
+  )
+  ELSE
+  (
+    &SectorSize = 0x20000
+    &FlashDriver="stm32h7i.bin"
+  )
+  
+  IF (&FlashDualBank)
+  (
+    FLASH.Create  1. 0x08000000++((&FlashSize/2.)-1.) &SectorSize TARGET Quad
+    FLASH.Create  2. (0x08000000+(&FlashSize/2.))++((&FlashSize/2.)-1.) &SectorSize TARGET Quad
+  )
+  ELSE
+  (
+    FLASH.Create  1. 0x08000000++(&FlashSize-1.) &SectorSize TARGET Quad
+  )
+
+  FLASH.TARGET 0x24000000 0x24001000 0x1000 ~~/demo/arm/flash/byte/&FlashDriver
+  FLASH.CHANGEtype 0x08000000--0x0803FFFF NOP ; PROTECT BOOTLOADER FROM FLASH OPERATIONS 
+
+  RETURN
+)

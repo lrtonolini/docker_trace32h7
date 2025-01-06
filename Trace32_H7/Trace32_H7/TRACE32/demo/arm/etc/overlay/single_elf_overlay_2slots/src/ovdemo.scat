@@ -1,0 +1,30 @@
+RAM 0x400 0x3C00 
+{
+	.text +0
+	{
+		crt0.obj (+CODE,+ENTRY)
+		* (+CODE)
+	}
+	.rodata +0
+	{
+		* (+CONST)
+	}
+	.data +0
+	{
+		* (+DATA)
+	}
+
+	.pageA0 0x1000 OVERLAY { crt0.obj (.pageA0, +FIRST)  ovl_a0.*obj (+CODE) }
+	.pageA1 0x1000 OVERLAY { crt0.obj (.pageA1, +FIRST)  ovl_a1.*obj (+CODE) }
+	.pageB0 0x2000 OVERLAY { crt0.obj (.pageB0, +FIRST)  ovl_b0.*obj (+CODE) }
+	.pageB1 0x2000 OVERLAY { crt0.obj (.pageB1, +FIRST)  ovl_b1.*obj (+CODE) }
+
+	.bss +0
+	{
+		* (+BSS)
+	}
+	.stack +0 EMPTY 0x1000
+	{
+	}
+}
+

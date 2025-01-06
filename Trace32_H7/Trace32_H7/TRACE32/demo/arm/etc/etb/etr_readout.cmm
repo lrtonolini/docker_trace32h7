@@ -1,0 +1,110 @@
+; --------------------------------------------------------------------------------
+; @Title: Script File to store the ETR ring buffer Data to a File
+; @Description:
+;   This script stores the ETR ring buffer data to the etr.bin file and
+;   generate etr_sim_import.cmm file useful to load the etr.bin in
+;   a simulator.
+;
+;   usage:
+;     CD.DO etr_readout.cmm
+; @Keywords: ETR, trace, Ring Buffer
+; @Author: NID
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: etr_readout.cmm 19682 2022-08-04 10:08:31Z ndelemarre $
+
+LOCAL &ETRBase &etrbaseaddr &COMPNAME &addr &size &cmmfile &binfile &buffstart &coreindex &RP &WP &start_buffer &end_buffer &copied_data_len &offset
+
+; get Coresight address of ETR1
+&ETRBase=COMPonent.BASE("ETR1",0)
+IF ADDRESS.OFFSET(COMPonent.BASE("ETR2",0))!=0.
+(
+  PRINT "Multiple ETRs configured, this demo uses ETR1 per default!"
+)
+IF ADDRESS.OFFSET(&ETRBase)==0.
+(
+  DIALOG.OK "No ETR configured."
+  ENDDO
+)
+
+(
+  PRIVATE &size &STS &WP &start_buffer &end_buffer &copied_data_len
+  &size=Data.Long(&ETRBase+0x004)
+  &STS=Data.Long(&ETRBase+0x0C)
+  &WP=Data.Long(&ETRBase+0x18)
+  &start_buffer=Data.LongLong(&ETRBase+0x118)
+  &end_buffer=&start_buffer+(&size<<0x02)
+  &copied_data_len=0x0
+
+  ; access class EA:   physical memory using core
+  ; access class EAHB: physical memory using AHB-AP
+  ; access class EAXI: physical memory using AXI-AP
+  IF (&STS&0x1)==0x0
+  (
+    Data.COPY EA:(&start_buffer--(&WP-1)) AVM:0x0
+    &copied_data_len=&WP-&start_buffer
+  )
+  ELSE
+  (
+    Data.COPY EA:(&WP--(&end_buffer-1)) AVM:0x0
+    Data.COPY EA:(&start_buffer--(&WP-1)) AVM:(&end_buffer-&WP)
+    &copied_data_len=&size<<0x02
+  )
+
+
+  ; saving data from virtual memory to etr.bin
+  Data.SAVE.Binary "./etr.bin" AVM:0x0++(&copied_data_len-1)
+)
+GOSUB CreateSimImport
+
+ENDDO
+
+CreateSimImport:
+(
+  LOCAL &cpuname &smpcores
+  &cpuname=SYStem.CPU()
+  &smpcores=CORE.NUMBER()
+  OPEN #1 "./etr_sim_import.cmm" /Create
+
+  WRITE #1 "; Template file generated automatically by etr_readout.cmm script"
+  WRITE #1 ";"
+  WRITE #1 "; Please fill SYStem.CONFIG missing informations"
+  WRITE #1 "  SYStem.CPU &cpuname"
+  IF STRing.SCAN(STRing.LoWeR(SYStem.CPU()),"cortex",0.)>=0.
+  (
+    WRITE #1 "; please add your SoC specific coresight configuration here"
+    WRITE #1 "; SYStem.CONFIG CoreNumber <>"
+    WRITE #1 "; SYStem.CONFIG ETM Base DAP:<> DAP:<> DAP:<> ..."
+    WRITE #1 "; SYStem.CONFIG ETR Base DAP:<> "
+  )
+  IF CORE.NUMBER()>1.
+  (
+    WRITE #1 "  CORE.NUMber &smpcores"
+  )
+  WRITE #1 "  SYStem.Up"
+  WRITE #1 ""
+  WRITE #1 "; load target code"
+  WRITE #1 "  Data.LOAD.Elf *"
+  WRITE #1 ""
+  WRITE #1 "; ETM Settings: these must match the settings when recording the trace !"
+  WRITE #1 "  ETM.PortSize 8."
+  WRITE #1 "  ETM.ContextID OFF"
+  WRITE #1 "  ETM.DataTrace OFF"
+  WRITE #1 "; ETM Settings: automatically generated:"
+  IF CORE.NUMBER()>1.
+    WRITE #1 "  ETM.PortMode Wrapped"
+  ELSE
+    WRITE #1 "  ETM.PortMode Bypass"
+  WRITE #1 "  ETM.Trace ON"
+  WRITE #1 "  ETM.ON"
+  WRITE #1 ""
+  WRITE #1 "; import trace data"
+  WRITE #1 "  LA.Mode FLOWTRACE ON"
+  WRITE #1 "  LA.IMPORT.ETB ~~~~/etr.bin"
+  WRITE #1 "  LA.List"
+
+  WRITE #1 ""
+  WRITE #1 "  ENDDO"
+  CLOSE #1
+  RETURN
+)

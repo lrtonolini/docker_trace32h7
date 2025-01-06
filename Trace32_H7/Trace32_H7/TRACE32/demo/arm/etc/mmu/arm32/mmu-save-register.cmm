@@ -1,0 +1,119 @@
+; --------------------------------------------------------------------------------
+; @Title: mmu-save-register.cmm
+; @Description:
+;   Saves ARM32 MMU registers to file "mmu-regs.cmm".
+;   This file is a PRACTICE script. To restore the registers, execute this script
+;   in TRACE32 with DO "mmu-regs.cmm" 
+; @Keywords: ARM,MMU,Register
+; @Author: PKR
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: mmu-save-register.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+LOCAL &filename &hypervisor_regs &secure_regs
+
+&filename="mmu-regs.cmm"
+
+IF VERSION.BUILD()>=57612.
+(
+  ; CPU.FEATURE() has been introduced with build 57612.
+  &secure_regs=CPU.FEATURE(SECURE)
+  &hypervisor_regs=CPU.FEATURE(HYPERVISOR)
+)
+ELSE
+( ; for older builds:
+  ; define the availability of hypervisor registers and secure registers manually
+
+  ;  -> set this to FALSE() if CPU has no trust zone !
+  &secure_regs=FALSE()
+
+  ;  -> set this to FALSE() if CPU has no virtualization extension !
+  &hypervisor_regs=FALSE()
+)
+
+GOSUB GetMMUregs &filename &hypervisor_regs &secure_regs
+PRINT "Done. MMU registers saved to file '&filename'"
+
+ENDDO
+
+
+GetMMUregs:
+  LOCAL &filename &hypervisor_regs &secure_regs &CPSR_M
+  ENTRY &filename &hypervisor_regs &secure_regs
+
+  OPEN #1 "&filename" /Create
+
+  &CPSR_M=Register(M)
+  IF (&secure_regs)
+  (
+    PRINT "Switching to monitor mode..."
+    Register.Set M 0x16
+  )
+  ELSE IF (&hypervisor_regs)
+  (
+    PRINT "Switching to hypervisor mode..."
+    Register.Set M 0x1A
+  )
+  ELSE
+  (
+    PRINT "Switching to supervisor mode..."
+    Register.Set M 0x13
+  )
+
+  IF (&secure_regs)
+    GOSUB getreg C15:0x11   %LONG SCR
+
+  GOSUB getreg C15:0x1     %LONG SCTLR
+  GOSUB getreg C15:0x202   %LONG TTBCR
+  GOSUB getreg C15:0x3     %LONG DACR
+
+  IF (Data.Long(C15:0x202)&0x80000000)==0       ; LPAE enabled ?
+  (
+    PRINT "Reading SD MMU registers..."
+    GOSUB getreg C15:0x2   %LONG TTBR0
+    GOSUB getreg C15:0x102 %LONG TTBR1
+    GOSUB getreg C15:0x2A  %LONG PRRR
+    GOSUB getreg C15:0x12A %LONG NMRR
+  )
+  ELSE
+  (
+    PRINT "Reading LPAE MMU registers..."
+    GOSUB getreg C15:0x10020 %QUAD TTBR0_lpae
+    GOSUB getreg C15:0x11020 %QUAD TTBR1_lpae
+    GOSUB getreg C15:0x2A    %LONG MAIR0
+    GOSUB getreg C15:0x12A   %LONG MAIR1
+  )
+
+  IF (&hypervisor_regs)
+  (
+    PRINT "Reading hypervisor related registers..."
+    GOSUB getreg HC15:0x4001  %LONG HSCTLR
+
+    GOSUB getreg HC15:0x4011  %LONG HCR
+    GOSUB getreg HC15:0x14020 %QUAD HTTBR
+    GOSUB getreg HC15:0x4202  %LONG HTCR
+    GOSUB getreg HC15:0x402A  %LONG HMAIR0
+    GOSUB getreg HC15:0x412A  %LONG HMAIR1
+
+    GOSUB getreg HC15:0x16020 %QUAD VTTBR
+    GOSUB getreg HC15:0x4212  %LONG VTCR
+  )
+
+  PRINT "Restoring previous CPU mode &CPSR_M"
+  Register.Set M &CPSR_M
+
+  CLOSE #1
+  RETURN
+
+
+getreg:
+  LOCAL &regaddr &width &regname &data
+  ENTRY &regaddr &width &regname
+
+  IF ("&width"=="%LONG")
+    &data=Data.Long(&regaddr)
+  ELSE
+    &data=Data.Quad(&regaddr)
+
+  WRITE #1 "Data.Set &regaddr &width &data  ; &regname"
+  RETURN

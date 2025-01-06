@@ -1,0 +1,48 @@
+; --------------------------------------------------------------------------------
+; @Title: SerialWireViewer with AutoFocusII
+; @Description:
+;   Necessary initialization sequence to use an AutoFocusII
+;   preprocessor with SerialWireViewer mode of an Cortex-M 3/4.
+;   Prerequisites:
+;    * Target must be an CortexM 3/4
+;    * Target MUST support SWD
+;    * TDO/SWO pin must be wired to
+;      PIN36 on Mictor-38 connector
+;    * VREF (Target) must be wired to VREF-DEBUG (JTAG   Connector)
+;    * VREF (Target) must be wired to VREF-TRACE (MICTOR Connector)
+;    * The Speed of the SWO line must be adjusted
+;      Analyzer.TraceCLOCK <...>MHz
+;   Limitiations:
+;   Please note that the SWO line speed may change over time e.g.
+;   PLL enable/disable... . So the Analyzer.TraceCLOCK must be updated
+;   on such an event.
+; @Keywords: CORTEX-M, CORTEXM, SerialWireViewer, SWV, AutoFocus
+; @Author: AME
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: swv_with_autofocus.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+RESet
+SYStem.RESet
+SYStem.CPU STM32F103
+SYStem.CONFIG DEBUGPORTTYPE SWD
+SYStem.Up
+
+IF Analyzer()
+(
+  ; Prevent that ETM uses the TPIU
+  ETM.Trace OFF
+
+  ; Select PortFilter SWV
+  Analyzer.PortType SWV
+  ; select TPIU mode NRZ or NRZ/2 ...
+  TPIU.PortMode NRZ 
+  ; Analyzer.TraceCLOCK <..>MHz
+  Analyzer.TraceCLOCK 1MHz
+
+  Analyzer.AutoInit ON
+  Analyzer.AutoArm ON
+)
+
+ENDDO

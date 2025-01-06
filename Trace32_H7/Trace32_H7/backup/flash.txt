@@ -1,0 +1,8 @@
+1MB M7 + 1MB M4
+
+default :
+
+data.save.binary bootloader_def.bin 0x08000000--0x0803FFFF
+data.save.binary m7_fw.bin 0x08040000--0x080FFFFF
+data.save.binary m4_fw.bin 0x08100000--0x081FFFFF
+data.save.binary full_backup.bin 0x08000000--0x081FFFFF

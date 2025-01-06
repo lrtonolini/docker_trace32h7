@@ -1,0 +1,37 @@
+; --------------------------------------------------------------------------------
+; @Title: Template file for creating bitmaps for buttons
+; @Description: Command BITMAPEDIT addmybutton.cmm is for creating own bitmaps.
+; @Keywords: bitmap, BITMAPEDIT, button
+; @Author: MSC
+; @Copyright: (C) 1989-2014 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: addmybutton.cmm 9716 2016-07-29 14:20:35Z wwbenayed $
+
+
+
+;|--------------------------------------------------------------------------------|
+;|                                                                                |
+;|  This template file addmybutton.cmm is used for creating bitmaps               |
+;|  which will be used later in an other user PRACTICE script.                    |
+;|                                                                                |
+;|  The command     BITMAPEDIT addmybutton.cmm                                    |
+;|  will open a window for defining and modifying a bitmap store between          |
+;|  the 2 square brackets in the script text below.                               |
+;|                                                                                |
+;|--------------------------------------------------------------------------------|
+
+
+MENU.ReProgram
+(
+    ADD
+    TOOLBAR
+    (
+        ; The square brackets will later contain the bitmap
+        TOOLITEM "newbutton" "cmd"
+        [
+        ]
+    )
+)
+
+ENDDO
+

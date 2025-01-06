@@ -1,0 +1,1489 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineSystem.cmake:200 (message)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      The target system is: Zephyr - 3.6.99 - arm
+      The host system is: Windows - 10.0.22631 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: C:/Users/Lily-RoseTonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/bin/ld.exe: c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/lib\\libc.a(lib_a-exit.o): in function `exit':
+      exit.c:(.text.exit+0x34): undefined reference to `_exit'
+      collect2.exe: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: C:/Users/Lily-RoseTonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc.exe 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+      
+      The C compiler identification is GNU, found in:
+        C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/3.29.1/CompilerIdC/CMakeCCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: C:/Users/Lily-RoseTonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/bin/ld.exe: c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/../../../../arm-zephyr-eabi/lib\\libc.a(lib_a-exit.o): in function `exit':
+      exit.c:(.text.exit+0x34): undefined reference to `_exit'
+      collect2.exe: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:128 (project)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: C:/Users/Lily-RoseTonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc.exe 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+      
+      The CXX compiler identification is GNU, found in:
+        C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/3.29.1/CompilerIdCXX/CMakeCXXCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineCompilerId.cmake:1165 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CMakeDetermineASMCompiler.cmake:135 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:134 (enable_language)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      arm-zephyr-eabi-gcc.exe (Zephyr SDK 0.16.5-1) 12.2.0
+      Copyright (C) 2022 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:144 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d7nw9p"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d7nw9p"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d7nw9p'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_fbada
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -o CMakeFiles/cmTC_fbada.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d7nw9p/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_fbada.dir/src.c.obj -o cmTC_fbada   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2328 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/linker_flags_template.cmake:11 (check_set_linker_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:37 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-1xigp3"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-1xigp3"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0_"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-1xigp3'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_00e10
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0_  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -o CMakeFiles/cmTC_00e10.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-1xigp3/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_00e10.dir/src.c.obj -o cmTC_00e10   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:34 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-remh69"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-remh69"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wall_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-remh69'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_84d1f
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wall_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wall -o CMakeFiles/cmTC_84d1f.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-remh69/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_84d1f.dir/src.c.obj -o cmTC_84d1f   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:34 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-fs8dag"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-fs8dag"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wformat__Wformat_security_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-fs8dag'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_188c7
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wformat__Wformat_security_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wformat -Wformat-security -o CMakeFiles/cmTC_188c7.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-fs8dag/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_188c7.dir/src.c.obj -o cmTC_188c7   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:34 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rnomoc"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rnomoc"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wformat__Wformat_zero_length_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rnomoc'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_a9ec4
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wformat__Wformat_zero_length_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wformat -Wformat-zero-length -o CMakeFiles/cmTC_a9ec4.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rnomoc/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_a9ec4.dir/src.c.obj -o cmTC_a9ec4   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:41 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-97w3q0"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-97w3q0"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wdouble_promotion_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-97w3q0'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_d7aa8
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wdouble_promotion_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wdouble-promotion -o CMakeFiles/cmTC_d7aa8.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-97w3q0/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_d7aa8.dir/src.c.obj -o cmTC_d7aa8   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:43 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ccwxmu"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ccwxmu"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wpointer_sign_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ccwxmu'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_49d36
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wpointer_sign_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wpointer-sign -o CMakeFiles/cmTC_49d36.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ccwxmu/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_49d36.dir/src.c.obj -o cmTC_49d36   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:46 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rjhqhq"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rjhqhq"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wpointer_arith_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rjhqhq'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_e8fad
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wpointer_arith_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wpointer-arith -o CMakeFiles/cmTC_e8fad.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rjhqhq/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_e8fad.dir/src.c.obj -o cmTC_e8fad   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:49 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-t4n46r"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-t4n46r"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wexpansion_to_defined_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-t4n46r'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_7e308
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wexpansion_to_defined_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wexpansion-to-defined -o CMakeFiles/cmTC_7e308.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-t4n46r/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_7e308.dir/src.c.obj -o cmTC_7e308   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:59 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ywykuh"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ywykuh"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wlogical_op_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ywykuh'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_ac1a7
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wlogical_op_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wlogical-op -o CMakeFiles/cmTC_ac1a7.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ywykuh/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_ac1a7.dir/src.c.obj -o cmTC_ac1a7   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:59 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rbg9x9"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rbg9x9"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wmissing_field_initializers_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rbg9x9'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_57f5e
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wmissing_field_initializers_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wmissing-field-initializers -o CMakeFiles/cmTC_57f5e.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-rbg9x9/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_57f5e.dir/src.c.obj -o cmTC_57f5e   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:74 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-89g7c4"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-89g7c4"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wpacked_bitfield_compat_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-89g7c4'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_cc73f
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wpacked_bitfield_compat_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wpacked-bitfield-compat -o CMakeFiles/cmTC_cc73f.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-89g7c4/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_cc73f.dir/src.c.obj -o cmTC_cc73f   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:74 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8cinqf"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8cinqf"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wvla_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8cinqf'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_b57a0
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wvla_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wvla -o CMakeFiles/cmTC_b57a0.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8cinqf/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_b57a0.dir/src.c.obj -o cmTC_b57a0   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:93 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-0f75s2"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-0f75s2"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Wunused_but_set_variable_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-0f75s2'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_62d2c
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Wunused_but_set_variable_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Wunused-but-set-variable -o CMakeFiles/cmTC_62d2c.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-0f75s2/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_62d2c.dir/src.c.obj -o cmTC_62d2c   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:95 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-jictju"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-jictju"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_Werror_implicit_int_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-jictju'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_63874
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_Werror_implicit_int_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -Werror=implicit-int -o CMakeFiles/cmTC_63874.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-jictju/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_63874.dir/src.c.obj -o cmTC_63874   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:174 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zy4f8j"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zy4f8j"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_mstack_protector_guard_global_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zy4f8j'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_ad1e0
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_mstack_protector_guard_global_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -mstack-protector-guard=global -o CMakeFiles/cmTC_ad1e0.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zy4f8j/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_ad1e0.dir/src.c.obj -o cmTC_ad1e0   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:189 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-a11ms0"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-a11ms0"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fno_freestanding_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-a11ms0'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_cb41c
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fno_freestanding_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fno-freestanding -o CMakeFiles/cmTC_cb41c.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-a11ms0/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_cb41c.dir/src.c.obj -o cmTC_cb41c   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:192 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d38sp8"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d38sp8"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_ffreestanding_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d38sp8'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_92173
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_ffreestanding_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -ffreestanding -o CMakeFiles/cmTC_92173.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-d38sp8/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_92173.dir/src.c.obj -o cmTC_92173   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2404 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/compiler/gcc/compiler_flags.cmake:208 (check_set_compiler_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:41 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-q3jcpa"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-q3jcpa"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_gdwarf_4_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-q3jcpa'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_33f38
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_gdwarf_4_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -gdwarf-4 -o CMakeFiles/cmTC_33f38.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-q3jcpa/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_33f38.dir/src.c.obj -o cmTC_33f38   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2328 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/linker_flags.cmake:1 (check_set_linker_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:42 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-09r5ic"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-09r5ic"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___print_memory_usage"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-09r5ic'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_4ff10
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___print_memory_usage  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--print-memory-usage -o CMakeFiles/cmTC_4ff10.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-09r5ic/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--print-memory-usage  CMakeFiles/cmTC_4ff10.dir/src.c.obj -o cmTC_4ff10   && cd ."
+        Memory region         Used Size  Region Size  %age Used\x0d
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2328 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/gcc/linker_flags.cmake:10 (check_set_linker_property)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/linker_flags.cmake:22 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/target_toolchain_flags.cmake:42 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/kernel.cmake:148 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/zephyr_default.cmake:141 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:66 (include)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/share/zephyr-package/cmake/ZephyrConfig.cmake:92 (include_boilerplate)"
+      - "CMakeLists.txt:4 (find_package)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-9njh92"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-9njh92"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__pg"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-9njh92'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_92c11
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__pg  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -pg -o CMakeFiles/cmTC_92c11.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-9njh92/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -pg  CMakeFiles/cmTC_92c11.dir/src.c.obj -o cmTC_92c11   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_base.cmake:13 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:335 (toolchain_ld_base)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-iiilwk"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-iiilwk"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__mcpu_cortex_m7__mthumb__mabi_aapcs__mfp16_format_ieee__mtp_soft"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-iiilwk'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_e3334
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__mcpu_cortex_m7__mthumb__mabi_aapcs__mfp16_format_ieee__mtp_soft  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -mcpu=cortex-m7 -mthumb -mabi=aapcs -mfp16-format=ieee -mtp=soft -o CMakeFiles/cmTC_e3334.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-iiilwk/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -mcpu=cortex-m7 -mthumb -mabi=aapcs -mfp16-format=ieee -mtp=soft  CMakeFiles/cmTC_e3334.dir/src.c.obj -o cmTC_e3334   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_base.cmake:17 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:335 (toolchain_ld_base)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-r02ewk"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-r02ewk"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___gc_sections"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-r02ewk'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_9cf5f
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___gc_sections  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--gc-sections -o CMakeFiles/cmTC_9cf5f.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-r02ewk/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--gc-sections  CMakeFiles/cmTC_9cf5f.dir/src.c.obj -o cmTC_9cf5f   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_base.cmake:17 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:335 (toolchain_ld_base)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-wd03v4"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-wd03v4"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___build_id_none"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-wd03v4'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_885e1
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___build_id_none  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--build-id=none -o CMakeFiles/cmTC_885e1.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-wd03v4/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--build-id=none  CMakeFiles/cmTC_885e1.dir/src.c.obj -o cmTC_885e1   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1925 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_base.cmake:24 (zephyr_ld_option_ifdef)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:335 (toolchain_ld_base)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-casciy"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-casciy"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___sort_common_descending"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-casciy'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_88051
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___sort_common_descending  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--sort-common=descending -o CMakeFiles/cmTC_88051.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-casciy/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--sort-common=descending  CMakeFiles/cmTC_88051.dir/src.c.obj -o cmTC_88051   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1925 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_base.cmake:24 (zephyr_ld_option_ifdef)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:335 (toolchain_ld_base)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-w6q28y"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-w6q28y"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___sort_section_alignment"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-w6q28y'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_38da2
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___sort_section_alignment  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--sort-section=alignment -o CMakeFiles/cmTC_38da2.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-w6q28y/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--sort-section=alignment  CMakeFiles/cmTC_38da2.dir/src.c.obj -o cmTC_38da2   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_baremetal.cmake:8 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:344 (toolchain_ld_baremetal)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-14xxw7"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-14xxw7"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__nostdlib"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-14xxw7'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_6f182
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__nostdlib  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -nostdlib -o CMakeFiles/cmTC_6f182.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-14xxw7/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -nostdlib  CMakeFiles/cmTC_6f182.dir/src.c.obj -o cmTC_6f182   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_baremetal.cmake:8 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:344 (toolchain_ld_baremetal)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-7xupjc"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-7xupjc"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__static"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-7xupjc'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_254af
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__static  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -static -o CMakeFiles/cmTC_254af.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-7xupjc/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -static  CMakeFiles/cmTC_254af.dir/src.c.obj -o cmTC_254af   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_baremetal.cmake:8 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:344 (toolchain_ld_baremetal)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zs1axy"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zs1axy"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl__X"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zs1axy'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_e3790
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl__X  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,-X -o CMakeFiles/cmTC_e3790.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-zs1axy/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,-X  CMakeFiles/cmTC_e3790.dir/src.c.obj -o cmTC_e3790   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_baremetal.cmake:8 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:344 (toolchain_ld_baremetal)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ew55wq"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ew55wq"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl__N"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ew55wq'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_ea5bb
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl__N  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,-N -o CMakeFiles/cmTC_ea5bb.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-ew55wq/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,-N  CMakeFiles/cmTC_ea5bb.dir/src.c.obj -o cmTC_ea5bb   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2243 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:134 (target_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/linker/ld/target_baremetal.cmake:30 (zephyr_ld_options)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:344 (toolchain_ld_baremetal)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-sltyn5"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-sltyn5"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___orphan_handling_warn"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-sltyn5'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_ed38a
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0__Wl___orphan_handling_warn  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--orphan-handling=warn -o CMakeFiles/cmTC_ed38a.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-sltyn5/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0 -Wl,--orphan-handling=warn  CMakeFiles/cmTC_ed38a.dir/src.c.obj -o cmTC_ed38a   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:401 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j02r4a"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j02r4a"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fno_asynchronous_unwind_tables_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j02r4a'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_eacf1
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fno_asynchronous_unwind_tables_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fno-asynchronous-unwind-tables -o CMakeFiles/cmTC_eacf1.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j02r4a/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_eacf1.dir/src.c.obj -o cmTC_eacf1   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:409 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-5usg5f"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-5usg5f"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_ftls_model_local_exec_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-5usg5f'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_4c26d
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_ftls_model_local_exec_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -ftls-model=local-exec -o CMakeFiles/cmTC_4c26d.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-5usg5f/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_4c26d.dir/src.c.obj -o cmTC_4c26d   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:429 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-bt8gkt"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-bt8gkt"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fno_reorder_functions_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-bt8gkt'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_513f9
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fno_reorder_functions_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fno-reorder-functions -o CMakeFiles/cmTC_513f9.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-bt8gkt/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_513f9.dir/src.c.obj -o cmTC_513f9   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:436 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-6b7rbo"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-6b7rbo"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check__param_min_pagesize_0_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-6b7rbo'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_d1436
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck__param_min_pagesize_0_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   --param=min-pagesize=0 -o CMakeFiles/cmTC_d1436.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-6b7rbo/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_d1436.dir/src.c.obj -o cmTC_d1436   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:439 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-17y6n3"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-17y6n3"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fno_defer_pop_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-17y6n3'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_23fb5
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fno_defer_pop_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fno-defer-pop -o CMakeFiles/cmTC_23fb5.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-17y6n3/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_23fb5.dir/src.c.obj -o cmTC_23fb5   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:458 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-xhit8x"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-xhit8x"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fmacro_prefix_map_C__Users_Lily_RoseTonolini_zephyrproject_zephyr_samples_basic_blinky_CMAKE_SOURCE_DIR_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-xhit8x'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_4f696
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fmacro_prefix_map_C__Users_Lily_RoseTonolini_zephyrproject_zephyr_samples_basic_blinky_CMAKE_SOURCE_DIR_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fmacro-prefix-map=C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/samples/basic/blinky=CMAKE_SOURCE_DIR -o CMakeFiles/cmTC_4f696.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-xhit8x/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_4f696.dir/src.c.obj -o cmTC_4f696   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:459 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8uyszx"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8uyszx"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fmacro_prefix_map_C__Users_Lily_RoseTonolini_zephyrproject_zephyr_ZEPHYR_BASE_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8uyszx'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_6ba49
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fmacro_prefix_map_C__Users_Lily_RoseTonolini_zephyrproject_zephyr_ZEPHYR_BASE_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fmacro-prefix-map=C:/Users/Lily-RoseTonolini/zephyrproject/zephyr=ZEPHYR_BASE -o CMakeFiles/cmTC_6ba49.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-8uyszx/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_6ba49.dir/src.c.obj -o cmTC_6ba49   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/CMakeLists.txt:461 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-gs694y"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-gs694y"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fmacro_prefix_map_C__Users_Lily_RoseTonolini_zephyrproject_WEST_TOPDIR_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-gs694y'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_828b3
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fmacro_prefix_map_C__Users_Lily_RoseTonolini_zephyrproject_WEST_TOPDIR_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fmacro-prefix-map=C:/Users/Lily-RoseTonolini/zephyrproject=WEST_TOPDIR -o CMakeFiles/cmTC_828b3.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-gs694y/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_828b3.dir/src.c.obj -o cmTC_828b3   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/arch/common/CMakeLists.txt:35 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j3ggt7"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j3ggt7"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_ffunction_sections_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j3ggt7'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_e7109
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_ffunction_sections_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -ffunction-sections -o CMakeFiles/cmTC_e7109.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-j3ggt7/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_e7109.dir/src.c.obj -o cmTC_e7109   && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "C:/Program Files/CMake/share/cmake-3.29/Modules/CheckCCompilerFlag.cmake:51 (cmake_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2182 (check_c_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:1102 (check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2221 (zephyr_check_compiler_flag)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:2197 (target_cc_option_fallback)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules/extensions.cmake:125 (target_cc_option)"
+      - "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/arch/common/CMakeLists.txt:35 (zephyr_cc_option)"
+    directories:
+      source: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-secms3"
+      binary: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-secms3"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/cmake/modules"
+    buildResult:
+      variable: "check_fdata_sections_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-secms3'
+        
+        Run Build Command(s): C:/ProgramData/chocolatey/bin/ninja.exe -v cmTC_bfc62
+        [1/2] C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -Dcheck_fdata_sections_C__nostartfiles__nostdlib__isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include___isystem__c__users_lily_rosetonolini_zephyr_sdk_0_16_5_1_arm_zephyr_eabi_bin____lib_gcc_arm_zephyr_eabi_12_2_0_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0  -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0   -fdata-sections -o CMakeFiles/cmTC_bfc62.dir/src.c.obj -c C:/Users/Lily-RoseTonolini/zephyrproject/zephyr/build/CMakeFiles/CMakeScratch/TryCompile-secms3/src.c
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\Users\\Lily-RoseTonolini\\zephyr-sdk-0.16.5-1\\arm-zephyr-eabi\\bin\\arm-zephyr-eabi-gcc.exe -nostartfiles -nostdlib -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include" -isystem "c:/users/lily-rosetonolini/zephyr-sdk-0.16.5-1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed" -Wl,--unresolved-symbols=ignore-in-object-files -Wl,--entry=0  CMakeFiles/cmTC_bfc62.dir/src.c.obj -o cmTC_bfc62   && cd ."
+        
+      exitCode: 0
+...

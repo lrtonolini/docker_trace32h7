@@ -1,0 +1,5 @@
+SYStem.Up
+Data.LOAD.Elf "~~/demo/sieve_ram_thumb_ii_v7m.elf"
+Go.direct main
+
+ENDDO

@@ -1,0 +1,146 @@
+; --------------------------------------------------------------------------------
+; @Title: Load the Position Independent Terminal example (SingleE mode)
+; @Description:
+;   Load the position independent t32term demo into RAM.
+;   The base address of the RAM is required. The instruction set supported by
+;   the CPU is automatically detected by the CORENAME().
+;   The example shows how a simple terminal can be implemented using TRACE32
+;   and a dualport/runtime-memory access. The SingleE mode requires 1byte each
+;   for the communication.
+;   When to use this terminal method?
+;     => for ultra small CortexM devices e.g. Cortex-M0, Cortex-M0+
+;   Prerequisites:
+;    * System is connected
+;    * RAM is accessible Read/Write/Execute
+;    * 4k of RAM required
+;    * Data-Cache is disabled
+;
+;   Usage:
+;          DO ~~/demo/arm/etc/virtual_terminal/memory_based/demo_term_mem_single <offset>
+;     e.g. DO ~~/demo/arm/etc/virtual_terminal/memory_based/demo_term_mem_single 0x1000
+;
+; @Author: AME
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: demo_term_mem_single.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+PRIVATE &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7
+PRIVATE &param &offset
+ENTRY &param
+
+IF "&param"==""&&INTERFACE.SIM()
+  &param=0x0
+
+GOSUB ParseParameters &param
+RETURNVALUES &offset
+
+GOSUB GetCpuModes
+RETURNVALUES &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7
+
+; ensure the TERMinal is inactive
+TERM.RESet
+; invalidate d-cache
+IF CPU.FEATURE(l1dcache)
+  CACHE.INVALIDATE DC
+
+IF &arm
+  Data.LOAD.Elf ~~~~/term_demo_single_pic_arm.elf          &offset /RelPATH /Verify
+ELSE IF &armbe
+  Data.LOAD.Elf ~~~~/term_demo_single_pic_armbe.elf        &offset /RelPATH /Verify
+ELSE IF &thumbv4
+  Data.LOAD.Elf ~~~~/term_demo_single_pic_thumb_v4.elf     &offset /RelPATH /Verify
+ELSE IF &thumbv6m
+  Data.LOAD.Elf ~~~~/term_demo_single_pic_thumb_v6m.elf    &offset /RelPATH /Verify
+ELSE IF &thumb_ii_v7
+  Data.LOAD.Elf ~~~~/term_demo_single_pic_thumb_ii_v7m.elf &offset /RelPATH /Verify
+ELSE
+(
+	PRINT %ERROR "Error: Coretype not supported by this script."
+	ENDDO FALSE()
+)
+
+; run till main
+Go main\1
+WAIT !STATE.RUN()
+
+; make sure the shared memory buffer is cleared
+Var.Assign T32_Term_Memory_Tar2HostBuffer[0] = 0
+Var.Assign T32_Term_Memory_Host2TarBuffer[0] = 0
+
+; enable runtime-memory-access
+IF !INTERFACE.SIM()
+  SYStem.MemAccess DAP
+
+; setup the terminal
+; T32_Term_Memory_Tar2HostBuffer is a single char
+; T32_Term_Memory_Host2TarBuffer is a single char
+TERM.RESet
+TERM.METHOD SingleE E:Var.VALUE(&T32_Term_Memory_Tar2HostBuffer[0]) E:Var.VALUE(&T32_Term_Memory_Host2TarBuffer[0])
+TERM.view
+
+; start the example
+Go
+
+ENDDO TRUE()
+
+
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+(
+	PRIVATE &param &offset
+	ENTRY &param
+	&offset=STRing.SCANAndExtract("&param","0x","")
+	IF "&offset"==""
+	(
+		PRINT %ERROR "Error: Missing Argument - Usage DO demo_term_mem_single.cmm 0x<offset> "
+		ENDDO FALSE()
+	)
+	; ensure parameter is HEX and round down to the nearest LONG
+	&offset="0x&offset"
+	&offset=(&offset)&~0x3
+
+	IF !SYStem.Up()
+	(
+		PRINT %ERROR "Error: Not connected to target. - Please use SYStem.Up before."
+		ENDDO FALSE()
+	)
+
+	RETURN "&offset"
+)
+
+GetCpuModes: ;()
+(
+	PRIVATE &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7
+
+	&arm=FALSE()
+	&armbe=FALSE()
+	&thumbv4=FALSE()
+	&thumbv6m=FALSE()
+	&thumb_ii_v7=FALSE()
+
+	&arm=&arm||(STRing.SCAN(CORENAME(),"CORTEXA",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"CORTEXR",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"ARM7",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"ARM9",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"ARM11",0)>=0)
+	if (&arm&&(STRing.SCAN(CORENAME(),"CORTEXR",0)>=0))
+	(
+		IF ((Data.Long(C15:0x1)&0x80000000)!=0x0)
+		(
+			&armbe=TRUE()
+			&arm=FALSE()
+		)
+	)
+
+	&thumbv6m=&thumbv6m||(STRing.SCAN(CORENAME(),"CORTEXM0",0)>=0)
+	&thumbv6m=&thumbv6m||(STRing.SCAN(CORENAME(),"CORTEXM1",0)>=0)
+
+	&thumb_ii_v7=&thumb_ii_v7||(STRing.SCAN(CORENAME(),"CORTEXM3",0)>=0)
+	&thumb_ii_v7=&thumb_ii_v7||(STRing.SCAN(CORENAME(),"CORTEXM4",0)>=0)
+	&thumb_ii_v7=&thumb_ii_v7||(STRing.SCAN(CORENAME(),"CORTEXM7",0)>=0)
+
+	RETURN "&arm" "&armbe" "&thumbv4" "&thumbv6m" "&thumb_ii_v7"
+)

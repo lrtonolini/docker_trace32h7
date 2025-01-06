@@ -1,0 +1,104 @@
+; --------------------------------------------------------------------------------
+; @Title: CMN search
+; @Description: This script searches for relevant CMN components
+;               Example: cmn_detect.cmm START=AXI:0x0 END=AXI:0x100000
+; @Keywords: CMN, trace
+; @Author: Michael Schleinkofer
+; @Copyright: (C) 1989-2023 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: cmn_detect.cmm 21143 2023-07-17 10:15:43Z mschleinkofer $
+
+PRIVATE &startAddress &endAddress
+LOCAL &parameters &readVal &currAddress
+
+ON ERROR GOSUB
+(
+  IF ERROR.ID()=="#emu_errbuserr"
+  (
+    ECHO "No valid Access: &currAddress"
+    RETURN
+  )
+  ELSE IF (ERROR.ID()=="#emu_errpwrf")||(ERROR.ID()=="#emu_errdown")
+  (
+    ECHO "Target needs to be powered!"
+    ENDDO
+  )
+  ELSE
+  (
+    ECHO "Other error occurred: " ERROR.ID()
+    ENDDO
+  )
+)
+
+ENTRY %LINE &parameters
+
+&startAddress=STRing.SCANAndExtract(STRing.UPpeR("&parameters"),"START=","AXI:0x0")
+&endAddress=STRing.SCANAndExtract(STRing.UPpeR("&parameters"),"END=","AXI:0x0")
+
+&currAddress=&startAddress
+
+AREA.CLEAR
+AREA.Create A000 150. 30000.
+AREA
+
+RePeaT
+(
+  ; read first 16 bits of block to get component identifier
+  IF "ARM"==CPUFAMILY()
+  (
+    &readVal=Data.Long(&currAddress)
+  )
+  ELSE IF "I386"==CPUFAMILY()
+  (
+    &readVal=SYStem.Option.CMNREAD(ADDRESS.OFFSET(&currAddress),4,0)
+  )
+  ELSE
+  (
+    ECHO "Wrong chip architecture. End..."
+    ENDDO
+  )
+  &readVal=0xFFFF&(&readVal)
+
+  ; check if component is CMN DTC
+  IF &readVal==0x0003
+  (
+    ECHO "CMN.Base " &currAddress
+  )
+  ; check if component is RootNodeBase
+  IF &readVal==0x0002
+  (
+    LOCAL &id1 &id3 &id4
+    IF "ARM"==CPUFAMILY()
+    (
+      &id1=Data.Long(&currAddress+0xC)
+      &id1=(&id1)&0xFF
+      &id3=Data.Long(&currAddress+0x14)
+      &id3=(&id3)&0xFF
+      &id4=Data.Long(&currAddress+0x18)
+      &id4=(&id4)&0xFF
+    )
+    ELSE IF "I386"=CPUFAMILY()
+    (
+      &id1=SYStem.Option.CMNREAD(ADDRESS.OFFSET(&currAddress)+0xC,4,0)
+      &id1=(&id1)&0xFF
+      &id3=SYStem.Option.CMNREAD(ADDRESS.OFFSET(&currAddress)+0x14,4,0)
+      &id3=(&id3)&0xFF
+      &id4=SYStem.Option.CMNREAD(ADDRESS.OFFSET(&currAddress)+0x18,4,0)
+      &id4=(&id4)&0xFF
+    )
+    IF (0xB4==&id1)&&(0x0==&id3)&&(0xC4==&id4)
+    (
+      ECHO "CMN.RootNodeBase " &currAddress
+    )
+    ELSE
+    (
+      ECHO "No matching RNB registers"
+      ECHO "&id1 &id3 &id4"
+    )
+  )
+  ;look at next possible block
+  &currAddress=&currAddress+0x4000
+)
+WHILE ADDRESS.OFFSET(&endAddress)>ADDRESS.OFFSET(&currAddress)
+
+ENDDO

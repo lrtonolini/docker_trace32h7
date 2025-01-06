@@ -1,0 +1,15 @@
+; --------------------------------------------------------------------------------
+; @Title: t32server - readme
+; @Description: -
+; @Author: KJM
+; @Copyright: (C) 1989-2014 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: readme 7571 2014-08-25 15:50:21Z kjmal $
+
+To compile the t32server:
+
+1. export CROSS_COMPILE=<cross_compiler>
+For example:
+export CROSS_COMPILE=/opt/arm-none-linux-gnueabi/bin/arm-none-linux-gnueabi-
+
+2. make

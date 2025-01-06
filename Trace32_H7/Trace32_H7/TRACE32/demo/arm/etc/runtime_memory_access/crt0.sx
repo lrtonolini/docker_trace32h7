@@ -1,0 +1,47 @@
+.file   "crt0.sx"
+.text
+.globl  _start
+.globl  _exit
+
+#ifdef __thumb__
+# define subs sub
+#endif
+
+
+_start:
+	/* set stack and frame pointer */
+	ldr  	r1, .SP
+	mov  	r0, #0
+	mov  	sp, r1
+	mov  	fp, r0
+
+	/* clear .bss-section */
+	ldr  	r4, .BSS_S
+	ldr  	r5, .BSS_E
+	subs 	r5, r5, r4
+	beq  	bss_done
+	mov  	r0, #0
+bss_clear:
+	strb 	r0, [r4]
+	add  	r4, r4, #1
+	subs 	r5, r5, #1
+	bne  	bss_clear
+bss_done:
+
+gomain:
+	mov  	r0, #0
+	mov  	r1, #0
+	bl   	main
+
+_exit:
+	b    	_exit
+
+
+.align  2
+.SP:
+	.word	__stack_end
+.BSS_S:
+	.word	__bss_start
+.BSS_E:
+	.word	__bss_end
+

@@ -1,0 +1,45 @@
+; --------------------------------------------------------------------------------
+; @Title: MOVE coprocessor (ARM)
+; @Description: -
+; @Author: PEG
+; @Changelog: 2004-07-01 PEG
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: permove.per 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+config 16. 8.
+width 8
+
+group usr:0x00--0x53 "MOVE Coprocessor"
+ line.long 0x0 "CR_ID,Identification"
+  hexmask.long.byte 0x0 24.--31. 1 "IMPLEMENTOR ,Implementor"
+  hexmask.long.byte 0x0 8.--15. 1 "  PARTNUMBER ,Part Number"
+  bitfld.long 0x0 4.--7. "  VERSION ,Mayor Version" "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+  bitfld.long 0x0 0.--3. "  REVISION ,Minor Version" "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15"
+
+ line.long 0x4 "CR_CFG,Configuration"
+  bitfld.long 0x4 0.--0. "IDX_INC ,Increment Index" "no,yes"
+
+ line.long 0x8 "CR_BYO,Byte Offset"
+  bitfld.long 0x8 0.--1. "BYO ,Byte Offset" "0,1,2,3"
+
+ line.long 0xc "CR_IDX,Line Index"
+  bitfld.long 0xc 0.--2. "IDX ,Line Index" "0,1,2,3,4,5,6,7"
+
+ line.long 0x10 "CR_ACC,Accumulated Results"
+  hexmask.long.word 0x10 0.--13. 1 "ACC ,Accumulated Result"
+
+ textline ""
+
+ line.quad 0x14 "LINE0,Block Buffer Line 0"
+ line.quad 0x1c "LINE1,Block Buffer Line 1"
+ line.quad 0x24 "LINE2,Block Buffer Line 2"
+ line.quad 0x2c "LINE3,Block Buffer Line 3"
+ line.quad 0x34 "LINE4,Block Buffer Line 4"
+ line.quad 0x3c "LINE5,Block Buffer Line 5"
+ line.quad 0x44 "LINE6,Block Buffer Line 6"
+ line.quad 0x4c "LINE7,Block Buffer Line 7"
+
+ textline ""
+

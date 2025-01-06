@@ -1,0 +1,73 @@
+; --------------------------------------------------------------------------------
+; @Title: Cortex-A9 Peudo Data Trace Example
+; @Description: Cortex-A9 Peudo Data Trace Example on the OMAP4430 (PandaBoard)
+; @Author: KJM
+; @Keywords: PSEUDODATATRACE CortexA9
+; @Chip: OMAP4430
+; @Board: PandaBoard
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: omap4430_tracedata.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+; connect debugger with first Cortex-A9
+ RESet
+ SYStem.CPU OMAP4430
+ CORE.ASSIGN 1.
+ SYStem.Up
+
+ Go
+ WAIT 1.s
+ Break
+
+; load demo program to SAR-RAM
+ Data.LOAD.ELF ~~~~/sieve_omap4430.axf
+ Register.Set PC main
+ Register.Set CPSR 0x1d3 
+ Register.Set R13 0x40305000
+
+
+; open some windows
+ WinCLEAR
+ WinPOS 0% 0% 100% 50%
+ List.auto
+
+
+; off-chip trace port analyzer (preprocessor) is connected to capture program trace
+ IF Analyzer()
+ (
+	; configure PAD: EMU[2:19] for 16-bit TPIU (PADx_DPM_EMUx)
+	Data.Set 0x4A1001B0 %Long Data.Long(SD:0x4A1001B0)&0x0000FFFF
+	Data.Set 0x4A1001B4 %Long 0
+	Data.Set 0x4A1001B8 %Long 0
+	Data.Set 0x4A1001BC %Long 0
+	Data.Set 0x4A1001C0 %Long 0
+	Data.Set 0x4A1001C4 %Long 0
+	Data.Set 0x4A1001C8 %Long 0
+	Data.Set 0x4A1001CC %Long 0
+	Data.Set 0x4A1001D0 %Long 0
+	Data.Set 0x4A1001d4 %Long 0
+
+	ETM.PortSize 16a
+	Analyzer.AutoFocus
+		
+	WinPOS 50% 50% 50% 50%
+	Analyzer.List
+	
+	; enable psudo data trace
+	ETM.PSEUDODATATRACE ON
+	
+	WinPOS 0% 50% 50% 50%
+	Analyzer.Chart.VarState
+	
+	Go sieve\25
+)
+ELSE
+(
+	Trace.METHOD Onchip
+	; enable psudo data trace
+	ETM.PSEUDODATATRACE ON
+	
+	WinPOS 0% 50% 50% 50%
+	Onchip.Chart.VarState
+)

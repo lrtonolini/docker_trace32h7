@@ -1,0 +1,167 @@
+; --------------------------------------------------------------------------------
+; @Title: mmu-save-register.cmm
+; @Description:
+;   Saves ARM64 MMU registers to file "mmu-regs.cmm".
+;   This file is a PRACTICE script. To restore the registers, execute this script
+;   in TRACE32 with DO "mmu-regs.cmm" 
+; @Keywords: ARM,MMU,Register
+; @Author: PKR
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: mmu-save-register.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+LOCAL &filename &hypervisor_regs &secure_regs
+
+&filename="mmu-regs.cmm"
+
+IF VERSION.BUILD()>=57612.
+(
+  ; CPU.FEATURE() has been introduced with build 57612.
+  &secure_regs=CPU.FEATURE(SECURE)
+  &hypervisor_regs=CPU.FEATURE(HYPERVISOR)
+)
+ELSE
+( ; for older builds:
+  ; define the availability of hypervisor registers and secure registers manually
+
+  ;  -> set this to FALSE() if CPU has no trust zone !
+  &secure_regs=FALSE()
+
+  ;  -> set this to FALSE() if CPU has no virtualization extension !
+  &hypervisor_regs=FALSE()
+)
+
+GOSUB GetMMUregs &filename &hypervisor_regs &secure_regs
+PRINT "Done. MMU registers saved to file '&filename'"
+
+ENDDO
+
+
+GetMMUregs:
+  LOCAL &filename &hypervisor_regs &secure_regs
+  ENTRY &filename &hypervisor_regs &secure_regs
+
+  IF (Register(M)&0x10)==0x10                     ; AArch32
+  (
+    OPEN #1 "&filename" /Create
+    GOSUB getreg C15:0x1     %LONG SCTLR
+    GOSUB getreg C15:0x202   %LONG TTBCR
+    GOSUB getreg C15:0x3     %LONG DACR
+
+    IF (&secure_regs)
+    (
+      IF (Register(NS)==0.)||(Register(M)==0x16)      ; Secure PL1 or mon?
+      (
+        PRINT "Reading AArch32 SCR register..."
+        GOSUB getreg C15:0x11   %LONG SCR
+      )
+    )
+
+    IF (Data.Long(C15:0x202)&0x80000000)==0       ; LPAE enabled ?
+    (
+      PRINT "Reading AArch32 SD MMU registers..."
+      GOSUB getreg C15:0x2   %LONG TTBR0
+      GOSUB getreg C15:0x102 %LONG TTBR1
+      GOSUB getreg C15:0x2A  %LONG PRRR
+      GOSUB getreg C15:0x12A %LONG NMRR
+    )
+    ELSE
+    (
+      PRINT "Reading AArch32 LPAE MMU registers..."
+      GOSUB getreg C15:0x10020 %QUAD TTBR0_lpae
+      GOSUB getreg C15:0x11020 %QUAD TTBR1_lpae
+      GOSUB getreg C15:0x2A    %LONG MAIR0
+      GOSUB getreg C15:0x12A   %LONG MAIR1
+    )
+
+    IF (&hypervisor_regs)
+    (
+      PRINT "Reading AArch32 hypervisor related registers..."
+      GOSUB getreg HC15:0x4001  %LONG HSCTLR
+
+      GOSUB getreg HC15:0x4011  %LONG HCR
+      GOSUB getreg HC15:0x14020 %QUAD HTTBR
+      GOSUB getreg HC15:0x4202  %LONG HTCR
+      GOSUB getreg HC15:0x402A  %LONG HMAIR0
+      GOSUB getreg HC15:0x412A  %LONG HMAIR1
+
+      GOSUB getreg HC15:0x16020 %QUAD VTTBR
+      GOSUB getreg HC15:0x4212  %LONG VTCR
+    )
+
+    CLOSE #1
+  )
+  ELSE                                             ; AArch64
+  (
+    LOCAL &CPSR_M
+    OPEN #1 "&filename" /Create
+    
+    &CPSR_M=Register(M)
+    
+    IF (&secure_regs)
+    (
+      PRINT "Switching to EL3_SP3 mode..."
+      Register.Set M 0xD
+    )
+    ELSE IF (&hypervisor_regs) 
+    (
+      PRINT "Switching to EL2_SP2 mode..."
+      Register.Set M 0x9
+    )
+    ELSE
+    (
+      PRINT "Switching to EL1_SP1 mode..."
+      Register.Set M 0x5
+    )
+    
+    IF (&secure_regs)                               ; EL3 regs shall be read AND CPU is in EL3. 
+    (                                               ; Otherwise those registers are not accessible        
+      PRINT "Reading AArch64 secure mode related registers..."
+      GOSUB getreg SPR:0x36100     %QUAD SCTLR_EL3
+      GOSUB getreg SPR:0x36202     %QUAD TCR_EL3
+      GOSUB getreg SPR:0x36200     %QUAD TTBR0_EL3
+      GOSUB getreg SPR:0x36A20     %QUAD MAIR_EL3
+      GOSUB getreg SPR:0x36110     %QUAD SCR_EL3
+    )
+    IF (&hypervisor_regs)                           ; EL2 regs shall be read AND CPU is in EL2 or EL3
+    (                                               ; Otherwise those registers are not accessible     
+      PRINT "Reading AArch64 hypervisor related registers..."
+      GOSUB getreg SPR:0x34100     %QUAD SCTLR_EL2
+      GOSUB getreg SPR:0x34202     %QUAD TCR_EL2
+      GOSUB getreg SPR:0x34200     %QUAD TTBR0_EL2
+      GOSUB getreg SPR:0x34A20     %QUAD MAIR_EL2
+      GOSUB getreg SPR:0x34110     %QUAD HCR_EL2
+      GOSUB getreg SPR:0x34210     %QUAD VTTBR_EL2
+      GOSUB getreg SPR:0x34212     %QUAD VTCR_EL2
+    )    
+    IF (&CPSR_M&0xC)>=0x4                           ; EL1 regs shall be read AND CPU is in El1, EL2 or EL3
+    (                                               ; Otherwise those registers are not accessible
+      PRINT "Reading AArch64 EL1 mode related registers..."
+      GOSUB getreg SPR:0x30100     %QUAD SCTLR_EL1
+      GOSUB getreg SPR:0x30202     %QUAD TCR_EL1
+      GOSUB getreg SPR:0x30200     %QUAD TTBR0_EL1
+      GOSUB getreg SPR:0x30201     %QUAD TTBR1_EL1
+      GOSUB getreg SPR:0x30A20     %QUAD MAIR_EL1
+      IF (&CPSR_M&0xC)>0x4                          ; We must be in EL2 or EL3 to read DACR32_EL2
+        GOSUB getreg SPR:0x34300     %QUAD DACR32_EL2
+    )
+    
+    PRINT "Restoring previous CPU mode &CPSR_M"
+    Register.Set M &CPSR_M
+    
+    CLOSE #1
+  )
+  RETURN
+
+
+getreg:
+  LOCAL &regaddr &width &regname &data
+  ENTRY &regaddr &width &regname
+
+  IF ("&width"=="%LONG")
+    &data=Data.Long(&regaddr)
+  ELSE
+    &data=Data.Quad(&regaddr)
+
+  WRITE #1 "Data.Set &regaddr &width &data  ; &regname"
+  RETURN

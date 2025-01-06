@@ -1,0 +1,30 @@
+; --------------------------------------------------------------------------------
+; @Title: Generic scrip to enable Arm time stamp generator (TSGen)
+; @Description:
+; Configure time stamp generator according to Arm specification.
+;   Usage:
+;     DO ~~/demo/arm/etc/tsgen/tsgen.cmm <base> <freq>
+;       <base>   Base address of TSGen with access class(!), e.g. APB, AXI ...
+;       <freq>   Desired freqency in Hz.
+;
+;     Examplel: DO ~~/demo/arm/etc/tsgen/tsgen.cmm "APB:0x80900000" "50000000."
+; @Keywords: TSGen
+; @Props: NoIndex, NoWelcome, NoMetaTags
+; @Author: BES
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: tsgen.cmm 19506 2022-06-14 13:09:50Z bschroefel $
+
+LOCAL &fHz &tsgenBase
+PARAMETERS &tsgenBase &fHz                  ; TSGen base address; TSGen frequenc in Hz;
+
+; Enable CoreSight TSGEN
+Data.Set &tsgenBase+0x000 %LE %Long 0.
+Data.Set &tsgenBase+0x008 %LE %Long 0.
+Data.Set &tsgenBase+0x00C %LE %Long 0.
+Data.Set &tsgenBase+0x000 %LE %Long 3.
+
+; Set clock base frequency to &fHz via CNTFID0
+Data.Set &tsgenBase+0x020 %LE %Long &fHz
+
+ENDDO

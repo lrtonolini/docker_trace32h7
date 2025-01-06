@@ -1,0 +1,64 @@
+; --------------------------------------------------------------------------------
+; @Title: ARM9/10/11, CortexA/R Compatible Semihosting via Breakpoint at SVC (SWI) Handler
+; @Description: 
+;   ARM9, ARM10, ARM11, Cortex-R4, Cortex-A8 compatible semihosting via 
+;   breakpoint at SVC (SWI) handler
+;   After executing this script you need to run the loaded dhrystone 
+;   benchmark program (-> 'Go').
+;   Enter a value e.g. '100000' in the TERM.GATE window. The program stops until
+;   the value has been entered.
+;   The benchmark program uses semihosting for inputs and outputs in the TERM.GATE
+;   window.
+;   See dhry.h if you want to know details on what the benchmark program does.
+;   See the target manual of the arm debugger (debugger_arm.pdf) for more details
+;   about 'semihosting'.
+; @Author: PEG
+; @Keywords: SWI
+; @Chip: ARM10*, ARM11*, ARM9*, Cortex-A*, Cortex-R*
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: swisoft_arm9_arm10_arm11_cortexr_cortexa.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+; Alternatively you could run the termdemo.axf application which demonstrates semihosting file I/O.
+; It outputs 'Hello World!' in the TERM.GATE window and offers you a menu to 
+; 'r' read and type an ascii file named test1 which needs to be in the current directory.
+; 'w' write the text 'Hello World!' in an ascii file named test2 in the current directory.
+; 'p' print 32 times the line 'Performance Test Text'.
+
+; The debugger is expected to be in UP state, therefore a target
+; specific start-up script will be needed to run first.
+
+
+; start-up in case of simulator
+  IF INTERFACE.SIM()
+  (
+    RESet
+    SYStem.CPU ARM9TDMI
+    Break.Set 0x08         ; no vector catch available on the simulator 
+    SYStem.Up
+  )
+
+; load demo application
+  Data.LOAD.Elf ~~~~/dhrystone.axf /spath /lpath /noclear
+; Data.LOAD.Elf ~~~~/termdemo.axf /spath /lpath /noclear
+
+; activate vector catch of SVC (SWI) vector
+  TrOnchip.Set SWI ON
+
+; configure and open semihosting channel
+  TERM.HEAPINFO 0 0x20000 0x30000 0x20000
+  TERM.METHOD armswi
+  TERM.Mode string
+
+; open some windows
+  WinCLEAR
+  WinPOS 0% 0% 100% 48%
+  List.auto
+  WinPOS 0% 50% 50% 48%
+  Frame /Locals /Caller
+  WinPOS 50% 50% 50% 48%
+  TERM.GATE
+
+  ENDDO
+

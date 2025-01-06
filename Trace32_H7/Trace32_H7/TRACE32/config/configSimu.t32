@@ -1,0 +1,32 @@
+;This configuration file is generated with T32Start2
+;===================================================
+
+;Environment Variables
+OS=
+
+
+; Standard License File (client.lic) used
+
+;T32 Intercom
+; not used
+
+;T32 API Access (UDP/TCP) not used
+
+;T32 GDB
+; not used
+
+;T32 TCF
+; not used
+
+
+;Connection to Host
+PBI=SIM
+
+;Screen Settings
+SCREEN=
+VFULL
+FONT=SMALL
+HEADER=TRACE32 PowerView for ARM 0 [SIM @ ]
+
+;Printer Settings:
+;PRINTER=WINDOWS

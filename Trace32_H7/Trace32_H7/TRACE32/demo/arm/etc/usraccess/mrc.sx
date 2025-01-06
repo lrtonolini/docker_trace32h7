@@ -1,0 +1,65 @@
+#ifdef __CC_ARM 
+/* ARM RealView assembler */
+#  define SECTION(x,t1,t2)   AREA |x|,t1
+#  define ARM        CODE32
+#  define THUMB      CODE16
+#  define ALIGN(x)   ALIGN x
+#  define LABEL(x)   x
+#  define GLOBL(x)   GLOBAL x
+#  define EXTERN(x)  EXTERN x
+#else
+/* GNU assembler */
+#  define SECTION(x,t1,t2)  .section x,t2
+#  define ARM       .arm
+#  define THUMB     .thumb
+#  define ALIGN(x)  .align x
+#  define LABEL(x)   x:
+#  define GLOBL(x)  .globl x
+#  define EXTERN(x) .extern x
+#  define END
+#endif
+
+	SECTION(.text,CODE,"ax")
+	ALIGN(2)
+	ARM
+	GLOBL(RdCtrlReg)
+	GLOBL(WrCtrlReg)
+	GLOBL(mrc)
+
+LABEL(RdCtrlReg)
+	mrc  p15,0,r0,c1,c0,0
+	bx   r14
+
+LABEL(WrCtrlReg)
+	mrc  p15,0,r0,c1,c0,0
+	bx   r14
+
+LABEL(mrc)
+	/* Transfer data to or from coprocessor
+	 *  r0 : data to read or write
+	 *  r1 : mrc/mcr command 
+	 */
+
+	/* disable caches */
+	mrc  p15,0,r2,c1,c0,0
+	bic  r3,r2,#0x000c
+	bic  r3,r3,#0x1000
+	mcr  p15,0,r3,c1,c0,0
+
+	/* write mrc/mcr command to memory */
+	str  r1,cmd
+
+	nop
+	nop
+	nop
+	nop
+LABEL(cmd)
+	nop   /* execute mrc/mcr command (which gets written here) */
+
+	/* re-enable caches */
+	mcr  p15,0,r2,c1,c0,0
+
+	bx   r14
+
+	END
+

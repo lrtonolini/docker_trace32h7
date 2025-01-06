@@ -1,0 +1,29 @@
+Do "~~/win.cmm"
+
+MENU.ReProgram
+(
+  ADD
+  MENU
+  (
+    POPUP "DEbug GDB"
+    (
+      MENUITEM "T32ThreadDebug"
+      (
+        CD.DO "~~/demo/T32ThreadDebug/start.cmm" MODE=MANUAL
+      )
+
+      MENUITEM "T32ThreadDebugLogger"
+      (
+        CD.DO "~~/T32ThreadDebugLogger/start.cmm" MODE=MANUAL
+      )
+
+      MENUITEM "T32ThreadDebugPrint"
+      (
+        CD.DO "~~/T32ThreadDebugPrint/start.cmm" MODE=MANUAL
+      )
+    )
+  )
+)
+ENDDO
+
+

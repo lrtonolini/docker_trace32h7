@@ -1,0 +1,711 @@
+;@Extension.Container.Version.1
+;-- DO NOT CHANGE THE LINE ABOVE --
+IF (VERSION.BUILD.BASE()<138311.)
+(
+  PRINTF %ERROR "%s: Software too old, please contact support@lauterbach.com." "RTX-ARM v5"
+  ENDDO
+)
+
+PMACRO.EXPLICIT
+PRIVATE &sParamline &sPpf &sCmd &sParameters &sAccess &sAccessSpaces &sAccessMachine &sOptionAccess &sOptionAccessMisc &sName &sMachine &sArguments &nVariant
+PRIVATE &bTaskConfig &bExtLoad &bCleanup
+ENTRY &sCmd %LINE &sParamline
+&sParameters=STRing.SCANAndExtract("&sParamline","PARAMETERS=","")
+&sAccess=STRing.SCANAndExtract("&sParamline","ACCESS=","")
+&sAccessSpaces=STRing.SCANAndExtract("&sParamline","ACCESSSPACES=","")
+&sAccessMachine=STRing.SCANAndExtract("&sParamline","ACCESSMACHINE=","")
+&sName=STRing.SCANAndExtract("&sParamline","NAME=","")
+&sMachine=STRing.SCANAndExtract("&sParamline","MACHINE=","")
+&sArguments=STRing.SCANAndExtract("&sParamline","ARGUMENTS=","")
+
+&sParameters=STRing.Replace("&sParameters","""","",0.)
+IF ("&sArguments"!="")
+  &sArguments=&sArguments
+IF ("&sAccess"!="")
+  &sOptionAccess="/ACCESS &sAccess"
+IF ("&sAccessSpaces"!="")
+  &sOptionAccessMisc="/ACCESSSPACES &sAccessSpaces"
+IF ("&sAccessMachine"!="")
+  &sOptionAccessMisc="&(sOptionAccessMisc) /ACCESSMACHINE &sAccessMachine"
+&sName=STRing.Replace("&sName","""","",0.)
+
+&bTaskConfig=STRing.SCAN("task.config,ext.config",STRing.LoWeR("&sCmd"),0.)>=0.
+&bExtLoad=STRing.SCAN("ext.load",STRing.LoWeR("&sCmd"),0.)>=0.
+&bCleanup=STRing.SCAN("task.res,ext.res,ext.delete",STRing.LoWeR("&sCmd"),0.)>=0.
+&sPpf=OS.PresentPracticeFile()
+
+IF (&bTaskConfig||&bExtLoad)
+(
+  IF ("&nVariant"!="32.")&&("&nVariant"!="64.")
+  (
+    IF CPUIS64BIT()
+      &nVariant="64."
+    ELSE
+      &nVariant="32."
+  )
+
+  IF STRing.ComPare("&sArguments","*32BIT*")
+    &nVariant="32."
+  ELSE IF STRing.ComPare("&sArguments","*64BIT*")
+    &nVariant="64."
+)
+
+IF (&bTaskConfig)
+(
+  PRIVATE &sMachineName
+  &sMachineName="RTX-ARM v5"
+  TASK.RESet
+  IF (&nVariant==32.)
+  (
+    GOSUB extension_32bit "&sParameters" "&sOptionAccess"
+    IF !STRing.Compare("&sArguments","*MENU=NONE*")
+      GOSUB menu_32bit "&sMachineName" ""
+    GOSUB autoload_32bit ""
+  )
+  ELSE IF (&nVariant==64.)
+  (
+    PRINTF %ERROR "%s: No support for %ubit, please contact support@lauterbach.com." "RTX-ARM v5" &nVariant
+  )
+)
+ELSE IF (&bExtLoad)
+(
+  PRIVATE &sMachineName &sInfix &sOptionName &sOptionMachine
+  &sInfix=""
+  &sMachineName="RTX-ARM v5"
+  IF ("&sName"!="")
+  (
+    &sInfix=STRing.UPpeR("&(sName).")
+    &sMachineName="&(sName)"
+    &sOptionName="/NAME &sMachineName"
+  )
+  ELSE IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MACHINESPACES)
+  (
+    IF SYStem.Option.MACHINESPACES()
+      &sInfix=TASK.TRANSPOSE.INFIX(OS.FILE.BASENAME("&sPpf",".**"))+"."
+  )
+  IF ("&sMachine"!="")
+  (
+    &sOptionMachine="/MACHINE &sMachine"
+  )
+  IF (&nVariant==32.)
+  (
+    GOSUB extension_32bit "&sParameters" "&sOptionAccess &sOptionAccessMisc &sOptionName &sOptionMachine"
+    IF !STRing.Compare("&sArguments","*MENU=NONE*")
+      GOSUB menu_32bit "&sMachineName" "&sInfix"
+    GOSUB autoload_32bit "&sOptionMachine"
+  )
+  ELSE IF (&nVariant==64.)
+  (
+    PRINTF %ERROR "%s: No support for %ubit, please contact support@lauterbach.com." "RTX-ARM v5" &nVariant
+  )
+)
+ELSE IF (&bCleanup)
+(
+  PRIVATE &sMachineName &sOptionMachine
+
+  &sMachineName="RTX-ARM v5"
+  IF ("&sName"!="")
+  (
+    &sMachineName="&(sName)"
+  )
+  IF ("&sMachine"!="")
+  (
+    &sOptionMachine="/MACHINE &sMachine"
+  )
+  GOSUB menu_delete "&sMachineName"
+  GOSUB autoload_delete "&sOptionMachine"
+)
+
+ENDDO
+
+extension_32bit: ; (options)
+(
+  PARAMETERS &sParameters &sOptions
+  EXTension.LOAD &sParameters &sOptions
+  (
+  VDMyTQAwMDMuMDAxQCgjKVRSQUNFMzIgY29uZmlndXJhdGlvbiBmaWxlIFYwMDMuMDAxIDogYXJt
+  L3J0eAAAAAAAAAAAAAAAdGwAADBQZGwAAAK0ZGEABAAAZXAAAAAkaHMABAnsAABURVhUAAECAwAA
+  I2AAACYAAAAAAAAAAAAAAAAAAAAAAAAAAABOgAAglCH/8HwIAqaQAQAUPGAAADhjFrxIACHlPGAA
+  ADhjFzRIACGpPGAAADhjGkhIACGpSAAKiUgADcVIAA6RSAAWMTxgAAA4YxpsSAAhmTxgAAA4Yxxs
+  SAAhmUgAHY1IAB5xSAAf2UgAIJE8YAAEOGMCpEgAIrWAAQAUfAgDpjghABBOgAAgPSAABIEpCcQs
+  CQAATIIAIJQh/+B8CAKmkAEAJJNhAAyTgQAQk6EAFJPBABiT4QAcPGAAADhjJgRIACFJP2AABJB7
+  CcA8YAAAOGMmEEgAIU09IAAEkGkJrDxgAAA4YyYcSAAhLT0gAASQaQmoPGAAADhjJiRIACEZP4AA
+  BJB8CaQ8YAAAOGMmOEgAIQU/oAAEkH0JoDxgAAA4YyZUSAAg8T/AAASQfgmYPGAAADhjJmhIACDd
+  P+AABJB/CZQ8YAAAOGMmfEgAIMk9IAAEkGkJkIE7CcCBXAmkfUpKFD0AAASRSAnEgV0JoH1KShQ9
+  AAAEkUgJvD1AAASBSgmcfUpKFD0AAASRSAm4gV4JmH1KShQ9AAAEkUgJtIFfCZR9KkoUPUAABJEq
+  CbCAAQAkfAgDpoNhAAyDgQAQg6EAFIPBABiD4QAcOCEAIE6AACCUIf/gfAgCppABACSToQAUk8EA
+  GJPhABxL//6dPGAAADhjJohIACApPSAABJBpCYw8YAAAOGMmoEgAIAk9IAAEkGkJiD+gAAA7vSak
+  f6PreEgAH/E9IAAEkGkJhDxgAAA4YyasSAAf3T0gAASQaQmAPGAAADhjJrRIAB/JPSAABJBpCXw/
+  4AAAO/8mvH/j+3hIAB+xPSAABJBpCXg8YAAAOGMmxEgAH509IAAEkGkJdDxgAAA4YybUSAAfiT0g
+  AASQaQlwPGAAADhjJuRIAB91PSAABJBpCWw8YAAAOGMm8EgAH2E9IAAEkGkJaDxgAAA4Yyb8SAAf
+  TT0gAASQaQlkPGAAADhjJwxIAB85PSAABJBpCWA/wAAAO94nFH/D83hIAB8hPSAABJBpCVw8YAAA
+  OGMnIEgAHw09IAAEkGkJWDxgAAA4YycwSAAe+T0gAASQaQlUPGAAADhjJ0BIAB7lPSAABJBpCVA8
+  YAAAOGMnUEgAHtE9IAAEkGkJTDxgAAA4YydcSAAevT0gAASQaQlIPGAAADhjJ2xIAB6pPSAABJBp
+  CUQ8YAAAOGMneEgAHpU9IAAEkGkJQDxgAAA4YyeESAAegT0gAASQaQk8PGAAADhjJ4hIAB5tPSAA
+  BJBpCTg8YAAAOGMnmEgAHlk9IAAEkGkJNDxgAAA4YyekSAAeUT0gAASQaQkwf+P7eEgAHjU9IAAE
+  kGkJLDxgAAA4Yye4SAAeIT0gAASQaQkoPGAAADhjJ8hIAB4NPSAABJBpCSQ8YAAAOGMn1EgAHfk9
+  IAAEkGkJIDxgAAA4YyfgSAAd5T0gAASQaQkcPGAAADhjJ+xIAB3RPSAABJBpCRg8YAAAOGMoAEgA
+  Hck9IAAEkGkJFH/D83hIAB2tPSAABJBpCRA/wAAAO94oEH/D83hIAB2VPSAABJBpCQw8YAAAOGMo
+  GEgAHY09IAAEkGkJCH+j63hIAB1xPSAABJBpCQQ8YAAAOGMoLEgAHV09IAAEkGkJAH/j+3hIAB1N
+  PSAABJBpCPx/w/N4SAAdPT0gAASQaQj4PGAAADhjKDRIAB0pPSAABJBpCPQ8YAAAOGMoPEgAHRU9
+  IAAEkGkI8DxgAAA4YyhESAAdAT0gAASQaQjsPSAABIBpCcA4YwABfGMANFRj2X6AAQAkfAgDpoOh
+  ABSDwQAYg+EAHDghACBOgAAglCH/8HwIAqaQAQAUPKAAADilL3Q4gAAfPGAABDhjCcxIAB1BPSAA
+  BJBpCcg8YAAAOGML5IABABR8CAOmOCEAEE6AACCUIf/wfAgCppABABST4QAMfH8beHwDIABBggCk
+  f+T7eDxgAAA4YyhMSAAdDTxgAAA4YyhcSAAdDX/k+3g8YAAAOGMoZEgAHIVIABzJPSAABIBpCXh8
+  fxoUSAAcWSwDAABAggBoSAAcrT0gAASAaQlcfH8aFEgAHCV8ZBt4PGAAADhjKGhIABxFSAAciT0g
+  AASAaQmEfH8aFEgAHAFUYwc+PSAAADkpKyBUYxA6fUkYLn0qShR9KQOmToAEIDhgAAJIABxFS///
+  WDiAACBIABwVS///lDxgAAA4YyhwSAAb7UgAHDE9IAAEgGkJYHx/GhRIABvBfGQbeDxgAAA4YylU
+  SAAbyUgAHA09IAAEgGkJOHx/GhRIABudfH8beHxkG3g8YAAAOGMpXEgAHA1/5Pt4PGAAADhjKGRI
+  ABuRPGAAADhjKqBIABuFOIAAIFfjADxIABuFPGAAADhjLORIABttgAEAFHwIA6aD4QAMOCEAEE6A
+  ACA8YAAAOGMofEgAG01L//9gPGAAADhjKIRIABs9S///UDxgAAA4YyiMSAAbLUv//0A8YAAAOGMo
+  mEgAGx1L//8wPGAAADhjKKRIABsNS///IDxgAAA4Yyi0SAAa/Uv//xA8YAAAOGMoxEgAGu1L//8A
+  PGAAADhjKNBIABrdS//+8DxgAAA4YyjgSAAazUv//uA8YAAAOGMo8EgAGr1L//7QPGAAADhjKQRI
+  ABqtS//+wDxgAAA4YykYSAAanUv//rA8YAAAOGMpKEgAGo1L//6gPGAAADhjKTBIABp9S//+kDxg
+  AAA4Yyk8SAAabUv//oCUIf/wfAgCppABABSTwQAIk+EADD0gAASAaQnESAAaMXx+G3hIABBxfH8b
+  eIEjAAAsCQAAQYIAXHxoG3g4YAAAOGMAAYUoAAQsCQAAQIL/9DhjAAFIABqVgH8AACwDAABBggAY
+  f8TzeEv//TWEfwAELAMAAECC//CAAQAUfAgDpoPBAAiD4QAMOCEAEE6AACA4YAAAS///vJQh/+B8
+  CAKmkAEAJJNBAAiTYQAMk4EAEJOhABSTwQAYk+EAHD0gAASD6QnIPSAABIBpCcRIABmBfGQbeH/j
+  +3hL//zFP8AAADveKWx/w/N4SAAZfThgAHpIABmxPGAAADhjKXBIABlpP6AAADu9LOR/o+t4SAAZ
+  WThgAABIABmNPSAABIBpCVh8fxoUSAAZEXxkG3g8YAAAOGMoaEgAGTF/w/N4SAAZKThgAHpIABld
+  PGAAADhjKYBIABkVf6PreEgAGQ04YAAASAAZQT0gAASAaQlEfH8aFEgAGN18fBt4PSAABIBpCUB8
+  fxoUSAAYyXx7G3g9IAAEgGkJVHx/GhRIABidfHobeD0gAASAaQk8fH8aFEgAGKF8Zxt4f0bTeH9l
+  23h/hON4PGAAADhjKbhIABidf8PzeEgAGJU4YAB6SAAYyTxgAAA4YyngSAAYgX+j63hIABh5OGAA
+  AEgAGK09IAAEgGkJSHx/GhRIABhJfHwbeD0gAASAaQlQfH8aFEgAGB18ext4PSAABIBpCUx8fxoU
+  SAAYIXxmG3h/Zdt4f4TjeDxgAAA4YyooSAAYIX/D83hIABgZOGAAekgAGE08YAAAOGMqWEgAGAV/
+  o+t4SAAX/ThgAABIABgxPSAABIBpCTR8fxoUSAAXzXxkG3g8YAAAOGMqdEgAF9V/w/N4SAAXzYAB
+  ACR8CAOmg0EACINhAAyDgQAQg6EAFIPBABiD4QAcOCEAIE6AACCUIf/wfAgCppABABST4QAMP+AA
+  BDv/AAB/4/t4SAAWuTh/ABRIABaxgAEAFHwIA6aD4QAMOCEAEE6AACCUIf/gfAgCppABACSTgQAQ
+  fHwbeEgADYGBIwAALAkAAEGCAJiTYQAMk6EAFJPBABiT4QAcfH8beD+gAAQ/wAAEO94CtDtgAABI
+  AAAQhT8ABCwJAABBggBUgH0JeHxpGhRIABbtfGQbeUGC/+Q4oAAff8PzeEgAFuWbfgAff4TjeH/D
+  83hIABWlLAMAAECC/8CAfwAAg2EADIOhABSDwQAYg+EAHEgAABSDYQAMg6EAFIPBABiD4QAcgAEA
+  JHwIA6aDgQAQOCEAIE6AACCUIf/wfAgCppABABRL//YFPSAABIEpCcgsCQAAQIIAaD0gAASJKQnM
+  LAkAAECCABQ8YAAEOGMAADhjADhIAABUPGAABDhjCcxL//7tPSAABJBpCcg4Y///OSD//XwDSEBB
+  gQAUPGAABDhjAAA4YwAoSAAAIDxgAAQ4YwAAOGMASEgAABA8YAAEOGMAADhjACiAAQAUfAgDpjgh
+  ABBOgAAgPGAAADhjDJBOgAAglCH/8HwIAqaQAQAUS//1WTxgAAQ4YwB0gAEAFHwIA6Y4IQAQToAA
+  IJQh/+B8CAKmkAEAJJOhABSTwQAYk+EAHD0gAAA5KSN4PUAABDlKAqSBCQAkgOkAKIDJACyAqgAI
+  gIoABDxgAAA4YytgSAAVgT/AAASD/gnAf+P7eEgAFVl8ZRt4f+T7eDxgAAA4YyuUSAAVXTiAACCA
+  fgnASAAVXT/gAAA7/yzkf+P7eEgAFUE9IAAEg6kJxH+j63hIABUZfGUbeH+k63g8YAAAOGMrtEgA
+  FR09IAAEg6kJvH+j63hIABT1fGUbeH+k63g8YAAAOGMr2EgAFPk9IAAEg6kJsH+j63hIABTRfGUb
+  eH+k63g8YAAAOGMr/EgAFNU9IAAEg6kJtH+j63hIABStfGUbeH+k63g8YAAAOGMsIEgAFLE8YAAA
+  OGMsREgAFKWAfgnAPSAABIEpCah8Y0oUSAAUeTiAAEBIABShf+P7eEgAFIGAAQAkfAgDpoOhABSD
+  wQAYg+EAHDghACBOgAAglCH/8HwIAqaQAQAUPGAABDhjAHQ4YwAQSAATfYABABR8CAOmOCEAEE6A
+  ACCUIf/wfAgCppABABQ8oAAAOKUskDiAAB88YAAEOGMJzEgAFGk9IAAEkGkJyDxgAAA4Yw6MgAEA
+  FHwIA6Y4IQAQToAAIJQh//B8CAKmkAEAFEv/8109IAAEgSkJyCwJAABBggA0PGAABDhjAJgsCf//
+  QYIAFIABABR8CAOmOCEAEE6AACA8YAAEOGMAmDhjACBL///kPGAABDhjAJg4YwAQS///1JQh//B8
+  CAKmkAEAFDxgAAQ4YwCYOGMAMEgAEq2AAQAUfAgDpjghABBOgAAglCH/8HwIAqaQAQAUfGQbeCgD
+  Jw9BgQAgPGAAADhjLJxIABNFgAEAFHwIA6Y4IQAQToAAIDxgAAA4YyykSAATKUv//+SUIf+QfAgC
+  ppABAHSTAQBQkyEAVJNBAFiTYQBck4EAYJOhAGSTwQBok+EAbD0gAASDCQnIfwTDeDxgAAA4Yyyo
+  SAATTTxgAAA4Yyy8SAATTX8Ew3g8YAAAOGMoZEgAEsVIABMJPSAABIBpCSx8eBoUSAASmSwDAABA
+  ggD8SAAS7T0gAASAaQkgfHgaFEgAEn1L//8tSAAS1T0gAASAaQkYfHgaFEgAEmVL//8VSAASvT0g
+  AASAaQkkfHgaFEgAEk1L//79P+AAADv/LOR/4/t4SAASUX/j+3hIABJJOGAAekgAEn08YAAAOGMs
+  xEgAEjU4YAAASAASaT0gAASAaQkcfHgaFEgAEgV8eRt5QYIAdJIBADCSIQA0kkEAOJJhADySgQBA
+  kqEARJLBAEiS4QBMPmAABD6AAAA6lCzoPqAAADq1KGQ+wAAAOtYs+D4gAAA6MSqgP2AAADt7LQA+
+  QAAAOlItHD4AAAA6EC0If/f7eEgAAdw4gAAgSAARwUv//wA4YAB+SAAR2TxgAAA4YyzgSAARkThg
+  AABIABHFSAAAMH4Dg3hIABF9SAABhIIBADCCIQA0gkEAOIJhADyCgQBAgqEARILBAEiC4QBMP+AA
+  ADv/LOR/4/t4SAARSThgAHpIABF9PGAAADhjLQxIABE1f+P7eEgAES04YAAASAARYT0gAASAaQko
+  fHgaFEgAEP18fxt5QYIAvD9AAAA7WihMP2AAADt7KFw/gAAAO5woZD+gAAA7vSqgP8AAADveLOQ/
+  IAAEf+T7eH9D03hIABFBf2PbeEgAEUV/5Pt4f4PjeEgAEMF/o+t4SAAQuTiAACB/4/t4SAAQ3X/D
+  83hIABClgHkJdHx/GhRIABCBfH8beUCC/7Q8YAAAOGMs5EgAEIWAAQB0fAgDpoMBAFCDIQBUg0EA
+  WINhAFyDgQBgg6EAZIPBAGiD4QBsOCEAcE6AACA4YAB+SAAQiTxgAAA4YyzgSAAQQThgAABIABB1
+  S///qH5Dk3hIABAtf1/TeCgaACBAgQAIO+AAIH/l+3h/pOt4OGEACEgAEAF/5Pt4OGEACEgAECUo
+  GgAgQYH+eH7ju3hIAA/xPSAABIBpCQx8eRoUSAAPyXx5G3lBgv5kg7MJFH+56hR/pOt4foOjeEgA
+  EDF/pOt4fqOreEgAD7k9IAAEgGkJEHx5GhRIAA95fGQbeH7Ds3hIAA+dPSAABIBpCSR8eBoUSAAP
+  dXx6G3lBggBAO9r//3/e6hQ7nQAQf7/reH/j+3hIAA89fGQbeH9j23hIAA9hfB/wQEGCABQ7/wAB
+  fBz4QECC/9xL//8YfiOLeEgAD0FL//8UlCH/8HwIAqaQAQAUPKAAADilLcQ4gAAfPGAABDhjCcxI
+  AA9tPSAABJBpCcg8YAAAOGMTiIABABR8CAOmOCEAEE6AACCUIf/wfAgCppABABRL/+5hPSAABIEp
+  CcgsCf//QYIANDxgAAQ4YwD0LAkAAECCABSAAQAUfAgDpjghABBOgAAgPGAABDhjAPQ4YwAgS///
+  5DxgAAQ4YwD0OGMAEEv//9SUIf/wfAgCppABABSTwQAIk+EADHx/G3h8ZBt4PGAAADhjLcxIAA7d
+  PGAAADhjLdxIAA7df+T7eDxgAAA4YyhkSAAOVUgADpk9IAAEgGkI/Hx/GhRIAA4pLAMAAECCAEhI
+  AA59PSAABIBpCQR8fxoUSAAN9Xx+G3goAwABQYIAeCgDAAJBggCALAMAAEGCACR8ZBt4PGAAADhj
+  KUxIAA35SAAAHDiAACBIAA4FS///tDxgAAA4YyhwSAAN3UgADiE9IAAEgGkJAHx/GhRIAA2ZfGkb
+  eUGCAEAoCQABQYIBAH/E83g8YAAAOGMpTEgADalIAAAwPGAAADhjLeRIAA2ZS///vDxgAAA4YyiE
+  SAANiUv//6w8YAAAOGMt7EgADXlIAA29PSAABIBpCPR8fxoUSAANTXxkG3g/wAAAO94spH/D83hI
+  AA1RSAANlT0gAASAaQjwfH8aFEgADSV8ZBt4f8PzeEgADTFIAA11PSAABIBpCOx8fxoUSAANBXx/
+  G3h8ZBt4PGAAADhjKVxIAA11f+T7eDxgAAA4YyhkSAAM+TxgAAA4YyqgSAAM7TiAACBX4wA8SAAM
+  7TxgAAA4YyzkSAAM1YABABR8CAOmg8EACIPhAAw4IQAQToAAIDxgAAA4Yy30SAAMsUv//ziUIf/w
+  fAgCppABABST4QAMOGAAfkgADNE8YAAAOGMuAEgADIk4YAAASAAMvT0gAASAaQnAPSAABIEpCZB8
+  Y0oUSAAMUXx/G3lBggAsk8EACD/AAAR/4/t4S//9vYB+CPh8fxoUSAAMLXx/G3lAgv/og8EACIAB
+  ABR8CAOmg+EADDghABBOgAAglCH/8HwIAqaQAQAUPSAABIBpCchL//15PGAAADhjKWxIAAwBgAEA
+  FHwIA6Y4IQAQToAAIJQh//B8CAKmkAEAFDxgAAQ4YwD0OGMAMEgACwmAAQAUfAgDpjghABBOgAAg
+  lCH/8HwIAqaQAQAUS//p4T0gAAQ4aQLUPUAABIFKCcSRSQLUOSAABJEjAASAAQAUfAgDpjghABBO
+  gAAglCH/8HwIAqaQAQAUk+EADHx/G3hL/+rpPSAABIBpCYh8fxoUSAALMYABABR8CAOmg+EADDgh
+  ABBOgAAglCH/8HwIAqaQAQAUk+EADHx/G3hL/+qtPSAABIBpCXh8fxoUSAALDXxkG3lAggAcOGAA
+  AIABABR8CAOmg+EADDghABBOgAAgP+AABDv/AuQ4oAAff+P7eEgACuU5IAAAmT8AH3/j+3hL///M
+  lCH/4JPBABh8fht5QYIA4DzgAAQ5BwMEgUcDBDkqAAGRJwMEVUoQOn1IUhSTygAELAkBaEGCALh8
+  CAKmkAEAJD0gAASAaQlsfH4aFEgACnksAwAAQYIAcHweGEBBggB0k6EAFJPhABw/4AAEO/8DBD+g
+  AASBXwAAOQoAAZEfAABVShA6fV9SFJBqAAQsCAFoQYIATIE9CWx8Y0oUSAAKKSwDAABBggBUfB4Y
+  QECC/8iDoQAUg+EAHIABACR8CAOmSAAALIABACR8CAOmSAAAIIABACR8CAOmSAAAFIOhABSD4QAc
+  gAEAJHwIA6aDwQAYOCEAIE6AACCDoQAUg+EAHIABACR8CAOmS///5JQh/+B8CAKmkAEAJJOhABST
+  wQAYk+EAHD0gAAQ5QAAAkUkDBD0gAASAaQnESAAJjTkj//85QP/9fAlQQEGBACQ9AAAEOUgDBIEo
+  AwQ46QABkOgDBFUpEDp9KkoUkGkABD0gAASAaQm8SAAJUXx/G3g9IAAEgGkJsEgACUF8fRt4PSAA
+  BIBpCbRIAAkxfH4beCwfAABBggCwPOAABDkHAwSBRwMEOSoAAZEnAwRVShA6fUhSFJPqAAQsCQFo
+  QYIAiD0gAASAaQl0fH8aFEgACO0sAwAAQYIAcHwfGEBBggBok2EADJOBABA/gAAEO5wDBD9gAASB
+  XAAAOQoAAZEcAABVShA6fVxSFJBqAAQsCAFoQYIALIE7CXR8Y0oUSAAInSwDAABBggBsfB8YQECC
+  /8iDYQAMg4EAEEgAAAyDYQAMg4EAEH+j63hL//2tf8PzeEv//aU9IAAEOGkDBIEpAwRVKRA6fSNK
+  FDlAAACRSQAEOGMABIABACR8CAOmg6EAFIPBABiD4QAcOCEAIE6AACCDYQAMg4EAEEv//6yUIf/w
+  fAgCppABABRL/+ehS//+VYABABR8CAOmOCEAEE6AACCUIf/wfAgCppABABSTwQAIk+EADHx+G3hL
+  /+dxPSAABDvpCKyTyQisPSAABIBpCUR8fhoUSAAHxZB/AAg9IAAEgGkJQHx+GhRIAAelgT8ACH0p
+  GhSRPwAEPSAABIBpCTx8fhoUSAAHlZB/AAyBPwAIOSkABJE/AAh/4/t4gAEAFHwIA6aDwQAIg+EA
+  DDghABBOgAAglCH/4HwIAqaQAQAkk6EAFJPBABiT4QAcfH4beHyfI3h8ZBt4PGAAADhjLoRIAAf5
+  iV8ABzugAAAsCgAAQYIALIk/AAg5Kf/QVSkGPigJAAlBgQAYOSr/0FUpBj4hKQAJf73pEDu9AAE9
+  IAAEgGkJPHx+GhRIAAbxfH8beHxkG3g8YAAAOGMupEgAB509IAAEgGkJVHx+GhRIAAa1cH4AEEGC
+  ALg9IAAEOSkBWDkpAAR/6vt4OQAAEH0JA6aRSQAAOUoABDkpAAxCAP/0OV8AQCweAABAggAIOV8A
+  iD0gAAQ5KQFYkUkAxJFJANAsHQAAQYIARD0gAAQ5KQFYPQAAADkILtiRCQDAPQAAADkILuCRCQDM
+  PQAAADkILuiRCQDYPQAAADkILvCRCQDkkUkA3JFJAOg8YAAEOGMBWIABACR8CAOmg6EAFIPBABiD
+  4QAcOCEAIE6AACA7/wBAPGAAADhjLsBIAAbBS///PJQh/7B8CAKmkAEAVJPhAEx8fxt4S//ldT0g
+  AASAaQnESAAF2XwD+ABBggB0OIAACDhhAAhIAAadLAMAAECCAEA4oAAHPIAAADiELxg4YQAISAAE
+  uXxqG3g8YAAEOGMIvCwKAABBggAogAEAVHwIA6aD4QBMOCEAUE6AACA8YAAAOGMu+EgABkFL//+4
+  OIEACH/j+3hL//4BS///0DxgAAQ4YwFYOGMA/Ev//8CUIf/wfAgCppABABRL/+TRPGAABDhjAmyA
+  AQAUfAgDpjghABBOgAAglCH/8HwIAqaQAQAUOGAAAEgABb05IAAALAMAAkGCACA8YAAEkSMIyDhj
+  CMiAAQAUfAgDpjghABBOgAAgOGAAAUgABY09IAAEgSkJxH0pGnh9KQA0VSnZfkv//8iUIf/wfAgC
+  ppABABST4QAMOGAABEgABV18fxt4fGQbeDxgAAA4Yy98SAAEuT0gAASAaQmIfH8aFEgABHl8ZBt4
+  PGAAADhjL5RIAASZPGAAADhjL6BIAASNgAEAFHwIA6aD4QAMOCEAEE6AACCUIf/wfAgCppABABQ8
+  YAAEOGMCbDhjAAhIAAOpgAEAFHwIA6Y4IQAQToAAIJQh//B8CAKmkAEAFEv/47U9IAAEOGkI0DlA
+  AASRSQjQPSAABIEpCcSRIwAMkSMACJEjAAQ9IAAAOSkehJEjABCAAQAUfAgDpjghABBOgAAglCH/
+  8HwIAqaQAQAUk+EADDhgAABIAAR1O+AAACwDAAJBggAcf+P7eIABABR8CAOmg+EADDghABBOgAAg
+  OGAAAUgABEk9IAAEgSkJxHwDSABAgv/UOGAABEgABDF8fxt4OGAAAEgABDFL//+8lCH/8HwIAqaQ
+  AQAUPGAABDhjAnxIAALRgAEAFHwIA6Y4IQAQToAAIJQh//B8CAKmkAEAFEv/4tE8YAAAOGMfQIAB
+  ABR8CAOmOCEAEE6AACCUIf/wfAgCppABABQ4YAAASAADvSwDAAJBggAcPGAABDhjCOSAAQAUfAgD
+  pjghABBOgAAgOGAAAUgAA5U9IAAEgSkJxHwJGABBggBUPKAABDilCOQ4gAABPSAABIBpCYRIAAO1
+  LAMAAEGCAIQ9IAAEgSkI6CgJAAJBggCAKAkAAkGBAEQsCQAAQYIAWD0gAAQ5QAACkUkI6EgAAFQ4
+  YAAESAADLT0gAAQ5SQjkkGkI5DkgAAGRKgAEOGAAAEgAAx1L//9cOSn//SgJAAZBgQA8PSAABDlA
+  AAORSQjoSAAAED0gAAQ5QAAEkUkI6DhgAABIAALpS///KD0gAAQ5QAABkUkI6Ev//+g9IAAEOSkI
+  5DlAAACRSQAES///1JQh//B8CAKmkAEAFDxgAAQ4YwKESAABcYABABR8CAOmOCEAEE6AACCUIf/w
+  fAgCppABABST4QAMfH8beHxlG3h8ZBt4PGAAADhjL+RIAAJ9PIAAADiEL/x/4/t4SAAAiSwDAABB
+  ggBIPIAAADiEMAR/4/t4SAAAcXxpG3g4YAAELAkAAEGCABQ8YAAAOGMwEEgAAfE4YAAAgAEAFHwI
+  A6aD4QAMOCEAEE6AACBL/9+hPSAABIBpCcRL///glCH/8HwIAqaQAQAUPGAABDhjAoxIAACRgAEA
+  FHwIA6Y4IQAQToAAIIlDAAAsCgAAQYIAIIkkAAB8CVAAQIIAFDiEAAGNQwABLAoAAECC/+iIZAAA
+  fGNQUE6AACAsBQAAQYIAMDiE//85A///fKkDpo0oAAGMZAABfGNIUUyCACAsCQAATYIAIEIA/+hO
+  gAAgOGAAAE6AACA4QAEBfIIQCE6AACA4QAECfIIQCE6AACA4QAEDfIIQCE6AACA4QAEEfIIQCE6A
+  ACA4QAEFfIIQCE6AACA4QAEHfIIQCE6AACA4QAEIfIIQCE6AACA4QAEJfIIQCE6AACA4QAEMfIIQ
+  CE6AACA4QAEOfIIQCE6AACA4QAIBfIIQCE6AACA4QAIEfIIQCE6AACA4QAIGfIIQCE6AACA4QAMB
+  fIIQCE6AACA4QAMCfIIQCE6AACA4QAMDfIIQCE6AACA4QAMRfIIQCE6AACA4QAQAfIIQCE6AACA4
+  QAQxfIIQCE6AACA4QAQyfIIQCE6AACA4QAQzfIIQCE6AACA4QARBfIIQCE6AACA4QARSfIIQCE6A
+  ACA4QARTfIIQCE6AACA4QAUTfIIQCE6AACA4QAUhfIIQCE6AACA4QAcBfIIQCE6AACA4QAcEfIIQ
+  CE6AACA4QAcUfIIQCE6AACA4QAgBfIIQCE6AACA4QAgCfIIQCE6AACA4QAoBfIIQCE6AACA4QAoC
+  fIIQCE6AACA4QAoTfIIQCE6AACA4QAoUfIIQCE6AACA4QAsDfIIQCE6AACC+AgMEAAAABQBAVkVS
+  U0lPTi1JTkZPQAA5MjY2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJDIAAAfnAAAABwAA
+  ABMAAAAAAAAAAAAAAABodHRwczovL3N2bi5pbnRlcm4ubGF1dGVyYmFjaC5jb20vc3ZuL2tlcm5l
+  bHNyYy9icmFuY2hlcy9uaWdodGx5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGh0dHBzOi8vc3ZuLmludGVybi5sYXV0ZXJiYWNo
+  LmNvbS9zdm4va2VybmVsc3JjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYmF1bWVpc3RlcgAAAAAA
+  AGVkay1saW51eDY0Yml0LTQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  AAAAAAAAAABHQ0MgOS41LjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB+cAAAAHAAAAEwAAAE4AACQyAAAH5wAAAAcAAAAAAAAA
+  AAAAAAAAAAAAAAAAAAABQV5SVFgtQVJNIHY1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAA
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAb3NSdHhJbmZvAAAAb3NSdHhJbmZv
+  X3QALm9zX2lkAAAudGhyZWFkLnJ1bi5jdXJyAAAAAC50aHJlYWQucmVhZHkudGhyZWFkX2xpc3QA
+  AAAudGhyZWFkLndhaXRfbGlzdAAAAC50aHJlYWQuZGVsYXlfbGlzdAAALnRpbWVyLmxpc3QAc3Ry
+  dWN0IG9zUnR4VGhyZWFkX3MAAAAALmlkAC5zdGF0ZQAALmZsYWdzAAAuYXR0cgAAAC5uYW1lAAAA
+  LnRocmVhZF9uZXh0AAAAAC50aHJlYWRfcHJldgAAAAAuZGVsYXlfbmV4dAAuZGVsYXlfcHJldgAu
+  dGhyZWFkX2pvaW4AAAAALmRlbGF5AAAucHJpb3JpdHkAAAAucHJpb3JpdHlfYmFzZQAALnN0YWNr
+  X2ZyYW1lAAAAAC5mbGFnc19vcHRpb25zAAAud2FpdF9mbGFncwAudGhyZWFkX2ZsYWdzAAAALnN0
+  YWNrX21lbQAALnN0YWNrX3NpemUALnNwAC50aHJlYWRfYWRkcgAAAAAudHpfbWVtb3J5AABvc1J0
+  eE1lc3NhZ2VRdWV1ZV90AC50aHJlYWRfbGlzdAAAAAAubXNnX3NpemUAAAAubXNnX2NvdW50AAAu
+  bXNnX2ZpcnN0AAAubXBfaW5mby5tYXhfYmxvY2tzAG9zUnR4TWVzc2FnZV90AAAubmV4dAAAAHN0
+  cnVjdCBvc1J0eFRpbWVyX3MALnR5cGUAAAAudGljawAAAC5sb2FkAAAALmZpbmZvAABUQVNLLlRo
+  cmVhZCAleAAAVEFTSy5UAAAlOHgAJTNkLgAAAABpbmFjdGl2ZQAAAAByZWFkeQAAAHJ1bm5pbmcA
+  d2FpdCBkZWxheQAAd2FpdCBqb2luAAAAd2FpdCB0aHIuZmxhZwAAAHdhaXQgZXZlbnQuZmxhZwB3
+  YWl0IG11dGV4AAB3YWl0IHNlbWFwaG9yZQAAd2FpdCBtZW1vcnlwb29sAHdhaXQgbWVzc2FnZSBn
+  ZXQAAAAAd2FpdCBtZXNzYWdlIHB1dAAAAAB3YWl0IGludGVydmFsAAAAd2FpdCBvcgB3YWl0IGFu
+  ZAAAAAB3YWl0IG1haWxib3gAAAAAKCVkLikAAAAlNWQuAAAAAERhdGEuTGlzdCAleAAAAAAKCgAA
+  QmFzZV9Qcmlvcml0eQAAAFN0YWNrX01lbW9yeSAgIFN0YWNrX3NpemUgICBTdGFja19mcmFtZSAg
+  IEN1cnJlbnRfc3AAAAAAMHglOHggICAgIDB4JTh4ICAgMHgleCAgICAgICAgIDB4JTh4AAAAAFRo
+  cmVhZF9GbGFncyAgICBUaHJlYWQvRXZlbnRfRmxhZ3NfT3B0aW9ucyAgIFdhaXRpbmdfVGhyZWFk
+  L0V2ZW50X0ZsYWdzADB4JTh4ICAgICAgMHgleCAgICAgICAgICAgICAgICAgICAgICAgICAgMHgl
+  OHgAAFRydXN0Wm9uZSBNZW1vcnkgSWRlbnRpZmllcgAweCU4eAAAAG1hZ2ljICAgIAAAAG5hbWUg
+  ICAgICAgICAgICAgICAgICAgICAgAABwcmlvAAAAAHN0YXRlICAgICAgIAAAAABkZWxheSAAAGVu
+  dHJ5ICAgAAAAAFNvcnJ5OiB0aHJlYWQgbm90IGZvdW5kLgAAAABUQVNLAAAAAFRIUkVBRAAAVGhy
+  ZWFkAABAKD0pX19SVE9TX1JUWEFSTV9fVEFTS19UAAAA///baP//3Aj//9wY///cKP//3Dj//9xI
+  ///cWP//3Gj//9x4///ciP//3Jj//9yo///cuP//3Mj//9zY///c6CVAY01URCBWZXJzaW9uICAl
+  cyAgJXMgICUwMmQuJTAyZC4lMDRkIChCdWlsZCAlcykKCgBvc1J0eEluZm8gICAgICAgICU4eCAg
+  ICAlOHggIAAAAGN1cnJlbnRfdGhyZWFkICAgJTh4ICAgICU4eCAgICAKAAAAAHJlYWR5X2xpc3Qg
+  ICAgICAgJTh4ICAgICU4eCAgICAKAAAAAGRlbGF5X2xpc3QgICAgICAgJTh4ICAgICU4eCAgICAK
+  AAAAAHdhaXRfbGlzdCAgICAgICAgJTh4ICAgICU4eCAgICAKAAAAAFJUWCB2ZXJzaW9uICAgICAg
+  AAAAVEVTVAAAAABhcmd1bWVudCAgICAgICAgIHZhbHVlICAgICAgIGNvbnRlbnQgICBzeW1ib2wA
+  AABtc2dxdWV1ZQAAAAAlNGQuAAAAACVkLgBUQVNLLk1zZ1F1ZXVlICV4AAAAAFRBU0suTVEAbWVz
+  c2FnZSAgIHByaW8gIGNvbnRlbnQKAAAAAG5vbmUKAAAARGF0YS5kdW1wICVhAAAAACAgJTNkLiAA
+  ICUyeAAAAAAuLi4Ad2FpdGluZyB0aHJlYWRzAC4uLiAgAAAAbmFtZSAgICAgICAgICAAAGNvdW50
+  AAAAbWF4ICAAAABzaXplIAAAAFNvcnJ5OiBtZXNzYWdlIHF1ZXVlIG5vdCBmb3VuZC4AUGxlYXNl
+  IHNwZWNpZnkgYSBtZXNzYWdlIHF1ZXVlIGlkLgAATVNHUVVFVUUAAAAATXNnUXVldWUAAAAAQCg9
+  KV9fUlRPU19SVFhBUk1fX1RBU0tfTVEAAHRpbWVyAAAAVEFTSy5USW1lciAleAAAAFRBU0suVEkA
+  c3RvcHBlZABvbmNlAAAAAHBlcmlvZGljAAAAAGFjdGl2ZSB0aW1lcnM6CgBzdGF0ZSAgICAAAAB0
+  eXBlICAgICAAAAB0aWNrIAAAAGxvYWQgAAAAZnVuYyAAAABTb3JyeTogdGltZXIgbm90IGZvdW5k
+  LgBUSU1FUgAAAFRJbWVyAAAAQCg9KV9fUlRPU19SVFhBUk1fX1RBU0tfVEkAAGdldENvcnRleE0z
+  Q29udGV4dDogbWFnaWM9JTh4AAAAZ2V0Q29ydGV4TTNDb250ZXh0OiBzcD0lOHgAAGV4dGVuZGVk
+  IHN0YWNrIGZyYW1lAAAAAHBzcF9ucwAAbXNwX25zAABwc3BfcwAAAG1zcF9zAAAAISFBUk0gQ29u
+  dGV4dDogVXBkYXRlIG5lZWRlZCEAAABDT1JURVhNAHI0AAByNQAAcjYAAHI3AAByOAAAcjkAAHIx
+  MAByMTEAcjAAAHIxAAByMgAAcjMAAHIxMgByMTQAcGMAAHhwc3IAAAAAcHNwAG1zcABoYXJkd2Fy
+  ZXRocmVhZAAALS0tICBUQVNLICBtYWdpYyA9ICU4eAAAICBpZCA9ICVkLgAAICAtLS0AAABfX1JU
+  T1NfUlRYQVJNX19BTAAAAF9fUlRPU19SVFhBUk1fX0FTAAAAX19SVE9TX1JUWEFSTV9fQVQAAABw
+  YXJhbWV0ZXIgMTogMHglOHggPSAlcwBtYWdpYwAAAG1hZ2ljc2l6ZQAAAHVua25vd24gdG9waWMA
+  AABUQVNLLkNPTkZJRwBfX1JUT1NfUlRYQVJNX19GVU5DAFJUWC1BUk0gVjUAAEFSTQBEQVRBAAAq
+  9AAAL+AAACr8AAArBAAABXAAACrsAAAq7AAALEAAACxAAAAFcAAAAAMAZAAAAAQAWAAACLAAAAAD
+  AGQAAAAEAFgAAAgYAAAAAgAAAAAAACrQAAAAAAAAKnwAACqIAAAqpAAAKqwAACq8AAAqxAAAAAAA
+  AAABADwAAAAALGAAAAy4AAAsWAAALFgAACxAAAAsQAAADIQAAAADAEYAAAAEANwAAA9cAAAAAgAA
+  AAAAAC1sAAAAAAAAAAIAAAAAAAAtTAAAAAAAAC2QAAAtwAAALZwAAC2oAAAOSAAAKnwAAC0kAAAt
+  NAAALTwAAC1EAAAAAAAAAAMAVQAAAAQBOAAAFdQAAAACAAAAAAAALkAAAAAAAAAAAwJVAAAABAE4
+  AAAWXAAALlgAAC6AAAAuYAAALmgAABNEAAAqfAAALSQAAC4QAAAuHAAALigAAC4wAAAuOAAAAAAA
+  AC8gAAAAAAAAAAQAAC8kAAAAAAAAAAQAAC8oAAAAAAAAAAQAAC8sAAAAAAAAAAQAAC8wAAAAAAAA
+  AAQAAC80AAAAAAAAAAQAAC84AAAAAAAAAAQAAC88AAAAAAAAAAQAAC9AAAAAAAAAAAQAAC9EAAAA
+  AAAAAAQAAC9IAAAAAAAAAAQAAC9MAAAAAAAAAAQAAC9QAAAAAAAAAAQAAC9UAAAAAAAAAAQAAC9Y
+  AAAAAAAAAAQAAC9cAAAAAAAAAAQAAC9kAAAAAAAAAAAAAC9oAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC9sAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB1AAAAdnAAA
+  L6gAAB0YAAAvvAAAHjQAAC/QAAAfGAAAMCAAAAADAAAAFwAAAAAAADAsAAAghAAALEAAADBAAAAw
+  TAAAAABUMzJF
+  )
+  RETURN
+)
+
+menu_32bit: ;(header, infix)
+(
+  PMACRO.LOCK
+  (
+    PRIVATE &sHeader &sInfix &sMenuName
+    PARAMETERS &sHeader &sInfix
+    &sMenuName=TASK.TRANSPOSE.INFIX("&sHeader")
+    IF MENU.EXIST("TASK.&(sMenuName)")
+      MENU.Delete.NAME TASK.&(sMenuName)
+    IF MENU.EXIST("EXT.&(sMenuName)")
+      MENU.Delete.NAME EXT.&(sMenuName)
+    MENU.ReProgram
+    (&+
+; --------------------------------------------------------------------------------
+; @Title: RTX-ARM specific menu
+; @Description: -
+; @Author: DIE
+; @Copyright: (c) 1989-2021 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: rtx.m 7861 2022-07-29 13:45:42Z amerkle $
+
+NAME "TASK.&(sMenuName)"
+IF !MENU.EXIST("TASK.&(sMenuName)")
+(
+add
+menu
+(
+  POPUP "&(sHeader)"
+  (
+    default
+    menuitem "Display &Threads"        "TASK.&(sInfix)Thread"
+    menuitem "Display &Message Queue..."
+    (
+        dialog
+        (
+          header "Message Queue"
+          pos 1. 1. 30.
+var:      defedit "" ""
+          pos 32. 1. 7.
+br:       button "Browse..."
+          (
+            PRIVATE &wildcard
+            &wildcard=dialog.string(var)
+            if "&wildcard"==""
+              &wildcard="*"
+            if !string.find("&wildcard","*?")
+              &wildcard="*&wildcard*"
+            sYmbol.Browse.Var &wildcard osMessageQueueId_t /Click "DIALOG.Set var ""*""" /Delete
+          )
+          pos 40. 1. 7.
+          defbutton "Ok"
+          (
+            PRIVATE &var
+            &var=dialog.string(var)
+            TASK.&(sInfix)MsgQueue var.value(&var)
+            dialog.end
+          )
+          pos 0. 0. 49. 3.
+          box "Message Queue"
+        )
+    )
+    menuitem "Display &Timer..."
+    (
+        dialog
+        (
+          header "Display Timer"
+          pos 1. 1. 20.
+ti.act:   choosebox "active timers"
+          (
+            dialog.disable var
+            dialog.disable br
+          )
+          pos 1. 2.
+ti.one:   choosebox "selected timer"
+          (
+            dialog.enable var
+            dialog.enable br
+          )
+          pos 1. 3. 30.
+var:      defedit "" ""
+          pos 32. 3. 7.
+br:       button "Browse..."
+          (
+            PRIVATE &wildcard
+            &wildcard=dialog.string(var)
+            if "&wildcard"==""
+              &wildcard="*"
+            if !string.find("&wildcard","*?")
+              &wildcard="*&wildcard*"
+            sYmbol.Browse.Var &wildcard osTimerId_t /Click "DIALOG.Set var ""*""" /Delete
+          )
+          pos 40. 3. 7.
+          defbutton "Ok"
+          (
+            PRIVATE &var
+            &var=dialog.string(var)
+            if dialog.boolean(ti.one)
+              TASK.&(sInfix)TImer var.value(&var)
+            else
+              TASK.&(sInfix)TImer
+            dialog.end
+          )
+          pos 0. 0. 49. 5.
+          box "Timer"
+        )
+        dialog.set ti.one
+    )
+    if !interface.gdb()
+    (
+      separator
+      popup "&Stack Coverage"
+      (
+        menuitem "&List Stacks"    "TASK.&(sInfix)STacK.view"
+        menuitem "Add Task"        "TASK.&(sInfix)STacK.ADD"
+        menuitem "Remove Task"     "TASK.&(sInfix)STacK.RM"
+        menuitem "&Reset Coverage"
+        (
+          if icd()||simulator()
+          (
+            PRIVATE &yes
+            dialog.yesno "Overwrite unused stack space" "with stack fill pattern?"
+            entry &yes
+            if !&yes
+              enddo
+            )
+          TASK.&(sInfix)STacK.Init
+        )
+        menuitem "Stack &Pattern..."
+        (
+            dialog
+            (
+              header "Stack Pattern"
+              pos 0 0 13. 3.
+              box "initialized pattern:"
+              pos 1 1 11. 1.
+  pattern:    defedit "" ""
+              pos 14. 1 6 1
+              defbutton "OK"
+              (
+                PRIVATE &pattern
+                &pattern=dialog.string(pattern)
+                TASK.&(sInfix)STacK.PATtern &pattern
+                dialog.end
+              )
+            )
+            dialog.set pattern "0xCC"
+        )
+      )
+    )
+  )
+  popup "Trace"
+  (
+    popup "List"
+    (
+      separator
+      menuitem "&Task Switches"     "Trace.List List.TASK"
+      menuitem "&Default and Tasks" "Trace.List List.TASK DEFault"
+    )
+  )
+  popup "Perf"
+  (
+    separator
+    popup "&Task Runtime"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+        )
+        if a.mode.flow()
+        (
+          Break.Delete /TraceEnable
+          Break.Set  C:0x1F:::task.&(sInfix)config(magic) /TraceEnable
+        )
+      )
+      menuitem "[:perf]Show &Numerical"   "Trace.STATistic.TASK"
+      menuitem "[:achart]Show as &Timing" "Trace.CHART.TASK"
+      menuitem "[:achart]Tracking with Trace &List"
+      (
+        Trace.List List.TASK DEFault /Track
+        Trace.CHART.TASK /Track
+      )
+    )
+    popup "Task &Function Runtime"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+          Analyzer.STATistic.PreFetch on
+        )
+        if a.mode.flow()
+        (
+          Break.Delete /TraceData
+          Break.Set  C:0x1F:::task.&(sInfix)config(magic) /TraceData
+        )
+      )
+      menuitem "[:perf]Show &Numerical"     "Trace.STATistic.TASKFUNC"
+      menuitem "[:perf]Show as &Tree"       "Trace.STATistic.TASKTREE"
+      menuitem "[:perf]Show &Detailed Tree" "Trace.STATistic.TASKTREE ALL"
+      menuitem "[:achart]Show as &Timing"   "Trace.CHART.TASKFUNC"
+      menuitem "[:alist]Show N&esting"      "Trace.List List.TASK FUNC TI.FUNC"
+    )
+    popup "Task &Status"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+        )
+      )
+      menuitem "[:perf]Show &Numerical"   "Trace.STATistic.TASKSTATE"
+      menuitem "[:achart]Show as &Timing" "Trace.CHART.TASKSTATE"
+      menuitem "[:achart]Tracking with Trace &List"
+      (
+        Trace.List List.TASK DEFault /Track
+        Trace.CHART.TASKSTATE /Track
+      )
+    )
+  )
+  popup "&Help"
+  (
+    MENUITEM "[:manual]OS Awareness Manual RTXARM" "HELP __RTOS_RTXARM_"
+  )
+)
+
+
+menu "task.&(sInfix)t"
+(
+  default
+  menuitem "Display detailed"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    TASK.&(sInfix)Task &magic
+  )
+  menuitem "Display thread struct"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Var.View %Open %String (struct osRtxThread_s*)(&address)
+  )
+  separator
+  menuitem "Display Stack Frame"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    Var.Frame /Locals /Caller /Task &magic
+  )
+  menuitem "Display Registers"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    Register /Task &magic
+  )
+  menuitem "Switch Context"     "Register.TASK address.offset(track.address())"
+  separator
+  menuitem "Add to Stack Cov"   "TASK.&(sInfix)STK.ADD address.offset(track.address())"
+  menuitem "Rm from Stack Cov"  "TASK.&(sInfix)STK.RM  address.offset(track.address())"
+  separator
+  menuitem "Dump task entry"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Data.dump &address /Long /Dialog
+  )
+)
+
+
+menu "task.&(sInfix)mq"
+(
+  default
+  menuitem "Display detailed"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    TASK.&(sInfix)MsgQueue &magic
+  )
+  menuitem "Display message queue struct"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Var.View %Open %String (osRtxMessageQueue_t*)(&address)
+  )
+  menuitem "Dump message queue entry"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Data.dump &address /Long /Dialog
+  )
+)
+
+
+menu "task.&(sInfix)ti"
+(
+  default
+  menuitem "Display detailed"
+  (
+    PRIVATE &magic
+    &magic=address.offset(track.address())
+    TASK.&(sInfix)TImer &magic
+  )
+  menuitem "Display timer struct"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Var.View %Open %String (struct osRtxTimer_s*)(&address)
+  )
+  menuitem "Dump timer entry"
+  (
+    PRIVATE &address
+    &address=track.address()
+    Data.dump &address /Long /Dialog
+  )
+)
+)
+    )
+  )
+  PMACRO.UNLOCK
+  RETURN
+)
+
+autoload_32bit: ;(options)
+(
+  PARAMETERS &sOptions
+  RETURN
+)
+
+
+
+menu_delete: ;(header)
+(
+  PRIVATE &sHeader &sMenuName
+  PARAMETERS &sHeader
+  &sMenuName=TASK.TRANSPOSE.INFIX("&sHeader")
+  IF MENU.EXIST("TASK.&(sMenuName)")
+    MENU.Delete.NAME TASK.&(sMenuName)
+  IF MENU.EXIST("EXT.&(sMenuName)")
+    MENU.Delete.NAME EXT.&(sMenuName)
+  RETURN
+)
+
+autoload_delete: ;(options)
+(
+  PARAMETERS &sOptionMachine
+  RETURN
+)

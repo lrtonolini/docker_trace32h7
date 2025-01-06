@@ -1,0 +1,71 @@
+; --------------------------------------------------------------------------------
+; @Title: Menu and Toolbar entries for PRACTICE related features
+; @Description:
+;   Adding debugging menu and toolbar entries for PRACTICE script development.
+;   Load this menu and toolbar with MENU.ReProgram ~/demo/menu/practice.men
+; @Keywords: practice, debug, menu, toolbar
+; @Author: SME
+; @Copyright: (C) 1989-2014 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: practice.men 18848 2022-01-26 11:12:19Z smeister $
+
+  ADD
+  MENU
+  (
+       POPUP "PRACTICE"
+       (
+              DEFAULT
+              MENUITEM        "[:plist] List"                        "PLIST"
+              MENUITEM        "[:pmacro] Macros"                     "PMACRO"
+              MENUITEM        "[:preset] Reset macros"               "PMACRO.RESET"
+              POPUP           "[:pbreakred] Breakpoints"
+              (
+                    MENUITEM  "[:pbreaklist] List breakpoints"       "PBREAK.List"
+                    MENUITEM  "[:pbreakset] Set breakpoints"         "PBREAK.Set"
+                    MENUITEM  "[:off] Disable all breakpoints"       "PBREAK.DISable"
+                    MENUITEM  "[:on] Enable all breakpoints"         "PBREAK.ENable"
+                    SEPARATOR
+                    MENUITEM  "[:removeall] Delete all breakpoints"  "PBREAK.Delete"
+                    SEPARATOR
+                    MENUITEM  "[:esave] Save breakpoints"            "::STOre * PBREAK"
+                    MENUITEM  "[:eload] Load breakpoints"            "::DO *"
+              )
+              POPUP           "[:manual] Manuals"
+              (
+                    MENUITEM  "[:manual] Training"                   "HELP.PDF ~~/pdf/training_practice.pdf"
+                    MENUITEM  "[:manual] Userguide"                  "HELP.PDF ~~/pdf/practice_user.pdf"
+                    MENUITEM  "[:manual] Reference"                  "HELP.PDF ~~/pdf/practice_ref.pdf"
+                    SEPARATOR
+                    MENUITEM  "[:manual] IDE Userguide"              "HELP.PDF ~~/pdf/ide_user.pdf"
+                    MENUITEM  "[:manual] IDE Reference"              "HELP.PDF ~~/pdf/ide_ref.pdf"
+                    MENUITEM  "[:manual] IDE Functions"              "HELP.PDF ~~/pdf/ide_func.pdf"
+                    SEPARATOR
+                    MENUITEM  "[:manual] Menu programming"           "HELP.PDF ~~/pdf/training_menu.pdf"
+              )
+       )
+  )
+
+
+  ADD
+  TOOLBAR
+  (
+       TOOLITEM  "PRACTICE single step"             "[:pstep]"      "PSTEP"
+       TOOLITEM  "PRACTICE step over"               "[:pstepover]"  "PSTEPOVER"
+       TOOLITEM  "PRACTICE continue"                "[:pgo]"        "CONTinue"
+       TOOLITEM  "PRACTICE break"                   "[:pstop]"      "STOP"
+       TOOLITEM  "PRACTICE enddo"                   "[:pend]"       "ENDDO"
+       SEPARATOR
+       TOOLITEM  "PRACTICE list"                    "[:plist]"      "PLIST"
+       TOOLITEM  "PRACTICE macros"                  "[:pmacro]"     "PMACRO"
+       TOOLITEM  "PRACTICE macros reset"            "[:preset]"     "PMACRO.RESET"
+       SEPARATOR
+       TOOLITEM  "PRACTICE list breakpoints"        "[:pbreaklist]" "PBREAK.List"
+       TOOLITEM  "PRACTICE set breakpoint"          "[=Et1S5@Lus$kUsqcOvG4S0V60F10dxUJzUbN7F00J9X0ZO0NW5t$mtYY7EDV8$Ono08ympbUG$i1lcLxl1Jz0MmxuHnH2z3H6l7]" "PBREAK.Set"
+       TOOLITEM  "PRACTICE disable all breakpoints" "[=EVjX5@zwnm2Al$Ym77ETR0GzoZ71FnWeE$zzw30MTHo$1$EXS70X04hL1le7EF41bOFK5nBG4G2GZzEaz3S9ZfcX0VB5effbO4]" "PBREAK.DISable"
+       TOOLITEM  "PRACTICE enable all breakpoints"  "[=EVj@7@ThssHAF41oBRsmwD2V91xRui@kwvzUov@X@0tB7fV8zE$UxYTx0G4Nb1KK8o4G494G20J94U2uUXtkB$gf$bu7]" "PBREAK.ENAble"
+       SEPARATOR
+       TOOLITEM  "PRACTICE delete all breakpoints"  "[:removeall]"  "PBREAK.Delete"
+       SEPARATOR
+       TOOLITEM  "PRACTICE save breakpoints"        "[:esave]"      "::STORE * PBREAK"
+       TOOLITEM  "PRACTICE load breakpoints"        "[:eload]"      "::DO *"
+  )

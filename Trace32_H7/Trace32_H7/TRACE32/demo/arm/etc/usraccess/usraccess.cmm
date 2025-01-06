@@ -1,0 +1,38 @@
+; --------------------------------------------------------------------------------
+; @Title: Example for User Controlled Memory Access (USR:)
+; @Description:
+;   Script to load a target monitor routine
+;   to access ordinary memory
+;   via the the TRACE32 User Controlled Memory Access (USR: memory class)
+;
+;   See readme.txt or look for command Data.USRACCESS in the manual
+;
+; @Author: HLG
+; @Keywords: Data.USRACCESS, USR
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: usraccess.cmm 20812 2023-04-21 07:13:33Z csax $
+
+
+IF !SYStem.UP()
+(
+	PRINT %ERROR "Not yet connected to target. Please execute SYStem.UP first."
+	ENDDO
+)
+
+LOCAL &addr
+&addr=0x1000
+
+IF CPUIS("OMAP4430*")
+	&addr=0x4A326400
+ELSE IF CPUIS("LPC23??")||CPUIS("LPC24??")
+	&addr=0x40007000
+ELSE IF STRing.SCAN(CORENAME(),"CORTEXM",0)>=0  //Cortex-M ?
+	&addr=0x20000000
+
+Data.USRACCESS &addr++0xfff,,"~~~~/usraccess.gnu.bin"
+
+; If code and data-buffer can stay at fixed address use option /keep to improve performance:
+; Data.USRACCESS 0x1000++0xfff,,"~~~~/usraccess.gnu.bin" /KEEP
+
+ENDDO

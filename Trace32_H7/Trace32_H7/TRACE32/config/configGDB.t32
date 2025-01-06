@@ -1,0 +1,33 @@
+;This configuration file is generated with T32Start2
+;===================================================
+
+;Environment Variables
+OS=
+
+; Standard License File (client.lic) used
+
+;T32 Intercom
+; not used
+
+;T32 API Access (UDP/TCP) not used
+
+;T32 GDB
+GDB=NETASSIST
+PORT=30000
+PROTOCOL=TCP
+
+;T32 TCF
+; not used
+
+
+;Connection to Host
+PBI=GDB
+
+;Screen Settings
+SCREEN=
+VFULL
+FONT=SMALL
+HEADER=TRACE32 PowerView for ARM 0 [GDB @ ]
+
+;Printer Settings:
+;PRINTER=WINDOWS

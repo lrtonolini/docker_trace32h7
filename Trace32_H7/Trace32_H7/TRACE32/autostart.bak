@@ -1,0 +1,166 @@
+;Call special setting files from customer (similar application preferences)
+; system-settings.cmm : contains general/default settings for all users
+; user-settings.cmm   : contains user specific settings, individual for each user
+; work-settings.cmm   : contains project specific settings selected by the working
+;                       directory from which TRACE32 was started
+; --------------------------------------------------------------------------------
+
+IF OS.FILE("~~/system-settings.cmm")
+  DO "~~/system-settings.cmm" &param
+IF OS.FILE("&uad/user-settings.cmm")
+  DO "&uad/user-settings.cmm" &param
+IF OS.FILE("&pwd/work-settings.cmm")
+  DO "&pwd/work-settings.cmm" &param
+
+
+; --------------------------------------------------------------------------------
+; Start TRACE32 Welcome dialog               (activated since TRACE32 DVD 09/2014)
+; window is only displayed if not disabled by user
+; --------------------------------------------------------------------------------
+
+WELCOME.STARTUP
+
+
+; --------------------------------------------------------------------------------
+; Show warning if there is a t32.cmm which was launched by older TRACE32 version
+; --------------------------------------------------------------------------------
+
+IF (VERSION.ENVironment(STARTUP)=="")&&(VERSION.BUILD()>=99519.)
+(
+  PRIVATE &isys &ipwd &file &newfile &details
+  &isys="&sys"
+  &ipwd="&pwd"
+  IF OS.VERSION(0)<0x10
+  (
+    &isys=STRing.UPpeR(STRing.Replace("&sys","/","\",0))
+    &ipwd=STRing.UPpeR(STRing.Replace("&pwd","/","\",0))
+  )
+
+  IF ("&ipwd"!="&isys")&&(OS.FILE("&pwd/t32.cmm"))
+  (
+    IF !OS.FILE("&(pwd)/work-settings.cmm")
+    (
+      //  ./t32.cmm exists (and is not the same than ~~/t32.cmm) and ./work-settings.cmm does not exist
+      &file="&(pwd)/t32.cmm"
+      &newfile="&(pwd)/work-settings.cmm"
+      &details="Previous versions of TRACE32 started the file ""t32.cmm"" from the working directory where TRACE32 was started."+CONVert.CHAR(10.)+"However new versions of TRACE32 will instead always launch the file ""autostart.cmm"" from the TRACE32 system directory (&sys) and this will launch the script ""work-settings.cmm"" from the working directory."+CONVert.CHAR(10.)+"Please move your project specific settings from ""./t32.cmm"" to ""./work-settings.cmm"""+CONVert.CHAR(10.)+"To remove this warning either create ""&newfile"" or delete or rename ""&file"""
+    )
+  )
+  ELSE IF OS.FILE("~~/t32.cmm")
+  (
+    PRIVATE &sha1
+    &sha1="839078942296c3fe61dabca810ed4483d0f79885.5e99463f765b53348d5e0cf31c8c63d2acf5d81b.4aba18cf51297a721eb7c0221fe9f1f3515f649d.2a10ceb22786ed663d8cd9db703d94ea05cd530b.8450ad62442629452221baf8b4345d1c77b73b2d.b89904dead694c9994567f9ddef0ebb1033a211f.b0087004c68f97dbd9c61f885dfc2c976d0e5270.9b7ceec2cef9f5438bbf42b3d0ec1fa10c964b03.6c6367b9413e0d469c67ca1fa352687a72e8595d.254b23af8ab4e29f21a6d18dcfe8f324c79dd577.93b17bd9ea4b3c5856045335593b60b98ceb308c.25597db8bd86728e49d313e7bd8f0036ca66ac77.06b001f68687923f264c8cde0ad404fcf257bf27.f3365e021c8ce5f0b95cab658340adbbf97cc58d.ba129a486ac7a2266d0a1d5c75b31af010ff9298.06b001f68687923f264c8cde0ad404fcf257bf27.06b001f68687923f264c8cde0ad404fcf257bf27.218e7777e4b3833ca80a99ea157432f551604293.8bb1e090075a1bbf71768dfaedb28c1ff3515cee.057606019f4d0441212fd22534526834d8619641.398f0db1744e94b6404b6b73ee5f845fb8c47eb4.71239d4c22a892948945b7a222bdf9d5d98fbef0.295c4b581d0731e0cc620d5ab7b4ce3cbc412075.f6e7c8ff910f3c291ada79c93b54ca58d5876267.789ba044f1a2a70416644b654dc2a306df1487f5.ecafc5ef8fabb971d91de833d36d085c73c6802b.5fd9c6ee40fbc284e7d6ebe39e81945e0de7f972.dd287918557c67bacf0bada079737b96ad581d6f.41955761f0856a8585c1e6e1f44a1a023e819e52.1a033d93d87b855a2003bb0902227eabb99bb897.bc1251a79a9c3c549fd964fefe632c1cf6dea903.a012b048b6d4f0b813d001a6ccfb3e4334fe21eb.72ef61920d54979fa47f71fbb1010c1bfc769c65.c64d8f6a4385d68f743e872aefba66b927924976.ae6f68240a8670346c8a746cbe0c2110ae3ddcc7.a79fa4bce6c1fd773be4d91295f95d26c422b1ca.f1dc9f93959c418fb710c9ea5dd82567fc0b4295.1d0ecfa6c7cb6f086abceebb46970e56c2089d8c"
+    SILENT.SHA1SUM ~~/t32.cmm /EolToLf
+    IF STRing.SCAN("&sha1",FILE.SUM(),0)==-1
+    (
+      //  ~~/t32.cmm contains modifications made by the user
+      &file="&(sys)/t32.cmm"
+      &newfile="&(sys)/system-settings.cmm"
+      &details="Previous versions of TRACE32 started the file ""t32.cmm"" from your TRACE32 system directory (&sys)."+CONVert.CHAR(10.)+"However new versions of TRACE32 will instead always launch the file ""autostart.cmm"" from the TRACE32 system directory and this will launch the script ""system-settings.cmm"" from the TRACE32 system directory."+CONVert.CHAR(10.)+"Please move the commands you've once added to ""t32.cmm"" to ""system-settings.cmm"""+CONVert.CHAR(10.)+"To remove this warning delete or rename ""&sys/t32.cmm"""
+    )
+  )
+  IF "&details"!=""
+  (
+    PRIVATE &readmore
+    &readmore="Read more at https://www.lauterbach.com/2018"
+    IF OS.VERSION(0)<0x10
+    (
+      &file=STRing.Replace("&file","/","\",0)
+      &newfile=STRing.Replace("&newfile","/","\",0)
+      &details=STRing.Replace("&details","/","\",0)
+    )
+    IF OS.VERSION(0)<0x20
+    (
+      PRIVATE &launch
+      IF  OS.VERSION(0)<0x10
+        &launch="OS.Hidden start """""""""
+      ELSE
+        &launch="OS.screen xdg-open"
+      &readmore="TEXTBUTTON """"+CONV.CHAR(2)+CONV.CHAR(77.)+""&readmore"" ""&launch https://www.lauterbach.com/2018"""
+    )
+    ELSE
+    (
+      &readmore="INFOTEXT ""&readmore"""
+    )
+    WinPOS
+    WinExt.DIALOG
+    (&+
+      ICON "[:info]"
+      HEADER " New AutoStart"
+
+      POS 0 0.2 70. 1.5
+      LTEXT "Please note:"
+      POS 0 1.7 70. 1
+      TEXT "Your file ""&file"""
+      TEXT "is no longer started automatically by TRACE32"
+
+      POS 0 4 70. 1
+      TEXT "Details:"
+      POS 0 5 70. 5.5
+      INFOTEXT "&details" LightGray SUnken
+
+      POS 0 10.5 70. 1
+      &readmore
+      POS 0 11.5 70. 1
+      TEXTBUTTON ""+CONV.CHAR(2)+CONV.CHAR(77.)+"Open """+OS.FILE.NAME("&file")+""" and """+OS.FILE.NAME("&newfile")+""" in editor"
+      (
+        FramePOS ,,,,Maximized
+        WinPOS 0 0 50% 100%
+        PEDIT "&file"
+        WinPOS 50% 0 50% 100%
+        PEDIT "&newfile"
+      )
+      POS 29. 13. 12. 1
+      DEFBUTTON "Close" "DIALOG.END"
+    )
+  )
+)
+
+
+; --------------------------------------------------------------------------------
+; Show warning if old directory ~~/demo/arm64 was found
+; --------------------------------------------------------------------------------
+
+IF VERSION.BUILD.BASE()>=138381.
+(
+  PRIVATE &showDlg
+
+  &showDlg=(CPUFAMILY()=="ARM")&&OS.DIR("~~/demo/arm64")&&LICENSE.HAVEFEATURE("ARMv8/v9-A/R")
+  IF (&showDlg)&&(PREFS.GetType("Warning.DemoArm64")==3)
+    &showDlg=(&showDlg)&&(PREFS.GetBool("Warning.DemoArm64"))
+
+  IF (&showDlg)
+  (
+    PRIVATE &dirOld &dirNew
+    &dirOld=OS.FILE.ABSPATH("~~/demo/arm64")
+    &dirNew=OS.FILE.ABSPATH("~~/demo/arm")
+
+    WinPOS
+    WinExt.DIALOG
+    (&+
+      ICON "[:info]"
+      HEADER " Obsolete TRACE32 directory detected"
+      POS 0.5  0.2 60. 1.5
+      LTEXT "Info: Directory ~~/demo/arm64 is obsolete"
+
+      POS 0.5  3. 60. 1
+      TEXT "Please back-up and then remove the following obsolete folder:"
+      POS 2.5  4. 58. 1
+      TEXTBUTTON ""+CONV.CHAR(2)+CONV.CHAR(77.)+"&dirOld" "OS.OPEN ""&dirOld"""
+
+      POS 0.5  6 60. 1
+      TEXT "Please use instead the files from:"
+      POS 2.5  7 58. 1.
+      TEXTBUTTON ""+CONV.CHAR(2)+CONV.CHAR(77.)+"~~/demo/arm" "OS.OPEN ""&dirNew"""
+
+      POS 0.5  9 60. 1
+      TEXTBUTTON ""+CONV.CHAR(2)+CONV.CHAR(77.)+"Read more at https://www.lauterbach.com/2021" "OS.OPEN ""https://www.lauterbach.com/2021"""
+      POS 20. 10.5 12. 1.
+      DEFBUTTON "Close" "DIALOG.END"
+    )
+  )
+)
+
+; --------------------------------------------------------------------------------
+
+ENDDO

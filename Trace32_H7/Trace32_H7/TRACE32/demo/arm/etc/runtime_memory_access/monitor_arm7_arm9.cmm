@@ -1,0 +1,69 @@
+; --------------------------------------------------------------------------------
+; @Title: Runtime Memory Access Example by TSMON3, PTMON3 or UDMON3 for ARM7,ARM9
+; @Description: -
+; @Chip: ARM7*, ARM9*
+; @Author: PEG
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: monitor_arm7_arm9.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+; The example assumes RAM at address 0.
+; The debugger is expected to be in UP state, therefore a target
+; specific start-up script will be needed to run first.
+; The simulator does not support the runtime memory access modes.
+
+; After executing this script you need to run the application (-> 'Go').
+
+; You can read and write memory and CP15 register.
+; Please note that access to only a few CP15 register are implemented in the monitor program.
+; Therefore only part of the peripheral register is valid (during runtime).
+; You can easily modify the monitor code to extend access to other CP15 registers.
+  Register.RESet
+
+; load monitor program for runtime access
+  Data.LOAD.ELF monitor_arm7_arm9.axf
+
+; configure memory access to use monitor when running
+; for runtime memory access there is no difference between TSMON3 and UDMON3
+; PTMON3 generates a trigger output which might be used to call the monitor handler
+; SYStem.MemAccess PTMON3
+; SYStem.MemAccess UDMON3
+  SYStem.MemAccess TSMON3
+
+; open some windows
+  WinCLEAR
+
+  WinPOS 0% 0% 100% 48%
+  List.auto
+
+  WinPOS 0% 50% 50% 24%
+  Data.dump E:Var.RANGE(flags) /Byte /NoOrient /SpotLight
+
+  WinPOS 0% 75% 50% 24%
+  Var.View %Decimal %E %SpotLight mcount
+
+  WinPOS 50% 50% 50% 48%
+  PER , /DualPort
+
+  ENDDO
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

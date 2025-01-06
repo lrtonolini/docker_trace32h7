@@ -1,0 +1,178 @@
+; --------------------------------------------------------------------------------
+; @Title: Example for manual SWD access, Debugger in DOWN Mode
+; @Description: 
+;   This script reads out the IDCODE of an DAP core when the debugger is in 
+;   DOWN mode.
+;   Detailed knowledge about SWD is required to use manual SWD control signals!
+; @Keywords: idcode swd
+; @Author: MAZ
+; @Props: Template
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: sample-swd-raw.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+LOCAL &id &ctrlstat &res
+LOCAL &DP_ID_ADR &DP_CTRLSTAT_ADR &DP_ABORT_ADR
+&DP_ID_ADR=0x0
+&DP_ABORT_ADR=0x0
+&DP_CTRLSTAT_ADR=0x1
+
+; The debugger is in DOWN mode, the SWD driver is tristated.
+
+SYStem.CONFIG.DEBUGPORTTYPE SWD
+
+JTAG.LOCK             ; prevent debugger from accessing SWD port
+JTAG.PIN ENable       ; enable output drivers
+
+GOSUB ShiftJTAG2SWD   ; switch SWJDP from JTAG to SWD
+GOSUB ShiftLineReset  ; reset physical SWD interface
+
+GOSUB SWDScanRead DP &DP_ID_ADR ; read DP:ID register (e.g. 0x2BA01477)
+ENTRY &res &id
+PRINT "ID==&id (&res)"
+
+GOSUB SWDScanWrite DP &DP_CTRLSTAT_ADR 0x54000000 ; write to DP:CRTLSTAT request power
+ENTRY &res
+PRINT "CTRLSTAT=0x54000000 (&res)"
+
+GOSUB SWDScanRead DP &DP_CTRLSTAT_ADR ; read DP:CTRLSTAT register back and receive acknownledge (e.g. 0xFC000000)
+ENTRY &res &ctrlstat
+PRINT "CTRLSTAT==&ctrlstat (&res)"
+
+JTAG.UNLOCK          ; enable accesses from debugger to SWD port
+
+enddo
+
+//according ARMs technical deference manual IHI0031A_ARM_debug_interface_v5.pdf
+
+ShiftLineReset:
+JTAG.SWD.SHIFT %long 0xFFFFFFFF %word 0xFFFF 1 1 0 0
+RETURN
+
+ShiftJTAG2SWD:
+JTAG.SWD.SHIFT %long 0xFFFFFFFF %byte 0xFF %byte 0xFF %byte 0x7B %byte 0x9E %byte 0xFF %byte 0xFF %long 0xFFFFFFFF %byte 0x0F 0 0 0 0
+RETURN
+
+SWDScanRead:
+LOCAL &apparam &address &res &rdata
+ENTRY &apparam &address
+GOSUB SWDScan &apparam READ &address 0x0
+ENTRY &res &rdata
+RETURN &res &rdata
+
+SWDScanWrite:
+LOCAL &apparam &address &wdata &res &rdata
+ENTRY &apparam &address &wdata
+GOSUB SWDScan &apparam WRITE &address &wdata
+ENTRY &res &rdata
+RETURN &res
+
+SWDScan:
+LOCAL &apparam &writeparam &address &wdata &ap &write &rdata &res &header &parity &swo &ack &buf &retry
+ENTRY &apparam &writeparam &address &wdata
+&rdata=0x0
+&res="OK"
+&parity=0
+&retry=0.
+
+&header="1" //start symbol '1'
+if "&apparam"=="AP"
+(
+  &header="&header 1"
+  &parity=&parity^0x1
+)
+else
+  &header="&header 0"
+
+if "&writeparam"=="READ"
+(
+  &header="&header 1"
+  &parity=&parity^0x1
+)
+else
+  &header="&header 0"
+
+if &address==0x0
+  &header="&header 0 0"
+else if &address==0x1
+(
+  &header="&header 1 0"
+  &parity=&parity^0x1
+)
+else if &address==0x2
+  &header="&header 0 1"
+else if &address==0x3
+(
+  &header="&header 1 1"
+  &parity=&parity^0x1
+)
+if &parity==0x1
+  &header="&header 1"
+else
+  &header="&header 0"
+
+&header="&header 0 1 X X X X" //stop + park + trn + ack[0..2]
+
+JTAG.SWD.SHIFT &header
+&swo=JTAG.SHIFT()
+&ack=(&swo>>9.)&0x7
+
+while ((&retry<10.)&&(&ack==0x2)) //wait response
+(
+  JTAG.SWD.SHIFT X %Byte 0x0x0 // abort sequence: trn + 8*'0'
+  JTAG.SWD.SHIFT &header
+  &swo=JTAG.SHIFT()
+  &ack=(&swo>>9.)&0x7
+  &retry=&retry+1.
+)
+
+if (&ack==0x2)||(&ack==0x4) //wait or fault resonse
+(
+  JTAG.SWD.SHIFT X %Byte 0x00 // abort sequence: trn + 8*'0'
+  if ("&writeparam"!="WRITE")&&("&apparam"!="DP")&&(&address!=0x0)
+    GOSUB SWDScan DP WRITE 0x0 0x1E //send abort instruction
+  &res="BUSERROR"
+  RETURN &res &rdata
+)
+else if &ack!=0x1
+(
+  &res="DEBUGPORTFAIL" ;ack out of valid values, SWD connection down
+  RETURN &res &rdata
+)
+if "&writeparam"=="WRITE"
+(
+  &buf="X %Long &wdata"
+  &parity=&wdata
+  &parity=&parity^(&parity>>16.)
+  &parity=&parity^(&parity>>8.)
+  &parity=&parity^(&parity>>4.)
+  &parity=&parity^(&parity>>2.)
+  &parity=&parity^(&parity>>1.)
+  &parity=&parity&0x1
+  if &parity!=0x0
+    &buf="&buf 1"
+  else
+    &buf="&buf 0"
+  &buf="&buf %byte 0x00" // add idle cycles: 8*'0'
+  JTAG.SWD.SHIFT &buf
+)
+else
+(
+  JTAG.SWD.SHIFT %long 0xXXXXXXXX X X %byte 0x00 ;32bit read data + parity + trn + 8*'0'
+  &swo=JTAG.SHIFT()
+  &rdata=&swo&0xFFFFFFFF
+  &parity=&rdata
+  &parity=&parity^(&parity>>16.)
+  &parity=&parity^(&parity>>8.)
+  &parity=&parity^(&parity>>4.)
+  &parity=&parity^(&parity>>2.)
+  &parity=&parity^(&parity>>1.)
+  &parity=&parity&0x1
+  if &parity!=((&swo>>32.)&0x1)
+  (
+    &res="DEBUGPORTFAIL" ;parity error, SWD connection down
+    &rdata=0x0
+  )
+)
+RETURN &res &rdata

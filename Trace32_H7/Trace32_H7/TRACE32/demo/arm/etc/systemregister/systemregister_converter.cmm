@@ -1,0 +1,314 @@
+; --------------------------------------------------------------------------------
+; @Title: ARM System Register Address Converter
+; @Description:
+;   This dialog assists in calculating the SPR: access class and Data.Assemble
+;   parameters for the AARCH64 coprocessor interface.
+;   Usage:
+;     DO ~~/demo/arm/etc/systemregister/systemregister_converter
+;       will open a dialog
+; @Keywords: SPR, Assemble
+; @Props: NoIndex, NoWelcome, NoMetaTags
+; @Author: AME
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: systemregister_converter.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+PRIVATE &arg
+ENTRY %LINE &arg
+PRIVATE &crn &op0 &op1 &crm &op2 &reg &dialog &dump
+PRIVATE &spraddr32 &opcode_mrs &opcode_msr &regname
+
+IF VERSION.BUILD()<77565.
+(
+  PRINT %ERROR "Please use more recent Software! Contact support@lauterbach.com."
+  ENDDO
+)
+
+; if no parameters are given open the dialog
+IF "&arg"==""
+(
+  GOSUB ShowDialog
+  ENDDO
+)
+
+; this time we need to update the dialog
+GOSUB ParseParameters &arg
+ENTRY &op0 &op1 &crn &crm &op2 &reg &dialog &dump
+
+; calculation for TRACE32 SPR address space encoding (based on AARCH64 but no Xt at 0)
+&spraddr32=(((&(op0)&0x3)<<0x10)|(&(op1)&0x7)<<0xc)|((&(crn)&0xf)<<0x8)|((&(crm)&0xf)<<0x4)|((&(op2)&0x7)<<0x0)
+&spraddr32="SPR:0x"+FORMAT.HEX(5.,&spraddr32)
+; calculation of the opcode - later converted into the name using TRACE32 disassembler
+&opcode_mrs=0xd5200000|(((&(op0)&0x3)<<19.)|(&(op1)&0x7)<<16.)|((&(crn)&0xf)<<12.)|((&(crm)&0xf)<<8.)|((&(op2)&0x7)<<5.)|(&reg)
+&opcode_msr=0xd5000000|(((&(op0)&0x3)<<19.)|(&(op1)&0x7)<<16.)|((&(crn)&0xf)<<12.)|((&(crm)&0xf)<<8.)|((&(op2)&0x7)<<5.)|(&reg)
+&regname=DISASSEMBLE.VALUE(X:0x0,&opcode_msr,0x1)
+IF STRing.COUNT("&regname",",")<=1.
+  &regname=STRing.TRIM(STRing.SPLIT("&regname",",",0))
+ELSE
+  &regname="unknown"
+
+; calculation for AARCH64 assembler commands 
+; op0:0x2/0x3 : mrs/msr
+; op0:0x1     : cache/tlb maintenance
+&mrs=DISASSEMBLE.VALUE(X:0x0,&opcode_mrs,0x0)
+&msr=DISASSEMBLE.VALUE(X:0x0,&opcode_msr,0x0)
+RePeaT 5.
+(
+  &mrs=STRing.Replace("&mrs","  "," ",0.)
+  &msr=STRing.Replace("&msr","  "," ",0.)
+)
+
+IF (&op0==0x1)
+(
+  ; it's a cache/tlb maintenance instruction
+  ; no mrs instruction, show the opcode as name
+  &mrs="not available"
+  IF STRing.SCAN("&msr","sys",0.)!=0.
+    &regname=STRing.Replace(STRing.Replace(STRING.UPper("&msr"),"X0","",0.),",","",0.)
+  ELSE
+    &regname=""
+)
+
+IF (&dialog)&&DIALOG.EXIST(SPR.Out)
+(
+  ; update the dialog if the dialog exists
+
+  DIALOG.Set SPR.Out "&spraddr32"
+  DIALOG.Set RegName.Out "&regname"
+  DIALOG.Set MRS.Out "&(mrs)"
+  DIALOG.Set MSR.Out "&(msr)"
+)
+ELSE IF (&dump==32.)
+(
+  ; open the dump window
+  Data.dump &(spraddr32)++0x0
+)
+ENDDO
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+(
+  PRIVATE &param &op0 &op1 &crn &crm &op2 &reg &dialog &dump &dump32
+  ENTRY %LINE &param
+  &op0=STRing.SCANAndExtract("&param","OP0=0x","")
+  &op1=STRing.SCANAndExtract("&param","OP1=0x","")
+  &crn=STRing.SCANAndExtract("&param","CRn=c","")
+  &crm=STRing.SCANAndExtract("&param","CRm=c","")
+  &op2=STRing.SCANAndExtract("&param","OP2=0x","")
+  &reg=STRing.SCANAndExtract("&param","Xt=x","0")
+  &dialog=STRing.SCAN("&param","DIALOG",0.)!=-1.
+  &dump32=STRing.SCAN("&param","DUMP32",0.)!=-1.
+
+  IF ("&op0"=="")||("&op1"=="")||("&crn"=="")||("&crm"=="")||("&op2"=="")
+  (
+    PRINT %ERROR "Error: Wrong Usage "
+    ENDDO ""
+  )
+  ; ensure parameter types are correct
+  &op0="0x&(op0)"
+  &op1="0x&(op1)"
+  &crn="&(crn)."
+  &crm="&(crm)."
+  &op2="0x&(op2)"
+  &reg="&(reg)."
+
+  IF (&dump32)
+    &dump=32.
+  ELSE
+    &dump=0.
+
+  RETURN &op0 &op1 &crn &crm &op2 &reg &dialog &dump
+)
+
+ShowDialog: ;()
+(
+  LOCAL &ppf
+  &ppf=OS.PPF()
+  DIALOG
+  (&+
+    HEADER "System Register Converter"
+    POS 0. 0. 30. 1.
+    TEXT "Convert OP0/OP1/CRn/CRm/OP2"
+    POS 0. 1. 3. 1.
+    TEXT "OP0"
+    POSX 1. 7.
+    OP0.SEL:  COMBOBOX "0x1,0x2,0x3"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2 &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 Xt=&xGPR DIALOG
+    )
+    POSX 1. 3.
+    TEXT "OP1"
+    POSX 1. 7.
+    OP1.SEL:  COMBOBOX "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7"
+    (
+      PRIVATE &op0 &crn &op1 &crm &op2 &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 Xt=&xGPR DIALOG
+    )
+    POSX 1. 3.
+    TEXT "CRn"
+    POSX 1. 7.
+    CRn.SEL:  COMBOBOX "c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2 &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 Xt=&xGPR DIALOG
+    )
+    POSX 1. 3.
+    TEXT "CRm"
+    POSX 1. 7.
+    CRm.SEL:  COMBOBOX "c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2 &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 Xt=&xGPR DIALOG
+    )
+    POSX 1. 3.
+    TEXT "OP2"
+    POSX 1. 7.
+    OP2.SEL:  COMBOBOX "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2 &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 Xt=&xGPR DIALOG
+    )
+    POS 0. 2.5 59. 1.
+    LINE "TRACE32 internal SPR access class"
+    POS 3. 4. 6. 1.
+    TEXT "Address:"
+    POSX 1. 13.
+    SPR.Out: HOTEDIT "SPR:0x20000"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 DIALOG
+    )
+    POSX 1. 13.
+    BUTTON "[:dump] Data.dump"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 DUMP32
+    )
+    POS 3. 5.5 6. 1.
+    Text "Name:"
+    POSX 1. 13.
+    RegName.Out: HOTEDIT "unknown"
+    (&-
+      PRIVATE &op0 &op1 &crn &crm &op2
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 DIALOG
+    )
+    POS 0. 7. 59. 1.
+    LINE "AARCH64 Assembler instruction"
+    POS 1. 8.5 12. 1.
+    BUTTON "Data.Assemble"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2 &mrsInstr &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      &crn=STRing.CUT("&crn",1.)+"."
+      &crm=STRing.CUT("&crm",1.)+"."
+      &xGPR=STRing.CUT("&xGPR",1.)+"."
+      &mrsInstr=0xD5200000+(&op0<<19.)+(&op1<<16.)+(&crn<<12.)+(&crm<<8.)+(&op2<<5.)+&xGPR
+      Data.Set Register(pc) %Long &mrsInstr
+    )
+    POSX 1. 33.
+    MRS.Out:  HOTEDIT "mrs x0,#0x2,#0x0,c0,c0,#0x0"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 DIALOG
+    )
+    POSX 1. 6.
+    XGPR.SEL:  COMBOBOX "x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,x16,x17,x18,x19,x20,x21,x22,x23,x24,x25,x26,x27,x28,x29,x30"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2 &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 Xt=&xGPR DIALOG
+    )
+    POS 1. 10. 12. 1.
+    BUTTON "Data.Assemble"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2 &msrInstr &xGPR
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      &xGPR=DIALOG.STRing(XGPR.SEL)
+      &crn=STRing.CUT("&crn",1.)+"."
+      &crm=STRing.CUT("&crm",1.)+"."
+      &xGPR=STRing.CUT("&xGPR",1.)+"." 
+      &msrInstr=0xD5000000+(&op0<<19.)+(&op1<<16.)+(&crn<<12.)+(&crm<<8.)+(&op2<<5.)+&xGPR
+      Data.Set Register(pc) %Long &msrInstr
+    )
+    POSX 1. 33.
+    MSR.Out:  HOTEDIT "msr #0x2,#0x0,c0,c0,#0x0,x0"
+    (
+      PRIVATE &op0 &op1 &crn &crm &op2
+      &op0=DIALOG.STRing(OP0.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crn=DIALOG.STRing(CRn.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" OP0=&op0 OP1=&op1 CRn=&crn CRm=&crm OP2=&op2 DIALOG
+    )
+    CLOSE "DIALOG.END"
+  )
+  DIALOG.Set OP0.SEL "0x2"
+  RETURN
+)

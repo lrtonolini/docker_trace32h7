@@ -1,0 +1,252 @@
+; --------------------------------------------------------------------------------
+; @Title: Zephyr specific menu
+; @Description: -
+; @Author: DIE AME
+; @Copyright: (c) 1989-2023 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: zephyr.m 9078 2023-06-05 09:27:00Z amerkle $
+
+NAME "TASK.ZEPHYR"
+
+IF !MENU.EXIST("TASK.ZEPHYR")
+(
+add
+menu
+(
+  popup "Zephyr"
+  (
+    default
+    menuitem "Display &Threads"         "TASK.THREAD"
+    menuitem "Display &Semaphores"      "TASK.SEMaphore"
+    menuitem "Display &Mutexes"         "TASK.MUTEX"
+    menuitem "Display &Alerts"          "TASK.ALERT"
+    menuitem "Display &Fifos && Lifos"  "TASK.QUEUE"
+    menuitem "Display &Stacks"          "TASK.ZSTACK"
+    menuitem "Display &Message Queues"  "TASK.MSGQ"
+    menuitem "Display &Mailboxes"       "TASK.MailBOX"
+    menuitem "Display &Pipes"           "TASK.PIPE"
+    menuitem "Display &Memory Slabs"    "TASK.MEMSLAB"
+    ;menuitem "Display &Memory Pools"    "TASK.MEMPOOL"
+    menuitem "Display &Timers"          "TASK.TIMER"
+    IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MACHINESPACES)
+    (
+      IF !SYStem.Option.MACHINESPACES()
+      (
+        MENUITEM "[  X X X X X,XXXXXXXXXXXX, XxxxxxxxxXs,XXxxxxxxxxXs, XxxxxxxxxXX,XXxxxxxxxxXs, XxxxxxxxxXX,XXxxxxSSSSSSSS, XxxxxSBBwwwwwS,XXxxxxSBBwwwXwBS, XXXXXSBBwwwwwBB, XsXsXSBBBBBBBBB,      SBBWWWWWBB,      SBBWWWWWBB,      SBBWRRRWBB,       BBWWWWWBB]Generate RAM Dump"
+        (
+          PRIVATE &sPath
+          &sPath=OS.FILE.JOINPATH(TASK.GETDIR(),"ramdump.cmm")
+          IF OS.FILE("&sPath")
+          (
+            DO "&sPath" /DIALOG
+            ENDDO
+          )
+          PRINT %ERROR "File ""ramdump.cmm"" not found. Please contact support@lauterbach.com ."
+        )
+      )
+    )
+    ELSE
+    (
+      MENUITEM "[  X X X X X,XXXXXXXXXXXX, XxxxxxxxxXs,XXxxxxxxxxXs, XxxxxxxxxXX,XXxxxxxxxxXs, XxxxxxxxxXX,XXxxxxSSSSSSSS, XxxxxSBBwwwwwS,XXxxxxSBBwwwXwBS, XXXXXSBBwwwwwBB, XsXsXSBBBBBBBBB,      SBBWWWWWBB,      SBBWWWWWBB,      SBBWRRRWBB,       BBWWWWWBB]Generate RAM Dump"
+      (
+        PRIVATE &sPath
+        &sPath=OS.FILE.JOINPATH(TASK.GETDIR(),"ramdump.cmm")
+        IF OS.FILE("&sPath")
+        (
+          DO "&sPath" /DIALOG
+          ENDDO
+        )
+        PRINT %ERROR "File ""ramdump.cmm"" not found. Please contact support@lauterbach.com ."
+      )
+    )
+    separator
+    popup "&Stack Coverage"
+    (
+      menuitem "&List Stacks"    "TASK.STacK.view"
+      menuitem "Add Task"        "TASK.STacK.ADD"
+      menuitem "Remove Task"     "TASK.STacK.RM"
+      menuitem "Reset Coverage"
+      (
+        PRIVATE &yes
+        DIALOG.YESNO "Overwrite unused stack space" "with stack fill pattern?"
+        ENTRY &yes
+        IF !&yes
+          ENDDO
+        TASK.STacK.Init
+      )
+    )
+  )
+  popup "Trace"
+  (
+    popup "[:alist]List"
+    (
+      separator
+      menuitem "&Task Switches"     "Trace.List List.TASK"
+      menuitem "&Default and Tasks" "Trace.List List.TASK DEFault"
+    )
+  )
+  popup "Perf"
+  (
+    separator
+    popup "&Task Runtime"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+        )
+        if trace.flow()
+        (
+          Break.Delete /TraceEnable
+          Break.Set task.config(magic) /Write /TraceEnable
+        )
+        Trace.Init
+      )
+      menuitem "[:perf]Show &Numerical"   "Trace.STATistic.TASK"
+      menuitem "[:achart]Show as &Timing" "Trace.CHART.TASK"
+      menuitem "[:achart]Tracking with Trace &List"
+      (
+        Trace.List List.TASK DEFault /Track
+        Trace.CHART.TASK /Track
+      )
+    )
+    popup "Task &Function Runtime"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+          Analyzer.STATistic.PreFetch on
+        )
+        if trace.flow()
+        (
+          Break.Delete /TraceData
+          Break.Set task.config(magic) /Write /TraceData
+        )
+        Trace.Init
+      )
+      menuitem "[:perf]Show &Numerical"     "Trace.STATistic.TASKFUNC"
+      menuitem "[:perf]Show as &Tree"       "Trace.STATistic.TASKTREE"
+      menuitem "[:perf]Show &Detailed Tree" "Trace.STATistic.TASKTREE ALL"
+      menuitem "[:achart]Show as &Timing"   "Trace.CHART.TASKFUNC"
+      menuitem "[:alist]Show N&esting"      "Trace.List List.TASK FUNC TI.FUNC"
+    )
+    popup "Task &Status"
+    (
+      menuitem "&Prepare"
+      (
+        if t.method.analyzer()
+        (
+          Analyzer.AutoInit on
+        )
+      )
+      menuitem "[:perf]Show &Numerical"   "Trace.STATistic.TASKSTATE"
+      menuitem "[:achart]Show as &Timing" "Trace.CHART.TASKSTATE"
+      menuitem "[:achart]Tracking with Trace &List"
+      (
+        Trace.List List.TASK DEFault /Track
+        Trace.CHART.TASKSTATE /Track
+      )
+    )
+  )
+  popup "&Help"
+  (
+    menuitem "Zephyr Awareness Manual" "HELP __RTOS_ZEPHYR_"
+  )
+)
+
+
+menu "task.thread"
+(
+  default
+  ;menuitem "Display detailed"
+  ;(
+  ;  PRIVATE &nAddress
+  ;  &nAddress=ADDRESS.OFFSET(TRACK.ADDRESS())
+  ;  TASK.Thread &nAddress
+  ;)
+  menuitem "Display thread struct"
+  (
+    PRIVATE &nAddress
+    &nAddress=ADDRESS.OFFSET(TRACK.ADDRESS())
+    Var.View %Open (struct k_thread*)&nAddress
+  )
+  separator
+  menuitem "Display Stack Frame"
+  (
+    PRIVATE &pTrackAddress &sTask
+    &pTrackAddress=TRACK.ADDRESS()
+    &sTask=""
+    IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MACHINESPACES)
+    (
+      IF SYStem.Option.MACHINESPACES()
+      (
+        SPRINTF &sTask "%u.:::%#x" ADDRESS.MACHINEID(&pTrackAddress) ADDRESS.OFFSET(&pTrackAddress)
+      )
+    )
+    IF "&sTask"==""
+    (
+      SPRINTF &sTask "%#x" ADDRESS.OFFSET(&pTrackAddress)
+    )
+    Var.Frame /Locals /Caller /Task &sTask
+  )
+  menuitem "Display Registers"
+  (
+    PRIVATE &pTrackAddress &sTask
+    &pTrackAddress=TRACK.ADDRESS()
+    &sTask=""
+    IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MACHINESPACES)
+    (
+      IF SYStem.Option.MACHINESPACES()
+      (
+        SPRINTF &sTask "%u.:::%#x" ADDRESS.MACHINEID(&pTrackAddress) ADDRESS.OFFSET(&pTrackAddress)
+      )
+    )
+    IF "&sTask"==""
+    (
+      SPRINTF &sTask "%#x" ADDRESS.OFFSET(&pTrackAddress)
+    )
+    Register /Task &sTask
+  )
+  menuitem "Switch Context"
+  (
+    PRIVATE &pTrackAddress &sTask
+    &pTrackAddress=TRACK.ADDRESS()
+    &sTask=""
+    IF PRACTICE.FUNCtion.AVAILable(SYStem.Option.MACHINESPACES)
+    (
+      IF SYStem.Option.MACHINESPACES()
+      (
+        SPRINTF &sTask "%u.:::%#x" ADDRESS.MACHINEID(&pTrackAddress) ADDRESS.OFFSET(&pTrackAddress)
+      )
+    )
+    IF "&sTask"==""
+    (
+      SPRINTF &sTask "%#x" ADDRESS.OFFSET(&pTrackAddress)
+    )
+    Register.TASK &sTask
+  )
+  separator
+  menuitem "Add to Stack Cov"
+  (
+    PRIVATE &nAddress
+    &nAddress=ADDRESS.OFFSET(TRACK.ADDRESS())
+    TASK.STacK.ADD &nAddress
+  )
+  menuitem "Rm from Stack Cov"
+  (
+    PRIVATE &nAddress
+    &nAddress=ADDRESS.OFFSET(TRACK.ADDRESS())
+    TASK.STacK.RM &nAddress
+  )
+  separator
+  menuitem "Dump thread entry"
+  (
+    PRIVATE &pAddress
+    &pAddress=TRACK.ADDRESS()
+    Data.dump &pAddress /LONG /DIALOG
+  )
+)
+)

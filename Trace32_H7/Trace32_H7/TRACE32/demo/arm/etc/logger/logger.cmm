@@ -1,0 +1,187 @@
+; --------------------------------------------------------------------------------
+; @Title: TRACE32 Logger Demo for Arm
+; @Description:
+;   This script demonstrates the usage of the TRACE32 Logger Trace
+; @Keywords: Logger, ARM, ARM64
+; @Author: CMO
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: logger.cmm 19260 2022-04-21 12:30:21Z amerkle $
+
+PRIVATE &aarch64 &thumb_ii_v7 &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7m
+PRIVATE &param &offset &timestamprate
+ENTRY &param
+
+; --------------------------------------------------------------------------------
+; Initialize and start the debugger
+WinCLEAR
+RESet
+IF (!SYStem.Up())
+(
+  IF (INTERFACE.SIM())
+  (
+    IF "&param"==""
+      &param=0x0
+
+    SYStem.CPU CortexA7
+  )
+  ELSE
+  (
+    SYStem.CPU *
+  )
+)
+SYStem.Up
+
+GOSUB ParseParameters &param
+RETURNVALUES &offset
+
+GOSUB GetCpuModes
+RETURNVALUES &aarch64 &thumb_ii_v7 &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7m
+
+; --------------------------------------------------------------------------------
+; Load demo program
+
+IF &aarch64
+  Data.LOAD.Elf ~~~~/logger_pic_aarch64.elf      &offset /RelPATH /Verify
+ELSE IF &thumb_ii_v7
+  Data.LOAD.Elf ~~~~/logger_pic_thumb_ii_v7.elf  &offset /RelPATH /Verify
+ELSE IF &arm
+  Data.LOAD.Elf ~~~~/logger_pic_arm.elf          &offset /RelPATH /Verify
+ELSE IF &armbe
+  Data.LOAD.Elf ~~~~/logger_pic_armbe.elf        &offset /RelPATH /Verify
+ELSE IF &thumbv4
+  Data.LOAD.Elf ~~~~/logger_pic_thumb_v4.elf     &offset /RelPATH /Verify
+ELSE IF &thumbv6m
+  Data.LOAD.Elf ~~~~/logger_pic_thumb_v6m.elf    &offset /RelPATH /Verify
+ELSE IF &thumb_ii_v7m
+  Data.LOAD.Elf ~~~~/logger_pic_thumb_ii_v7m.elf &offset /RelPATH /Verify
+ELSE
+(
+  PRINT %ERROR "Error: Coretype not supported by this script."
+  ENDDO FALSE()
+)
+
+; --------------------------------------------------------------------------------
+; Run till LOGGER Initialization is finished
+Mode.Hll
+Go.direct sYmbol.EXIT(T32_LoggerInit)
+WAIT !RUN()
+
+List.auto
+
+; Initialize LOGGER
+LOGGER.RESet
+LOGGER.Init
+IF &aarch64
+  LOGGER.Mode.64Bit ON
+LOGGER.ADDRESS ADDRESS.OFFSET(T32_LoggerStruct)
+LOGGER.OFF
+
+IF TRUE()
+(
+  ; for demonstration use the upcounter variable in LOGGER_TimerGet()
+  ; as code is compiled with LOGGER_TIMER_DEMONSTRATION
+  Var.Assign T32_LoggerFast = 0;
+
+  LOGGER.TimeStamp Up
+  &timestamprate=1000000.    ; Decimal value of logger timer speed, e.g. 1MHz
+  LOGGER.TimeStamp Rate &timestamprate
+)
+
+
+; --------------------------------------------------------------------------------
+; Open some windows
+WinPOS 98. 0.
+LOGGER
+WinPOS 0. 0. 81. 25. 10. 1.
+LOGGER.List
+WinPOS 0. 31. 116. 18. 16. 2.
+LOGGER.DRAW.Var %STD plot1;
+
+ENDDO
+
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+(
+  PRIVATE &param &offset
+  ENTRY &param
+  &offset=STRing.SCANAndExtract("&param","0x","")
+  IF "&offset"==""
+  (
+    PRINT %ERROR "Error: Missing Argument - Usage DO logger.cmm 0x<offset> "
+    ENDDO FALSE()
+  )
+  ; ensure parameter is HEX and round down to the nearest LONG
+  &offset="0x&offset"
+  &offset=(&offset)&~0x3
+
+  IF !SYStem.Up()
+  (
+    PRINT %ERROR "Error: Not connected to target. - Please use SYStem.Up before."
+    ENDDO FALSE()
+  )
+
+  RETURN "&offset"
+)
+
+GetCpuModes: ;()
+(
+  PRIVATE &aarch64 &thumb_ii_v7 &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7m
+
+  &aarch64=FALSE()
+  &arm=FALSE()
+  &armbe=FALSE()
+  &thumb_ii_v7=FALSE()
+  &thumbv4=FALSE()
+  &thumbv6m=FALSE()
+  &thumb_ii_v7m=FALSE()
+
+  IF (CPU.FEATURE(SPR))
+  (
+    ; detect AARCH mode by checking bit4 of the M field of CPSR
+    IF ((Register(M)&0x10)==0x0)
+    (
+      ; AARCH64 Mode
+      &aarch64=TRUE()
+    )
+    ELSE IF (((Register(M)&0x10)!=0x0)&&Register(E)==0.)
+    (
+      ; AARCH32 Mode
+      IF (Register(T)==0.)
+        &arm=TRUE()
+      ELSE
+        &thumb_ii_v7=TRUE()
+    )
+  )
+  else
+  (
+    &arm=&arm||(STRing.SCAN(CORENAME(),"CORTEXA",0)>=0)
+    &arm=&arm||(STRing.SCAN(CORENAME(),"CORTEXR",0)>=0)
+    &arm=&arm||(STRing.SCAN(CORENAME(),"ARM7",0)>=0)
+    &arm=&arm||(STRing.SCAN(CORENAME(),"ARM9",0)>=0)
+    &arm=&arm||(STRing.SCAN(CORENAME(),"ARM11",0)>=0)
+    IF (&arm&&(STRing.SCAN(CORENAME(),"CORTEXR",0)>=0))
+    (
+      IF ((Data.Long(C15:0x1)&0x80000000)!=0x0)
+      (
+        &armbe=TRUE()
+        &arm=FALSE()
+      )
+    )
+
+    &thumbv6m=&thumbv6m||(STRing.SCAN(CORENAME(),"CORTEXM0",0)>=0)
+    &thumbv6m=&thumbv6m||(STRing.SCAN(CORENAME(),"CORTEXM1",0)>=0)
+    &thumbv6m=&thumbv6m||(STRing.SCAN(CORENAME(),"CORTEXM23",0)>=0)
+
+    &thumb_ii_v7m=&thumb_ii_v7m||(STRing.SCAN(CORENAME(),"CORTEXM3",0)>=0)
+    &thumb_ii_v7m=&thumb_ii_v7m||(STRing.SCAN(CORENAME(),"CORTEXM4",0)>=0)
+    &thumb_ii_v7m=&thumb_ii_v7m||(STRing.SCAN(CORENAME(),"CORTEXM7",0)>=0)
+    &thumb_ii_v7m=&thumb_ii_v7m||(STRing.SCAN(CORENAME(),"CORTEXM33",0)>=0)
+    &thumb_ii_v7m=&thumb_ii_v7m||(STRing.SCAN(CORENAME(),"CORTEXM35",0)>=0)
+    &thumb_ii_v7m=&thumb_ii_v7m||(STRing.SCAN(CORENAME(),"CORTEXM55",0)>=0)
+  )
+
+  RETURN "&aarch64" "&thumb_ii_v7" "&arm" "&armbe" "&thumbv4" "&thumbv6m" "&thumb_ii_v7m"
+)

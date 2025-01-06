@@ -1,0 +1,111 @@
+; --------------------------------------------------------------------------------
+; @Title: Demo for customizing the Menus and Toolbars
+; @Description:
+;   This script shows how to program a menu in PRACTICE and add it to an
+;   existing menu. Load the menu with MENU.ReProgram ~/demo/menu/demo.men
+; @Keywords: menu, popup, buttons, replace, menuitem, toolbar, toolitem
+; @Author: -
+; @Copyright: (C) 1989-2014 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: demo.men 7443 2014-07-21 13:28:06Z mschaeffner $
+
+
+;  add mode is required, as we want to add new items to the existing menu
+   ADD
+
+;  definition of the main pulldown menu bar
+   MENU
+   (
+;       using an existing menu name will choose this name
+        POPUP "File"
+        (
+;             replace an existing menu item by a new one (here a customized load command)
+              REPLACE
+              MENUITEM "Load..."         "Data.LOAD.Ieee *.x e: /p"
+;             add a new menu item to the existing popup
+              MENUITEM "Edit .c File..." "EDIT *.c"
+        )
+;       adding a new popup
+        POPUP "&My Popup"
+        (
+;             add an item that can be accessed by an accelerator key (F10)
+              MENUITEM "Double Step,F10" "Step 2"
+;             add an item that executes a small PRACTICE program
+              MENUITEM "Mixed Step,F11"
+              (
+                       Step.ASM
+                       Step.HLL
+              )
+;             add an item of another device (here the TA32)
+              MENUITEM "Timing View"     "T:Analyzer.Timing"
+        )
+   )
+
+
+;  definition of toolbar items
+   TOOLBAR
+   (
+;       add a button with text bitmap
+        TOOLITEM "Analyzer Arm"              "AA,Y"           "Analyzer.Arm"
+;       add a button with an existing bitmap
+        TOOLITEM "Analyzer List"             "ALIST"          "Analyzer.List"
+;       add a button with a modified bitmap
+        TOOLITEM "Analyzer List in HLL mode" ".c,R,ALIST"     "Analyzer.List CPU List.Hll List.NoFetch"
+        SEPARATOR
+;       add a button with a customized bitmap
+        TOOLITEM "Timing Analyzer Arm"       "T:Analyzer.Arm"
+        [
+  XXXR XXX  XXX
+  X XR X X  X X
+XXX XXXX XXXX XX
+     R
+ XXX RXXX  XXX
+ X X RX X  X X
+XX XXXX XXXX XXX
+     R
+XXX  XXX  XXX  X
+X X  X X  X X  X
+X XXXX XXXX XXXX
+     R
+XX  XXX  XXX  XX
+ X  XRX  X X  X
+ XXXXRXXXX XXXX
+     R
+        ]
+   )
+
+
+;  definition of local buttons
+   BUTTONS "d.l"
+   (
+;       add buttons to the list window
+        MENUITEM "Delete PC" "Break.Delete R(pc)"
+        MENUITEM "Delete BP" "Break.Delete TRACK.ADDRESS()"
+   )
+
+;  definitions of an command related local pulldown
+   MENU "d.l"
+   (
+;        add an item to the popup menu
+         MENUITEM "[:list]List Marked" "Data.List /Mark Read"
+   )
+
+;  definition of an function related pulldown
+;  this pulldown is used when an address is selected
+   MENU "data"
+   (
+        MENUITEM "[:view]View Detailed" "Data.View %Var TRACK.ADDRESS() /Mark Write"
+   )
+
+;  definition of an function related pulldown
+;  this pulldown is used when a variable is selected
+   MENU "var"
+   (
+;       add an item
+        MENUITEM "Show with strings"
+        (
+                 LOCAL &name
+                 &name=SELECTION.STRING()
+                 Var.View %s &name
+        )
+   )

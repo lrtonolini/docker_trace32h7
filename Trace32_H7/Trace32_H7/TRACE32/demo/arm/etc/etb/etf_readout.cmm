@@ -1,0 +1,53 @@
+; --------------------------------------------------------------------------------
+; @Title: Script File to store the ETF Raw Data to a File
+; @Description: 
+;    This script stores the ETF raw data to the etf.bin file.
+;    By default this script stores the data of ETF1 if multiple ETF units
+;    are available this script must be adapted.
+;    Please note that the ETF must be used in Circular-Buffer-Mode/ETB mode
+;    in order to export the data (Onchip.TraceCONNECT ETF1).
+; @Keywords: ETF, raw, trace
+; @Author: -
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: etf_readout.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+; get Coresight address of ETF1
+LOCAL &etfbase &depth
+&etfbase=ADDRESS.OFFSET(COMPonent.BASE("ETF1",0))
+&depth=0
+
+IF &etfbase!=0
+(
+	&depth=Data.Long(EDAP:&etfbase+0x004)
+)
+ELSE
+(
+	DIALOG.OK "No ETF configured."
+	ENDDO
+)
+
+IF &depth==0
+(
+	DIALOG.OK "Size of the ETF is zero!"
+	ENDDO
+)
+
+; set read pointer to the beginning
+Data.Set EDAP:&etfbase+0x014 %Long Data.Long(EDAP:&etfbase+0x018)
+
+
+; Readout content
+&addr=0
+WHILE &addr<=(&depth*4)-1
+(
+	Data.Set AVM:&addr %Long Data.Long(EDAP:&etfbase+0x010)
+	&addr=&addr+4
+)
+
+; Save it into a binary file
+Data.SAVE.Binary etf.bin AVM:0x000++((&depth*4)-1)
+
+ENDDO
+

@@ -1,0 +1,336 @@
+; --------------------------------------------------------------------------------
+; @Title: Example for Debugging Code Overlays (Multi-ELF)
+; @Description:
+;   Example for debugging Code Overlays with TRACE32
+;   unsing two ELF files execute code at the same location
+;
+;   Supported Targets:
+;       OMAP4430 PandaBoard
+;       ARM922T Excalibur (EPXA10/EPXA1) (without ETMv3 real time trace !)
+;       TRACE32 Instruction Set Simulator
+;
+;   Parameter Values:
+;       GNU : starting demo compiled with GNU compiler for ARM
+;       ARM : starting demo compiled with ARM RealView compiler (default)
+;       16  : using 16-bit context ID messages for ETMv3 real time trace
+;       32  : using 32-bit context ID messages for ETMv3 real time trace
+;
+; @Author: HLG
+; @Board: OMAP4430 PandaBoard; EPXA1/EPXA10 Excalibur; TRACE32 Simulator
+; @Chip: EPXA1, EPXA10, OMAP4430
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: ovdemo.cmm 20804 2023-04-20 10:21:12Z bschroefel $
+
+
+
+LOCAL &param &compiler &cpu
+ENTRY %LINE &param
+&param=STRing.LoWeR("&param")
+
+IF VERSION.BUILD()<34207.
+(
+	PRINT %ERROR "Sorry, this demo requires TRACE32 build 34207. or higher"
+	ENDDO
+)
+
+&compiler="ARM"
+IF STRing.SCAN("&param","gnu",0)>=0
+	&compiler="GNU"
+IF STRing.SCAN("&param","arm2",0)>=0
+	&compiler="ARM2"
+&idSize=16.
+IF STRing.SCAN("&param","32",0)>=0
+	&idSize=32.
+
+WinCLEAR
+AREA.CLEAR
+Break.Delete
+sYmbol.RESet
+SYStem.RESet
+Break.RESet
+IF Analyzer()
+	Analyzer.RESet
+FramePOS ,,,,maximized
+
+
+; --------------------------------------------------------------------------------
+; Setting up the target board
+; --------------------------------------------------------------------------------
+SYStem.CPU ARM7TDMI
+ETM.RESet
+SYStem.Option IMASKASM ON
+SYStem.Option IMASKHLL ON
+SYStem.Option INTDIS ON
+SYStem.Option OVERLAY withOVSBP  ;<- Enable the address extension for Code Overlays + support software breakpoints in overlay pages by writing to the related overlay storage (use "ON" instead of "withOVSBP" if the overlay storage memory is not mapped to the address space or not writable)
+SYStem.JtagClock CTCK 1.MHz
+IF (Analyzer())&&(!INTERFACE.SIM())&&(ETM.VERSION()>=30.)
+(
+	ETM.PortSize 8
+)
+
+LOCAL &device
+IF STRing.SCAN("&param","panda",0)>=0
+(
+	&device=0x0B95C02F
+)
+ELSE
+(
+	SYStem.DETECT IDCode
+	&device=IDCODE(0)&0x0fffffff
+)
+
+IF &device==0x0B95C02F
+(
+	; TI PandaBoard : http:;en.wikipedia.org/wiki/PandaBoard
+
+	LOCAL &CONTROL_ID_CODE &i
+
+	SYStem.CPU OMAP4430APP1
+	SYStem.JtagClock CTCK 20.MHz
+	SYStem.CONFIG CTIBASE 0xd4148000
+	SYStem.Option ResBreak ON
+	SYStem.Mode Up
+
+	&CONTROL_ID_CODE=Data.Long(ASD:0x4A002204)
+	PRINT "OMAP Control ID: 0x" FORMAT.HEX(8,&CONTROL_ID_CODE);
+
+	IF ((&CONTROL_ID_CODE&0x0fffffff)!=0x0B95C02F)&&hardware.POWERDEBUG()
+	(
+		PRINT %ERROR "ERROR ! This is not a PandaBoard"
+		ENDDO
+	)
+
+	; Configure the MMU to map 46KiB of SRAM at physical address 0x40300000 to virtual address 0x0000--0xB7ff
+	Data.Set C15:0x1 %Long Data.Long(c15:1)&~1 ;disable MMU
+	Data.Set SD:0x40300000++0x3fff %Long 0   ;clear 16KiB Translation Table
+	Data.Set SD:0x40300000 %Long 0x4A327011  ;create level one entry, which points to Coarse Page Table
+	Data.Set SD:0x4A327000++0x03ff %Long 0   ;clear 1KiB Coarse Page Table in SAR_RAM 2
+	&i=0
+	WHILE &i<10.                             ;creating Small Page entries in Coarse Page Table
+	(                                        ;mapping upper 40KiB of OCM_RAM to address 0x0000
+		Data.Set SD:0x4A327000+(&i*4) %Long 0x40304002+(&i*0x1000)
+		&i=&i+1
+	)
+	Data.Set SD:0x4A327028 %Long 0x4A326002  ;mapping SAR_RAM 1 to address 0xA000
+	Data.Set SD:0x4A32702C %Long 0x4A328002  ;mapping SAR_RAM 3 to address 0xB000
+	Data.Set c15:0x0002 %Long 0x40300000     ;set Translation Table Base register 0
+	Data.Set c15:0x0102 %Long 0x40300000     ;set Translation Table Base register 1
+	Data.Set c15:0x0003 %Long 0x00000003     ;set domain 0 access to Manager
+
+	IF Analyzer()
+	(
+		; configure PAD: EMU[2:19] for 16-bit TPIU (PADx_DPM_EMUx)
+		Data.Set 0x4A1001B0 %Long Data.Long(SD:0x4A1001B0)&0x0000FFFF
+		Data.Set 0x4A1001B4--0x4A1001D7 %Long 0
+
+		ETM.PortSize 16a
+	)
+	Data.Set c15:0x0001 %Long 0x00000079     ;enable MMU
+
+	Break.CONFIG.UseContextID ON  ; Enable context sensitive onchip breakpoint
+)
+ELSE IF &device==0x049220DD
+(
+	 ; Altera Excalibur : http:;www.altera.com/products/devices/excalibur
+
+	LOCAL &exc_registers_base &exc_id &epxa &addr
+	&exc_registers_base=0x7fffc000
+
+	SYStem.CPU EPXA
+	SYStem.JtagClock CTCK 10.MHz
+	SYStem.Mode Up
+
+	&exc_id=Data.Long(D:(&exc_registers_base+0x8)) ; read Excalibur-ID
+	PRINT "Excalibur ID: " &exc_id
+
+	IF &exc_id==0x090010DD
+		&epxa=10.
+	ELSE IF &exc_id==0x081010DD
+		&epxa=1.
+	ELSE
+	(
+		PRINT %ERROR "ERROR ! This is not an EPXA1 or EPXA10 target board"
+		ENDDO
+	)
+	PRINT "Detected EPXA"+FORMAT.Decimal(0,&epxa)
+
+	Data.Set c15:00000001 %LE %Long 0x00000178   ; disable InstructionCache
+
+	; Turn off all memories except the SRAM
+	Data.Set (&exc_registers_base+0x0) %Long 0x00000001 ; Turn off default boot mapping with Flash0 at address 0
+	&addr=(&exc_registers_base+0xA0)
+	WHILE &addr<=(&exc_registers_base+0xDC)
+	(
+		Data.Set &addr %Long 0
+		&addr=&addr+4
+	)
+
+	IF &epxa==1.
+	(
+		Data.Set (&exc_registers_base+0x90) %Long 0x00000681 ; Map SRAM0 to Address 0x0000 with a size of 16KB
+		Data.Set (&exc_registers_base+0x94) %Long 0x00004181 ; Map SRAM1 to Address 0x4000 with a size of 16KB
+	)
+	ELSE
+	(
+		Data.Set (&exc_registers_base+0x90) %Long 0x00020803 ; Map SRAM0 to Address 0x0000 with a size of 128KB
+		Data.Set (&exc_registers_base+0x94) %Long 0x00000803 ; Map SRAM1 to Address 0x0000 with a size of 128KB
+	)
+
+	IF Analyzer()
+	(
+		Data.Set SD:(&exc_registers_base+0x04c) %LE %Long 0x06 ; enable trace if not already done (ENSHURE THAT THE REGISTER IS NOT LOCKED !)
+		IF ((Data.Long(D:(&exc_registers_base+0x4C)))>>1)%2==0 ; Check if Bit 1 of Register IOCR_TRACE is not set - otherwise the Trace is not accessible
+			PRINT %ERROR "Can't enable ETM on Target (Maybe you have locked register IOCR_TRACE on your Excalibur target)."
+	)
+)
+ELSE IF &device==0x0002B02F
+(
+	SYStem.CPU CORTEXR4
+	SYStem.JtagClock CTCK 5MHz
+	SYStem.Option EnReset OFF
+	SYStem.CONFIG.MULTITAP IcepickC
+	SYStem.CONFIG.DEBUGTAP 2.
+	SYStem.CONFIG DAPIRPOST 6.
+	SYStem.CONFIG DAPDRPOST 1.
+	SYStem.CONFIG DEBUGBASE  0x80005000
+	SYStem.CONFIG ETBBASE    0x80001000
+	SYStem.CONFIG ETMBASE    0x80006000
+	SYStem.CONFIG TPIUBASE   0x80003000
+	SYStem.CONFIG FUNNELBASE 0x80004000
+	SYStem.Mode Up
+	Data.Set C15:0x01 %Long 0y0xxxxxxxxx0xx  ;Disable Caches
+)
+ELSE
+(
+	ON error GOTO
+	(
+		AREA.view
+		PRINT %ERROR "SYStem.Up failed! Are you really using an "+SYStem.CPU()+" ?"
+		ENDDO
+	)
+	SYStem.Mode Up
+	ON error
+)
+
+
+; --------------------------------------------------------------------------------
+; Setting up the overlay example
+; --------------------------------------------------------------------------------
+Register.RESet
+Register.Set CPSR 0x0013
+Data.Set 0--0x0fff %Long 0
+sYmbol.SourcePATH.Set "~~~~/src"
+
+IF "&compiler"=="GNU"
+(
+	Data.LOAD.Elf "~~~~/caller.elf" /PlusVM
+	sYmbol.OVERLAY.Create 0xA001,,,"\\page1\.text"
+	sYmbol.OVERLAY.Create 0xB001,,,"\\page2\.text"
+	Data.LOAD.Elf "~~~~/page1.elf" /NoClear /NoRegister /OVERLAY /RelPATH /GNU /PlusVM /Include
+	Data.LOAD.Elf "~~~~/page2.elf" /NoClear /NoRegister /OVERLAY /RelPATH /GNU /PlusVM
+)
+ELSE IF "&compiler"=="ARM2"
+(
+	; Nice and easy variant for debugging, but in this example not that good for tracing,
+	; since the symbols of not-overlayed LOADER_TEXT sections will be loaded to segment 0xA001 or 0xB001 too,
+	; but the trace decoder will search them at segment 0;
+	Data.LOAD.Elf "~~~~/caller.axf" /PlusVM
+	Data.LOAD.Elf "~~~~/page1.axf" P:0xA001:0 /NoClear /NoRegister /OVERLAY /RelPATH /PlusVM /Include
+	Data.LOAD.Elf "~~~~/page2.axf" P:0xB001:0 /NoClear /NoRegister /OVERLAY /RelPATH /PlusVM
+)
+ELSE
+(
+	Data.LOAD.Elf "~~~~/caller.axf" /PlusVM
+	sYmbol.OVERLAY.Create 0xA001,,,"\\page1\TEXT"
+	sYmbol.OVERLAY.Create 0xB001,,,"\\page2\TEXT"
+	sYmbol.OVERLAY.FRIEND 0x0000 0xA001
+	Data.LOAD.Elf "~~~~/page1.axf" /NoClear /NoRegister /OVERLAY /RelPATH /PlusVM /Include
+	Data.LOAD.Elf "~~~~/page2.axf" /NoClear /NoRegister /OVERLAY /RelPATH /PlusVM
+	Data.COPY OVS:sYmbol.SECRANGE(\\page1\TEXT) VM:sYmbol.SECADDRESS(\\page1\TEXT)
+	Data.COPY OVS:sYmbol.SECRANGE(\\page2\TEXT) VM:sYmbol.SECADDRESS(\\page2\TEXT)
+	Data.COPY OVS:sYmbol.SECRANGE(\\page1\TEXT) VM:0:ADDRESS.OFFSET(sYmbol.SECADDRESS(\\page1\TEXT))
+	Data.COPY OVS:sYmbol.SECRANGE(\\page2\TEXT) VM:0:ADDRESS.OFFSET(sYmbol.SECADDRESS(\\page2\TEXT))
+)
+sYmbol.OVERLAY.AutoID
+Data.Set \\page1\Global\id %Long %LE 0
+
+IF (Analyzer())&&(!INTERFACE.SIM())&&(ETM.VERSION()>=30.)
+(
+	ETM.HalfRate ON
+
+	ETM.ContextID 32.
+	IF &idSize!=32. ; Size of Context ID register should be set to 16-bits ?
+	(
+		Var.set \\page1\loader\segment=0xA001
+		Var.set \\page2\loader\segment=0xB001
+		ETM.ContextID 16.
+	)
+	IF ETM.VERSION()<0x13 ; ETM < v1.3 ?
+		ETM.ContextID OFF
+	IF ETM.VERSION()<0x20 ;ETMv1.x ?
+		ETM.STALL ON ;stall cpu when target fifo is full
+
+	Analyzer.TERMination ON
+	Analyzer.TestFocus ; test trace port
+	IF FOUND() ; if trace port test failed...
+	(
+		PRINT "Performing AutoFocus..."
+		Analyzer.AutoFocus
+	)
+	Analyzer.AutoInit ON
+	Analyzer.AutoArm ON
+
+	IF ETM.VERSION()<40.
+	(
+		ETM.DataTrace WRITE  ; enable the recording of memory writes
+
+		; record any write to ID (D:5400) for statistic analyses
+		Break.Set ADDRESS.OFFSET(\\page1\Global\id)++3 /Write /tracedata
+
+		WinPOS 102% 70% 98% 30%
+		WinExt.Analyzer.STATistic.DistriB d.L /Filter Address ADDRESS.OFFSET(\\page1\Global\id)
+
+		WinPOS 102% 20% 98% 20%
+		WinExt.Analyzer.Chart.DistriB d.L /Filter Address ADDRESS.OFFSET(\\page1\Global\id) /zoomtrack /zoomtrack
+	)
+	WinPOS 0% 0% 55% 60%
+	List.auto
+	WinPOS 55%  0 45% 60%
+	Analyzer.List TPC List.ADDRESS ALL /Track
+	WinPOS 30% 60% 70% 20%
+	Analyzer.Chart.TASKINFO /ZoomTrack
+)
+ELSE
+(
+	WinPOS 0% 0% 100% 60%
+	List.auto
+	WinPOS 30% 60% 70% 20%
+	Var.Ref %Hex %Decimal
+)
+WinPOS 0% 60% 30% 40%
+Frame
+WinPOS 30% 82% 70% 18%
+sYmbol.OVERLAY.List /STorage
+
+
+Mode.Mix
+Go main
+
+
+
+STOP
+; ------- demo start -------
+SCREEN.display
+IF Analyzer()
+(
+	Analyzer.Mode stack
+	Analyzer.SIZE 7000000.
+)
+Go
+WAIT 1.s
+Break
+; -------- demo end --------
+
+ENDDO
+

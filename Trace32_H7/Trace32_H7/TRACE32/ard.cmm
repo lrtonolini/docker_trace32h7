@@ -1,0 +1,6 @@
+DIALOG.OK "Please refer to README before fisrt start"
+
+Do "~~/menu.cmm"
+Do "~~/WinDemo.cmm"
+
+

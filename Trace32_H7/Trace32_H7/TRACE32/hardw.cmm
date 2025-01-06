@@ -1,0 +1,44 @@
+WinCLEAR
+
+; --------------------------------------------------------------------------------
+; initialize and start the debugger
+RESet
+SYStem.CPU STM32H747XI-CM7
+SYStem.CONFIG.DEBUGPORTTYPE SWD
+Trace.METHOD.Onchip
+IF COMBIPROBE()||UTRACE()
+(
+  SYStem.CONFIG.CONNECTOR MIPI20T
+)
+SYStem.Option DUALPORT ON
+SYStem.Option.EnReset OFF
+SYStem.Option VECTRESET ON
+SYStem.Up
+
+; --------------------------------------------------------------------------------
+; load demo program (uses internal RAM only)
+Data.LOAD.Elf "~~/demo/sieve_ram_thumb_ii_v7m.elf"
+
+; --------------------------------------------------------------------------------
+; start program execution
+Go.direct main
+WAIT !STATE.RUN()
+
+; --------------------------------------------------------------------------------
+; open some windows
+WinCLEAR
+Mode.Hll
+WinPOS 0. 0. 116. 26.
+List.auto
+WinPOS 120. 0. 100. 8.
+Frame.view
+WinPOS 120. 14.
+Var.Watch
+Var.AddWatch %SpotLight ast flags 
+WinPOS 120. 25.
+Register.view /SpotLight
+WinPOS 0. 32.
+Var.DRAW %DEFault sinewave
+
+Do "~~/menu.cmm"
+ENDDO

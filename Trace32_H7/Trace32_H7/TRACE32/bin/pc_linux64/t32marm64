@@ -1,0 +1,8 @@
+#!/bin/bash
+EXENAME=$(readlink -e "$0")
+echo "Warning: TRACE32 PowerView executable $EXENAME is deprecated."                                                     >&2
+echo "Warning: t32marm64 was replaced by a new consolidated t32marm, which now supports both 32-bit and 64-bit CPUs."    >&2
+echo "Warning: Please change the executable name accordingly in your preferred start method(s)"                          >&2
+echo "Warning: e.g. shortcut properties, shell scripts, ..."                                                             >&2
+echo "Warning: For details please visit: https://www.lauterbach.com/3264"                                                >&2
+exec ${EXENAME%64} "$@"

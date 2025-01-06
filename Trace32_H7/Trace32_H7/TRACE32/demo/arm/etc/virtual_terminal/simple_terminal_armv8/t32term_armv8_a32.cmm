@@ -1,0 +1,66 @@
+; @Title: Example for using the 'virtual terminal' via DCC for ARMv8 AArch32
+; @Description:
+; Example for using the 'virtual terminal' via the Debug Communication Channel
+; (DCC) for ARMV8 AArch32 ARM mode
+; The example assumes RAM at address 2e008000.
+; After executing this script you need to run the loaded example program ('Go')
+; It outputs 'Hello world!' in the TERM window.
+; When you enter three characters of any type it outputs 'Hello world!' again.
+;
+; See the target manual of the arm debugger (debugger_arm.pdf) for more details
+; about the 'virtual terminal'.
+;
+; The debugger is expected to be in 'UP' state, therefore a target specific
+; start-up script probably similar to the following one for the simulator will
+; be needed to run first.
+;
+; @Keywords: AARCH, ARMv8, armcc, Cortex-A53, Cortex-A57, TERM, ARM64
+; @Author: BES
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; $Id: t32term_armv8_a32.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+; start-up in case of simulator
+  IF INTERFACE.SIM()
+  (
+    RESet
+    SYStem.CPU ARMV8-A
+    SYStem.Up
+    ; switch to AArch32 user mode
+	Register.Set M 0x10
+  )
+
+; make sure we are connected to the target
+  IF !SYStem.Up()
+  (
+    PRINT %ERROR "Error: Not connected to target. - Please use SYStem.Up before."
+    ENDDO FALSE()
+  )
+
+; make sure we are in AArch32 mode
+  IF !(((Register(M)&0x10)!=0x0)&&(Register(E)==0.)&&(Register(T)==0.))
+  (
+    PRINT %ERROR "Error: AARCH state not supported by this script."
+    ENDDO
+  )
+
+; load demo application to RAM
+  Data.LOAD.BINARY ~~~~/t32term_armv8_a32.bin 0x2e008000
+  SYStem.Option DISMODE ARM
+
+; adjust PC since we have no elf file here. 0x2e008000--0x2e00800F contains "Hello world!" text
+  Register.Set PC 0x2e008010
+
+; open some windows
+  WinCLEAR
+  WinPOS 0% 0% 50% 100%
+  List.auto
+  WinPOS 50% 0% 100% 100%
+  TERM
+
+  ENDDO
+
+
+
+
+
+

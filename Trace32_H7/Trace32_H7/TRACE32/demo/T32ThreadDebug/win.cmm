@@ -1,0 +1,22 @@
+WinPOS 0.25 0.071429 100. 23. 21. 1. W002
+WinTABS 10. 10. 25.
+List
+
+WinPOS 105.13 28.786 44. 22. 0. 0. W003
+Register.view
+
+WinPOS 106.13 0.0 88. 8. 9. 1. W001
+WinTABS 42. 13. 9.
+TASK.List
+
+WinPOS 105.88 12.286 89. 10. 5. 0. W004
+Frame /Args /Locals /Caller
+
+WinPOS 154.5 28.786 38. 16. 0. 0. W005
+Var.Watch %SpotLight
+
+VAR.ADDWATCH Sinewave
+VAR.ADDWATCH flags
+VAR.ADDWATCH Counter
+Do "~~/menu.cmm"
+Do "~~/WinDemo.cmm"

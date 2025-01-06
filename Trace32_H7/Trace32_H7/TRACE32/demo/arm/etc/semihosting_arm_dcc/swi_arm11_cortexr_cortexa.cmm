@@ -1,0 +1,227 @@
+; --------------------------------------------------------------------------------
+; @Title: Semihosting Example via DCC or BUFFERE for ARM11, Cortex-R and Cortex-A
+; @Description: 
+;   ARM11, Cortex-R4, Cortex-A8 compatible semihosting via DCC channel or BUFFERE
+;   The example assumes RAM at address 0.
+; @Author: PEG, MAZ
+; @Chip: ARM11*, Cortex-A*, Cortex-R*
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: swi_arm11_cortexr_cortexa.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+; Drystone sample application
+;   &APPLICATIONELF must be set to "dhrystone"
+;   After executing this script you need to run the loaded dhrystone benchmark program (-> 'Go').
+;   Enter a value e.g. '100000' in the TERM.GATE window.
+;   The benchmark program uses semihosting for inputs and outputs in the TERM.GATE window.
+;   See dhry.h if you want to know details on what the benchmark program does.
+; File I/O performance demo
+;   &APPLICATIONELF must be set to "term_performance_demo"
+;   The execution of the script will stop before the test starts. CONT need to be entered to continue.
+
+; BUFFERE protocol
+;   Indeed also the BUFFERE protocol can be used in this sample. Therefore only another swi handler need to
+;   to be involved by &SWIHANDLERELF to "t32swi_arm11_cortexr_cortexa_buffere". BUFFERE requires dual port memory access
+;   provided by AHB or AXI bus access. The memory must be at a fixed physical address and not cached.
+
+; See the target manual of the arm debugger (debugger_arm.pdf) for more details about 'semihosting'.
+
+; The debugger is expected to be in UP state, therefore a target
+; specific start-up script will be needed to run first.
+
+; configuration
+  &APPLICATIONELF="dhrystone"                           ; - drystone sample
+  ;&APPLICATIONELF="term_performance_demo"               ; - performance measurement demo
+  &SWIHANDLERELF="t32swi_arm11_cortexr_cortexa"         ; - DCC3 variant for ARM11, Cortex-A/Cortex-R
+  ;&SWIHANDLERELF="t32swi_arm11_cortexr_cortexa_buffere" ; - BUFFERE variant for Cortex-A/Cortex-R using AXI or AHB
+
+; heap and stack is placed after the code
+  &HEAPSIZE=0x20000
+  &STACKSIZE=0x1000
+  &BUFFERESIZE=0x1000 ; size of the BUFFERE commuication buffers. should be smaller than 15K
+  &BUFFEREACCESSCLASSS="E"
+  PRIVATE &SetNewBUFSIZ
+  ;&SetNewBUFSIZ=0x1000  ; override internal file buffer size used by stdio files
+
+; start-up in case of simulator
+  if INTERFACE.SIM()
+  (
+    RESet
+    SYStem.CPU CortexA9
+    SYStem.Up
+  )
+
+ 
+; load demo application
+  Register.RESet
+  Break.Delete
+  Data.LOAD.ELF &APPLICATIONELF.axf /spath /lpath /verify
+  &VECBASE=register(PC)&0xFFFC0000
+
+; load semihosting handler
+  Data.LOAD.ELF &SWIHANDLERELF.axf /spath /lpath /verify /noclear /noreg
+  
+
+; initialize stack pointer and vector table
+  if y.exist(t32swi_armcc_version)&&(var.value(t32swi_armcc_version)/1000000.==5.)
+    &SWISECENDSYMBOL="\\&SWIHANDLERELF\ER_ZI"
+  else
+    &SWISECENDSYMBOL="\\&SWIHANDLERELF\&SWIHANDLERELF.axf"  
+  &HEAPSTART=(address.offset(y.secend(&SWISECENDSYMBOL))+0x100)&0xFFFFFF00
+  &HEAPEND=&HEAPSTART+&HEAPSIZE
+  &STACKSTART=&HEAPSTART+&HEAPSIZE+&STACKSIZE
+  &STACKEND=&HEAPEND
+  register.set R13 &STACKSTART
+  ; in the beginning the application retrieve parameters for stack and head from the host in case the application was
+  ; compiled without that information in the linker file (option --scatter=).
+  TERM.HEAPINFO &HEAPSTART &HEAPEND &STACKSTART &STACKEND
+  
+; patch entry into semihosting handler
+  Data.Assemble &VECBASE+0x08 ldr pc,&VECBASE+0x28
+  Data.Set &VECBASE+0x28 %Long T32_Swi_Handler /v
+
+; breakpoint to stop on application exit
+  Break.Set T32_Term_Break
+
+; configure and open semihosting channel
+  
+  if symbol.exist(T32_Term_Memory_Tar2HostBuffer)
+  (
+    ; setup BUFFERE if configured
+    if !symbol.exist(Term_Memory_Tar2HostBuffer)
+    (
+      ;configure t32term_memory.c in case define T32_TERM_MEMORY_BLOCKED_SIZE was not set
+      ; place communication buffers after stack start
+      &BUFFERSTART=&STACKSTART+16.
+      var.set T32_Term_Memory_Tar2HostBuffer=&BUFFERSTART
+      var.set T32_Term_Tar2HostBufferSize=&BUFFERESIZE
+      var.set T32_Term_Memory_Host2TarBuffer=&BUFFERSTART+&BUFFERESIZE
+      var.set T32_Term_Host2TarBufferSize=&BUFFERESIZE
+    )
+    if !INTERFACE.SIM()    
+      sys.memaccess DAP
+    ; clear communication semaphore
+    data.set &BUFFEREACCESSCLASSS:var.value(T32_Term_Memory_Tar2HostBuffer)++3 0x0 /VERIFY
+    data.set &BUFFEREACCESSCLASSS:var.value(T32_Term_Memory_Host2TarBuffer)++3 0x0 /VERIFY
+    ; setup buffer to be used for communication
+    if (var.value(T32_Term_Tar2HostBufferSize)>0x100)
+      TERM.METHOD BufferE &BUFFEREACCESSCLASSS:var.value(T32_Term_Memory_Tar2HostBuffer)++(var.value(T32_Term_Tar2HostBufferSize)-1) &BUFFEREACCESSCLASSS:var.value(T32_Term_Memory_Host2TarBuffer)++(var.value(T32_Term_Host2TarBufferSize)-1)
+    else
+      TERM.METHOD BufferE &BUFFEREACCESSCLASSS:var.value(T32_Term_Memory_Tar2HostBuffer) &BUFFEREACCESSCLASSS:var.value(T32_Term_Memory_Host2TarBuffer)
+  )
+  else
+  (
+    TERM.METHOD dcc3
+  )
+  TERM.Mode string
+
+  if y.exist(newBUFSIZ) ;- term_perf_demo
+    goto term_performance_measurement
+
+; open some windows - drystone sample
+  WinCLEAR
+  WinPOS 0% 0% 100% 48%
+  List.auto
+  WinPOS 0% 50% 50% 48%
+  Frame /Locals /Caller
+  WinPOS 50% 50% 50% 48%
+  TERM.GATE
+
+  ENDDO
+
+term_performance_measurement:
+  TERM.MODE VT100
+
+  if "&SetNewBUFSIZ"!=""
+    var.set newBUFSIZ=&SetNewBUFSIZ
+  Break.Set vFatal\1
+
+  ;generate test pattern file
+  Data.PATTERN VM:0x0++0x1fffff
+  Data.SAVE.Binary ~~~~/dumpin.bin VM:0x0--0x1fffff
+
+  &filesize=v.value(sizeof(pBuffer))*v.value(blockcount)/1024.
+
+  print "-------------------------------------------------------------------------------"
+  print "target BUFFERE size " FORMAT.DECimal(0.,var.value(T32_Term_Tar2HostBufferSize))
+  print "target block size " FORMAT.DECimal(0.,sYmbol.sizeof(pBuffer))
+  print "target block count " FORMAT.DECimal(0.,var.value(blockcount))
+  print "target file size " FORMAT.DECimal(0.,&filesize) " KBytes"
+
+  WinClear
+  WinPOS 0% 0% 100% 48%
+  List.auto
+  WinPOS 0% 50% 50% 48%
+  Frame /Locals /Caller
+  WinPOS 50% 50% 50% 25%
+  TERM.GATE
+  WinPOS 50% 75% 50% 25%
+  AREA
+
+
+  print "--> enter CONT to start test"
+  go main
+  stop
+
+  Break.Set vScenarioHook\1
+  Break.Set vReadTransferStartHook\1
+  Break.Set vReadTransferEndHook\1
+  Break.Set vWriteTransferStartHook\1
+  Break.Set vWriteTransferEndHook\1
+  Break.Set vTransferHook\1
+  Break.Set vFatal\1
+
+  gosub TestRun
+enddo
+
+TestRun:
+  PRIVATE &times
+  GOSUB StartWaitTarget "vScenarioHook\1"
+  go.up
+  if symbol.exist(pReadFile)
+     print "-------------------------- testing stdio system calls interface -----------------"
+  if symbol.exist(hReadFile)
+     print "-------------------------- testing TRACE32 terminal interface -------------------"
+  GOSUB StartWaitTarget "vReadTransferStartHook\1"
+  GOSUB StartWaitTarget "vReadTransferEndHook\1"
+  RETURNVALUES &times
+  GOSUB StartWaitTarget "vTransferHook\1"
+  PRINT "Transfer of " FORMAT.DECimal(0.,&filesize) " KBytes from Host to Target took " FORMAT.DECimal(0.,&times) " seconds."
+  GOSUB StartWaitTarget "vWriteTransferStartHook\1"
+  GOSUB StartWaitTarget "vWriteTransferEndHook\1"
+  RETURNVALUES &times
+  GOSUB StartWaitTarget "vTransferHook\1"
+  PRINT "Transfer of " FORMAT.DECimal(0.,&filesize) " KBytes from Target to Host took " FORMAT.DECimal(0.,&times) " seconds."
+return
+
+
+StartWaitTarget:
+  PARAMETERS &symbolname
+  PRIVATE &starttime &stoptime &time
+  &starttime=DATE.UnixTime()
+  Go.direct
+  WAIT !STATE.RUN()
+  &stoptime=DATE.UnixTime()
+  if "&symbolname"!="" 
+    GOSUB VerifyHook "&symbolname"
+  &time=&stoptime-&starttime
+  RETURN "&time"
+VerifyHook:
+  PARAMETERS &symbolname
+  IF Register(PC)!=ADDRESS.OFFSET(&symbolname)
+  (
+    PRINT "Error"
+    ENDDO
+  )
+  RETURN
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,47 @@
+; Created by FreeRTOS ramdump.cmm - $Id: ramdump.cm 8179 2022-11-11 06:41:18Z amerkle $
+; 27. Feb 2024 on Windows
+
+IF !SIMULATOR()
+(
+  PRINT %ERROR "Please execute this script in a TRACE32 Simulator!"
+  ENDDO
+)
+
+RESet
+SYStem.RESet
+SYStem.CPU STM32H747XI-CM7
+SYStem.Up
+List
+
+; Restore memory contents
+Data.LOAD.Binary ~~~~/1709028179_mem_ad_0x20000000--0x20002c3f.bin AD:0x20000000--0x20002c3f /NosYmbol
+
+; Restore registers per logical core
+DO ~~~~/1709028179_reg_core0.cmm
+DO ~~~~/1709028179_spr_core0_current.cmm
+DO ~~~~/1709028179_reg_core0.cmm
+
+Data.LOAD.Elf "~~/demo/sieve_ram_thumb_ii_v7m.elf"  /NoCODE
+
+; Restore flowtrace
+Trace.LOAD ~~~~/1709028179_trace.ad
+
+; --------------------------------------------------------------------------------
+; open some windows
+WinCLEAR
+Mode.Hll
+WinPOS 0. 0. 116. 26.
+List.auto
+WinPOS 120. 0. 100. 8.
+Frame.view
+WinPOS 120. 14.
+Var.Watch
+Var.AddWatch %SpotLight ast flags bug_a
+WinPOS 120. 25.
+Register.view /SpotLight
+WinPOS 0. 32.
+Var.DRAW %DEFault sinewave
+Var.set bug_a = 1 
+
+Do "~~/menu.cmm"
+ENDDO

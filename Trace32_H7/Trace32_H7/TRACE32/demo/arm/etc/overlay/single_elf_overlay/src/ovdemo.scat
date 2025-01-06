@@ -1,0 +1,39 @@
+RAM 0x400 0x3C00 
+{
+	.text +0
+	{
+		crt0.obj (+CODE,+ENTRY)
+		* (+CODE)
+	}
+	.rodata +0
+	{
+		* (+CONST)
+	}
+	.data +0
+	{
+		* (+DATA)
+	}
+	.page1 0x1000 OVERLAY
+	{
+		crt0.obj (.page1, +FIRST)
+		task1.obj   (+CODE)
+		task.obj    (+CODE)
+		funcasm.obj (+CODE)
+		sieve.obj   (+CODE) 
+		* (.page1)
+	}
+	.page2 0x1000 OVERLAY
+	{
+		crt0.obj (.page2, +FIRST)
+		blubber.obj (+CODE)
+		* (.page2)
+	}
+	.bss +0
+	{
+		* (+BSS)
+	}
+	.stack +0 EMPTY 0x1000
+	{
+	}
+}
+

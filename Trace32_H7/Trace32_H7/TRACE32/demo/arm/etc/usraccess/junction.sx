@@ -1,0 +1,40 @@
+/* TRACE32 will call the target monitor program for the user controlled memory access
+ * in 32-bit ARM code except for Cortex-M
+ * This assembler routine switches too Thumb mode if not already in Thumb mode. 
+ * As a result you can compile usraccess.c in thumb mode and use the same resulting 
+ * binary for Cortex-M and other ARM cores.
+ */
+
+#ifdef __CC_ARM	 
+	/* ARM RealView assembler */
+	AREA |.first|, CODE
+	ALIGN 2
+	CODE32
+	GLOBAL __main
+__main
+#else
+	/* GNU assembler */
+	.section .first, "ax"
+	.align 2
+	.arm
+	.globl  _start
+_start:
+#endif
+
+	and     r1,r5,r1    /* THUMB: asr r1,r0,#0; b 0x10  (R1 destroyed) => jump over the next three lines in Thumb mode */
+	mov     r1,#1
+	add     r1,r1,pc
+	bx      r1          /* switch to thumb mode and go to next line */
+	
+#ifdef __CC_ARM
+	CODE16
+	EXTERN usraccess
+#else
+	.thumb
+#endif
+
+	b      usraccess
+
+#ifdef __CC_ARM
+	END
+#endif

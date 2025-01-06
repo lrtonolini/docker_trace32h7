@@ -1,0 +1,72 @@
+; --------------------------------------------------------------------------------
+; @Title: Background Monitor for ARM966E-S / ARM926EJ-S on Integrator Core Module from ARM
+; @Description: 
+;   Background monitor for ARM966E-S or ARM926EJ-S on Integrator
+;   Core Module from ARM. The example assumes RAM at address 0x0.
+; @Author: PEG
+; @Board: Integrator
+; @Chip: ARM926EJ-S, ARM966E-S
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: monitor.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+;   PEG, July 2008
+
+  SYStem.RESet
+;  SYStem.CPU ARM966E
+  SYStem.CPU ARM926EJ
+  SYStem.JtagClock RTCK
+  TrOnchip.Set DABORT OFF
+  TrOnchip.Set PABORT OFF
+  TrOnchip.Set UNDEF OFF
+  SYStem.MemAccess UDMON3
+  SYStem.Up
+
+; load monitor
+  Data.LOAD.ELF monitor_arm9xxe.axf /Verify
+
+; patch trap vector table for monitor
+  Data.Assemble 0x00 ldr pc,0x20
+  Data.Assemble 0x04 ldr pc,0x24
+  Data.Assemble 0x08 mov pc,r14
+  Data.Assemble 0x0c ldr pc,0x2c
+  Data.Assemble 0x10 ldr pc,0x30
+  Data.Assemble 0x14 b 0x14
+  Data.Assemble 0x18 b 0x18
+  Data.Assemble 0x1c b 0x1c
+
+  Data.Set 0x20 %Long Monitor_EntryRES
+  Data.Set 0x24 %Long Monitor_EntryUND
+  Data.Set 0x2c %Long Monitor_EntryPABT
+  Data.Set 0x30 %Long Monitor_EntryDABT
+
+; initialize stack for monitor trap routine
+  Register.Set r13_und Data.Long(Monitor_StackBase)
+
+; first word on monitor stack needs to be initialized
+  Data.Set V.ADDRESS("*Monitor_StackBase") %Long 0
+
+; initialize stack and prepare application start in user mode
+  Register.Set CPSR 0xd0
+  Register.Set PC main
+  Register.Set R13 0xfe00
+
+  ENDDO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

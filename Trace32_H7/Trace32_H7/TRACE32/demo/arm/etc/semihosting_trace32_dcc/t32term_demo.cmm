@@ -1,0 +1,145 @@
+; --------------------------------------------------------------------------------
+; @Title: TRACE32 Compatible Semihosting for all Arm architectures
+; @Description:
+;   - Semihosting via Arm DCC.
+;   - No DCC for Cortex-M exists, i.e. runtime memroy access is used
+;
+;   Prerequisites:
+;    * System is connected
+;    * RAM is accessible Read/Write/Execute
+;
+;   Usage:
+;          DO ~~/demo/arm/etc/semihosting_trace32_dcc/t32term_demo.cmm <RamStart>
+;     e.g. DO ~~/demo/arm/etc/semihosting_trace32_dcc/t32term_demo.cmm 0x1000
+; @Author: CMO, PEG
+; @Keywords: Cortex-M?, ARM7*, ARM9*, ARM11*, Cortex-A*, Cortex-R*, Semi-hosting
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: t32term_demo.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+; After executing this script you need to run the loaded example program (-> 'Go').
+; It outputs 'Hello World!' in the TERM.GATE window and offers you a menu to 
+; 'r' read and type an ascii file named test1 which needs to be in the current directory.
+; 'w' write the text 'Hello World!' in an ascii file named test2 in the current directory.
+; 'p' print 32 times the line 'Performance Test Text'.
+
+; For further functions of the TRACE32 compatible semihosting see t32term.c.
+; See the target manual of the arm debugger (debugger_arm.pdf or debugger_armv8v9.pdf)
+; for more details about 'semihosting'.
+
+
+PRIVATE &param &offset
+ENTRY %LINE &param
+
+; --------------------------------------------------------------------------------
+; Initialize and start the debugger
+WinCLEAR
+RESet
+IF INTERFACE.SIM()
+(
+  IF "&param"==""
+    &param=0x0
+
+  SYStem.CPU CortexA7
+  SYStem.Up
+)
+
+GOSUB ParseParameters &param
+RETURNVALUES &offset
+
+; --------------------------------------------------------------------------------
+; Load demo program
+
+IF (CPU.FEATURE(SPR))
+(
+  ; AArch64 capable CPU
+  ; detect AArch mode by checking bit4 of the M field of CPSR
+  IF ((Register(M)&0x10)==0x0)
+  (
+    Data.LOAD.Elf ~~~~/t32term_pic_aarch64.elf          &offset /RelPATH /Verify
+  )
+  ELSE IF (((Register(M)&0x10)!=0x0)&&(Register(E)==0.)&&(Register(T)==0.))
+  (
+    ; AArch32 mode
+      Data.LOAD.Elf ~~~~/t32term_pic_arm11_cortex.elf   &offset /RelPATH /Verify
+  )
+  ELSE
+  (
+    PRINT %ERROR "Error: Coretype not supported by this script."
+    ENDDO FALSE()
+  )
+)
+ELSE IF (STRing.SCAN(CORENAME(),"ARM7",0)>=0)||(STRing.SCAN(CORENAME(),"ARM9",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/t32term_pic_arm7_arm9.elf          &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"ARM11",0)>=0)||(STRing.SCAN(CORENAME(),"CORTEXA",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/t32term_pic_arm11_cortex.elf       &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"CORTEXM0",0)>=0)||(STRing.SCAN(CORENAME(),"CORTEXM1",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/t32term_pic_thumb_v6m.elf          &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"CORTEXM3",0)>=0)||(STRing.SCAN(CORENAME(),"CORTEXM4",0)>=0)||(STRing.SCAN(CORENAME(),"CORTEXM7",0)>=0)
+(
+  Data.LOAD.Elf ~~~~/t32term_pic_thumb_ii_v7m.elf       &offset /RelPATH /Verify
+)
+ELSE IF (STRing.SCAN(CORENAME(),"CORTEXR",0)>=0)
+(
+  IF ((Data.Long(C15:0x1)&0x80000000)!=0x0)
+    Data.LOAD.Elf ~~~~/t32term_pic_arm11_cortex_be.elf  &offset /RelPATH /Verify
+  ELSE
+    Data.LOAD.Elf ~~~~/t32term_pic_arm11_cortex.elf     &offset /RelPATH /Verify
+)
+ELSE
+(
+  PRINT %ERROR "Error: Coretype not supported by this script."
+  ENDDO FALSE()
+)
+
+; --------------------------------------------------------------------------------
+; configure and open semihosting channel
+IF (STRing.SCAN(CORENAME(),"CORTEXM",0)>=0)
+  TERM.METHOD BUFFERE e:OutBuffer e:InBuffer
+ELSE
+  TERM.METHOD dcc3
+TERM.Mode ascii
+
+; open some windows
+WinCLEAR
+WinPOS 0% 0% 100% 48%
+List.auto
+WinPOS 0% 50% 50% 48%
+Frame /Locals /Caller
+WinPOS 50% 50% 50% 48%
+TERM.GATE
+
+ENDDO TRUE()
+
+
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+(
+  PRIVATE &param &offset
+  ENTRY &param
+  &offset=STRing.SCANAndExtract("&param","0x","")
+  IF "&offset"==""
+  (
+    PRINT %ERROR "Error: Missing Argument - Usage DO logger.cmm 0x<offset> "
+    ENDDO FALSE()
+  )
+  ; ensure parameter is HEX and round down to the nearest LONG
+  &offset="0x&offset"
+  &offset=(&offset)&~0x3
+
+  IF !SYStem.Up()
+  (
+    PRINT %ERROR "Error: Not connected to target. - Please use SYStem.Up before."
+    ENDDO FALSE()
+  )
+
+  RETURN "&offset"
+)

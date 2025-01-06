@@ -1,0 +1,45 @@
+; --------------------------------------------------------------------------------
+; @Title: Read data from external application into TERM.view via pipe
+; @Description:
+; This script demonstrates, how a pipe can be used on Windows.
+; It will start a pipe server in a cmd shell and wait for a client to connect.
+; The client TRACE32 will then receive test data from the application and display
+; it in the "TERM.view" window. No application will be loaded in TRACE32.
+; Run this script in the TRACE32 Instruction Set Simulator for Arm 64-bit.
+;
+; @Keywords: pipe, terminal, term
+; @Author: BES
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: winpiperead.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+; ------------------------------------------------------------------------------  
+; Start pipe server "win_pipe_example.exe" to create "my_pipe" and connect
+; TERM.view to the pipe.
+; NOTE: '-r' must be passed as a parameter to switch the example application
+;       into read mode. Otherwise it will default to write mode.
+(
+  PRIVATE &ppd
+   
+  &ppd=OS.PresentPracticeDirectory()    ; Current directory of this script
+  &ppd="&ppd"+"\..\app\"
+  OS.Command "&ppd\win_pipe_example.exe -r"
+  WAIT 1.0s                             ; Wait for pipe to be created
+)
+
+; ------------------------------------------------------------------------------
+; Configure terminal
+TERM.RESet
+TERM.METHOD PIPE \\.\pipe\my_pipe
+TERM.Mode STRING
+TERM.view #1
+
+; The example application will now output the string
+; '  * Terminal iteration xxxx'
+; as long as view TERM.view is open or more that 1024 outputs are made
+  
+; If you close the terminal here, the example pipe will also be terminated
+// TERM.RESet #1                         ; Close channel again
+  
+ENDDO
+

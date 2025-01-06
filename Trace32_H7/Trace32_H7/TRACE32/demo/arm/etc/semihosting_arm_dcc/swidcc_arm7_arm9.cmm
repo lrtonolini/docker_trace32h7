@@ -1,0 +1,69 @@
+; --------------------------------------------------------------------------------
+; @Title: ARM7, ARM9 Compatible Semihosting via DCC Channel
+; @Description: -
+; @Author: PEG
+; @Chip: ARM7*, ARM9*
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: swidcc_arm7_arm9.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+; The example assumes RAM at address 0.
+; After executing this script you need to run the loaded dhrystone benchmark program (-> 'Go').
+; Enter a value e.g. '100000' in the TERM.GATE window.
+; The benchmark program uses semihosting for inputs and outputs in the TERM.GATE window.
+; See dhry.h if you want to know details on what the benchmark program does.
+; See the target manual of the arm debugger (debugger_arm.pdf) for more details about 'semihosting'.
+
+; The debugger is expected to be in UP state, therefore a target
+; specific start-up script will be needed to run first.
+
+; start-up in case of simulator
+  if INTERFACE.SIM()
+  (
+    RESet
+    SYStem.CPU ARM7TDMI
+    SYStem.Up
+  )
+
+  Register.RESet
+
+; load semihosting handler
+  Data.LOAD.ELF t32swi_arm7_arm9.axf /spath /lpath
+  
+; load demo application
+  Data.LOAD.ELF dhrystone.axf /spath /lpath /noclear
+
+; patch entry into semihosting handler
+  Data.Assemble 0x08 ldr pc,0x28
+  Data.Set 0x28 %Long T32_Swi_Handler
+
+; breakpoint to stop on application exit
+  Break.Set TerminalBreak
+
+; configure and open semihosting channel
+  TERM.HEAPINFO 0 0x20000 0x30000 0x20000
+  TERM.METHOD dcc3
+  TERM.Mode string
+
+; open some windows
+  WinCLEAR
+  WinPOS 0% 0% 100% 48%
+  List.auto
+  WinPOS 0% 50% 50% 48%
+  Frame /Locals /Caller
+  WinPOS 50% 50% 50% 48%
+  TERM.GATE
+
+  ENDDO
+
+
+
+
+
+
+
+
+
+
+
+

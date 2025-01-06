@@ -1,0 +1,162 @@
+; --------------------------------------------------------------------------------
+; @Title: Script to power a CPU via Power State Coordination Interface (PSCI)
+; @Description:
+; Use active core to power sleeping cores if PSCI is supported. It is recommended
+; to assemble and endless loop (e.g. b $-0x0) at the entry point address before
+; calling this script. See parameter <entryAddr> below.
+; @Keywords: PSCI, ARM, power down
+; @Author: bschroefel
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: psci_generic.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+; --------------------------------------------------------------------------------
+; Please refer to the ARM document "POWER STATE COORDINATION INTERFACE (PSCI)
+; System Software on ARM Systems (ARM DEN 0022C)" for more details
+; Calling convention:
+;   DO psci_generic.cmm "<psci_fct>" "<smcAddr>" "<entryAddr>" "<mpidr>"
+;     <psci_fct>  PSCI_VERSION  Read and return PSCI version. Requires <smcAddr>
+;                 SYSTEM_RESET  Reset the system. Requires <smcAddr>
+;                 CPU_ON        Enable CPU. Needs <smcAddr>, <entryAddr>, <mpidr>
+;     <smcAddr>                 A RAM address that is used to assemble a SMC
+;                               instruction to trigger the PSCI function call
+;     <entryAddr>               The address at which the woken CPU starts
+;     <mpidr>                   The MPIDR_EL1 value of the CPU to wake
+;
+; Example call to wake CPU 2 in cluster 1:
+;    DO psci_generic.cmm "CPU_ON" "0x80000004" "0xFFFF0000" "0x102"
+;
+; --------------------------------------------------------------------------------
+
+LOCAL &psci_cmd
+&psci_cmd=PRACTICE.ARG(0)
+
+&psci_cmd=STRing.UPpeR("&psci_cmd")
+
+IF "&psci_cmd"=="PSCI_VERSION"
+(
+  PRIVATE &smcAddr &backupPC &backupInstr &backupX0 &version
+  &smcAddr=PRACTICE.ARG(1)
+
+  ; Backup
+  &version=0
+  &backupPC=Register(pc)
+  &backupInstr=Data.Long(C:&smcAddr)
+  &backupX0=Register(x0)
+
+  ; Execute PSCI function
+  Register.Set pc &smcAddr
+  Data.Assemble &smcAddr SMC #0         ; PSCI call
+  Register.Set x0 0x84000000
+  SYStem.Option INTDIS ON
+  Step.Over
+  SYStem.Option INTDIS OFF
+  &version=Register(x0)
+
+  ; Restore and evaluate
+  Register.Set pc &backupPC
+  Register.Set x0 &backupX0
+  Data.Set &smcAddr %Long &backupInstr
+
+  IF &version<0
+    PRINT %ERROR "PSCI function failed. Probably not supported"
+
+  ENDDO "&version"
+)
+ELSE IF "&psci_cmd"=="SYSTEM_RESET"
+(
+  PRIVATE &smcAddr &backupPC &backupInstr &backupX0
+  LOCAL &errorFlag
+  &smcAddr=PRACTICE.ARG(1)
+  &errorFlag=FALSE()
+
+  ; Backup
+  &backupPC=Register(pc)
+  &backupInstr=Data.Long(C:&smcAddr)
+  &backupX0=Register(x0)
+
+  ; Execute PSCI function
+  ; TRACE32 will loose the connection, thus it's normal some errors pop up
+  Register.Set pc &smcAddr
+  Data.Assemble &smcAddr SMC #0 B $+0x0 ; PSCI call, endless loop
+  Register.Set x0 0x84000009
+  SYStem.Option INTDIS ON
+  ON ERROR GOSUB
+  (
+    &errorFlag=TRUE()
+    RETURN
+  )
+  Go
+  SCREEN.WAIT 200ms
+  SYStem.Option INTDIS OFF
+  ON ERROR inherit
+
+  IF SYStem.Up()||!&errorFlag||STATE.RUN()
+  (
+    ; Reset may have failed
+    Break
+    ; check return value and PC Location
+    IF (Register(X0)!=0)&&(Register(PC)!=(&smcAddr+0x4))
+    (
+      PRINT %ERROR "SYSTEM_RESET failed!"
+      ENDDO "FALSE()"
+    )
+  )
+  ENDDO "TRUE()"
+)
+ELSE IF "&psci_cmd"=="CPU_ON"
+(
+  PRIVATE &mpidr &smcAddr &entryPointAddr &result
+  PRIVATE &backupPC &backupInstr &backupX0 &backupX1 &backupX2
+
+  &smcAddr=PRACTICE.ARG(1)
+  &entryPointAddr=PRACTICE.ARG(2)
+  &mpidr=PRACTICE.ARG(3)
+  &mpidr=&mpidr&0x000000FF00FFFFFF      ; Only consider Aff3 - Aff0
+
+  ; Backup
+  &backupPC=Register(pc)
+  &backupInstr=Data.Long(C:&smcAddr)
+  &backupX0=Register(x0)
+  &backupX1=Register(x1)
+  &backupX2=Register(x2)
+
+  ; Execute PSCI function
+  Register.Set pc &smcAddr
+  Data.Assemble &smcAddr SMC #0         ; PSCI call
+
+  IF (Register(M)&0x10)==0x0            ; AArch64/AArch32 PSCI function call
+    Register.Set x0 0xC4000003          ; to wake CPU
+  ELSE
+    Register.Set x0 0x84000003
+
+  Register.Set X1 &mpidr                ; Select CPU to wake
+  Register.Set X2 &entryPointAddr       ; entry point cpu should loop on
+
+  SYStem.Option INTDIS ON
+  Step.Over                             ; Execute PSCI call
+  SYStem.Option INTDIS OFF
+  &result=Register(x0)
+
+  ; Restore and evaluate
+  Register.Set pc &backupPC
+  Register.Set x0 &backupX0
+  Register.Set x1 &backupX1
+  Register.Set x2 &backupX2
+  Data.Set &smcAddr %Long &backupInstr
+
+  IF (&result==0x0)||(&result==-4.)
+    ENDDO "TRUE()"
+  ELSE
+  (
+    PRINT %ERROR "CPU power on failed!"
+    ENDDO "FALSE()"
+  )
+)
+ELSE
+(
+  PRINT %ERROR "Unknown PSCI command: &psci_cmd"
+  ENDDO "FALSE()"
+)
+
+ENDDO

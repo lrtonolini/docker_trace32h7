@@ -1,0 +1,67 @@
+; --------------------------------------------------------------------------------
+; @Title: Demo for VFP9 Running on AIEC Evaluation Board
+; @Description: -
+; @Keywords: floating, FPU
+; @Author: PEG
+; @Board: AIEC EVB
+; @Chip: ARM966E-S
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: minidemo_vfp9.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+
+ WinCLEAR
+
+ SYStem.CPU ARM966E-VFP
+ IF hardware.ICD()
+  SYStem.JtagClock RTCK
+ SYStem.Up
+
+// run startup code from target
+ IF hardware.ICD()
+ (
+  Go.direct
+  WAIT 1.0s
+  Break.direct
+ )
+
+// load demo application and setup runtime environment
+ Register.Set cpsr 0xd3
+ Data.LOAD.Elf minidemo_vfp9.axf
+ Register.Set r13 0x4001000
+ Register.Set r14 0
+ IF hardware.ICD()
+  Go.direct 8 /Program /Onchip
+ ELSE
+  Go.direct 8
+ WAIT 0.5s
+ IF STATE.RUN()||Register(pc)!=8
+   STOP "not reached swi"
+ Data.Set Data.Long(d:Register(r1))+8 %Long 0x4000800
+ Data.Set Data.Long(d:Register(r1))+0x0c %Long 0x4001000
+ Register.Set PC r(r14)
+
+// configure FPU display
+ FPU.TARGET 0x221600++0xff 0x4000500++0xff
+ FPU.ON
+
+// run till main
+ Go.direct main
+
+// open windows
+ WinPOS 0% 0% 50% 50%
+ List.auto
+ WinPOS 0% 50% 50% 50%
+ Frame /Locals /Caller
+ WinPOS 50% 0% 50% 100%
+ FPU.view
+ 
+ ENDDO
+
+
+
+
+
+
+
+

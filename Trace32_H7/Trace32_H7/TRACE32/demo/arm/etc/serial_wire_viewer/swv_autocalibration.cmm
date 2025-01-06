@@ -1,0 +1,205 @@
+; --------------------------------------------------------------------------------
+; @Title: Script file to search the best value of SWVPrescaler devider
+; @Description:
+;    This script tests different values of the SWVPrescaler divider to
+;    determine the value that yields the highest SWV baudrate below the
+;    maximum supported by TRACE32.
+; @Keywords: SWV, SWVPrescaler, uTrace, Combiprobe, CAnalyzer
+; @Author: MSA AME MPL
+; @Board: -
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: swv_autocalibration.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+PRIVATE &params &maxRate &tpiu
+ENTRY %LINE &params
+
+GOSUB ParseParameters "&params"
+RETURNVALUES &maxRate
+
+IF !CAnalyzer()
+(
+  PRINT %ERROR "SerialWireViewer requires a CombiProbe or uTrace!"
+  ENDDO
+)
+
+&tpiu=CAnalyzer.TraceCONNECT()
+IF "&tpiu"==""
+(
+  PRINT %ERROR "Please select a TPIU with CAnalyzer.TraceCONNECT"
+  ENDDO
+)
+
+IF TPIU.PortSize()!="SWV"
+(
+  PRINT %ERROR "Please set TPIU.PortSize SWV"
+  ENDDO
+)
+
+IF VERSION.BUILD.BASE()>=78280.
+(
+  ; Newer versions of TRACE32 should reliably detect if the SWV rate is out of
+  ; range. We can just try increasing settings for the SWVPrescaler until we
+  ; find one inside the supported range.
+
+  PRIVATE &currentSwvPrescaler &currentSwvRate
+  &currentSwvPrescaler=0.
+  &currentSwvRate=-1.0
+  WHILE (&currentSwvRate<=0)||(&currentSwvRate>&maxRate)
+  (
+    ; change the SWVPrescaler and calculate the SWVrate
+    &currentSwvPrescaler=&currentSwvPrescaler+1.
+    &tpiu.SWVPrescaler &currentSwvPrescaler
+    ON ERROR CONTinue
+    GOSUB GetSwvRate
+    RETURNVALUES &currentSwvRate
+    ON ERROR inherit
+
+    IF &currentSwvPrescaler>=100.
+    (
+      ; assuming that the target is running at a frequency below 10.0 GHz, we
+      ; should have found a valid setting by now. Abort to prevent an endless
+      ; loop when there is a connection problem.
+
+      PRINT %ERROR "Failed to determine a valid SWVPrescaler setting. Please check your connections."
+      ENDDO
+    )
+  )
+
+  PRINT "Detected SWVPrescaler = &currentSwvPrescaler (f=" FORMAT.FLOAT(0.,3.,&currentSwvRate/1.0e6) "Mbps)"
+  ENDDO
+)
+
+; used as script local variables
+LOCAL &swvp1 &swvp2 &swvp3 &swvrate1 &swvrate2 &swvrate3 &ratioMargin
+PRIVATE &ratio &currentSwvRate &currentSwvPrescaler
+
+; ratio error margin (500kbps)
+&ratioMargin=500000.
+&ratio=2*&ratioMargin
+
+GOSUB INIT
+
+&currentSwvPrescaler=0.
+;loop till we get the wanted value
+WHILE &ratio>&ratioMargin
+(
+  ; change the SWVPrescaler and calculate the SWVrate
+  &currentSwvPrescaler=&currentSwvPrescaler+1.
+  &tpiu.SWVPrescaler &currentSwvPrescaler
+  ON ERROR CONTinue
+  GOSUB GetSwvRate
+  RETURNVALUES &currentSwvRate
+  ON ERROR inherit
+
+  ; algorithm should ensure that we get 3 linear values of SWV Rate before exit
+  GOSUB UpdateRate "&currentSwvRate"
+  GOSUB CalcRatio "&currentSwvPrescaler"
+  RETURNVALUES &ratio
+)
+
+; we have now a swv-rate detected which is SAFE to work, but too pessimistic!
+; find a divider which yields to a swv-rate NEAR 40Mbps (use 39MBps as goal)
+PRIVATE &swvBaseRate &optimalDivider &optimalSwvPrescaler
+&swvBaseRate=&currentSwvRate*&currentSwvPrescaler
+&optimalDivider=(1.0*&swvBaseRate)/(39.0*1000.0*1000.0)
+
+; round the divider to the nearest INT (MATH-CEIL operation)
+&optimalSwvPrescaler=CONVert.FLOATTOINT(&optimalDivider+1.0)
+&tpiu.SWVPrescaler &optimalSwvPrescaler
+CAnalyzer.AutoFocus
+PRINT "Detected SWVPrescaler = &optimalSwvPrescaler (f=" FORMAT.FLOAT(3.,2.,(1.0*&swvBaseRate)/(&optimalSwvPrescaler*1000.0*1000.0)) "Mbps)"
+
+
+ENDDO
+
+INIT: ;(initialize algorithm calculation values)
+(
+  &swvp1=1.
+  &swvp2=1.
+  &swvp3=1.
+
+  &swvrate=-1.
+  &swvrate1=-1.
+  &swvrate2=-1.
+  &swvrate3=-1.
+  RETURN
+)
+
+UpdateRate: ;(update SWV Rate array)
+(
+  PARAMETERS &swvrate
+
+  &swvrate1=&swvrate2
+  &swvrate2=&swvrate3
+  &swvrate3=&swvrate
+  RETURN
+)
+
+
+CalcRatio: ;( calculate ratio between the 3 given points in order to compare it with the margin error )
+(
+  PRIVATE &ratio &ratio1 &ratio2
+  PARAMETERS &currentSwvPrescaler
+  ; verifing swvrateN linearity
+  ;   swvrate3=f_swo/(currentSwvPrescaler)
+  ;   swvrate2=f_swo/(currentSwvPrescaler-1)
+  ;   swvrate1=f_swo/(currentSwvPrescaler-2)
+  IF (&swvrate3==-1.)||(&swvrate2==-1.)||(&swvrate1==-1.)
+  (
+    ; make sure the outer loop loops again
+    &ratio=2.*&ratioMargin
+  )
+  ELSE
+  (
+    &ratio1=math.ABS(&swvrate1*(&currentSwvPrescaler-2.)-&swvrate2*(&currentSwvPrescaler-1.))
+    &ratio2=math.ABS(&swvrate2*(&currentSwvPrescaler-1.)-&swvrate3*&currentSwvPrescaler)
+    ; available starting from DVD2016.02
+    ;&ratio=MAX(&ratio1,&ratio2)
+    &ratio=&ratio1
+    IF &ratio2>&ratio1
+    (
+      &ratio=&ratio2
+    )
+  )
+  RETURN "&ratio"
+)
+
+GetSwvRate: ;( returns the SWV rate after TPIU.SWVPrescaler setting )
+(
+  ; since CAnalyzer.AutoFocus does not return always the same SWV rate, we make an average of 5. iterations
+  PRIVATE &rate &i &ratesum
+  &ratesum=0.
+  &i=0.
+  WHILE &i<5.
+  (
+    CAnalyzer.AutoFocus
+    IF CAnalyzer.TraceCLOCK()<=0
+    (
+      RETURN "-1.0"
+    )
+    &ratesum=&ratesum+CAnalyzer.TraceCLOCK()
+    &i=&i+1.
+  )
+  &rate=&ratesum/5.
+  RETURN "&rate"
+)
+
+ParseParameters: ;(params)
+(
+  PRIVATE &maxRate
+  PARAMETERS &params
+  &maxRate=STRing.SCANAndExtract("&params","MAXMBPS=","100")
+  &maxRate=STRing.Replace("&maxRate",".","",0)+"."
+
+  ON ERROR GOSUB
+  (
+    PRINT %ERROR "SWV AutoCalibration: Wrong Parameter"
+    ENDDO
+  )
+  &maxRate=&maxRate*1000.0*1000.0
+  ON ERROR inherit
+  RETURN "&maxRate"
+)
+
+

@@ -1,0 +1,99 @@
+; --------------------------------------------------------------------------------
+; @Title: Load the Position Independent Terminal Performance Demo
+; @Description:
+;   This script is a helper script for term_performance_demo.cmm .
+;   It selects the most suitable demo-code depending on the Coretype.
+;
+; @Props: NoWelcome NoIndex
+; @Author: AME
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: load_term_performance_demo.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+PRIVATE &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7
+PRIVATE &param &offset
+ENTRY &param
+
+IF "&param"==""&&INTERFACE.SIM()
+  &param=0x0
+
+GOSUB ParseParameters &param
+ENTRY &offset
+
+GOSUB GetCpuModes
+ENTRY &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7
+
+IF &arm
+	Data.LOAD.Elf ~~~~/term_performance_demo_pie_arm.elf          &offset /RelPATH /Verify
+ELSE IF &armbe
+	Data.LOAD.Elf ~~~~/term_performance_demo_pie_armbe.elf        &offset /RelPATH /Verify
+ELSE IF &thumbv4
+	Data.LOAD.Elf ~~~~/term_performance_demo_pie_thumb_v4.elf     &offset /RelPATH /Verify
+ELSE IF &thumbv6m
+	Data.LOAD.Elf ~~~~/term_performance_demo_pie_thumb_v6m.elf    &offset /RelPATH /Verify
+ELSE IF &thumb_ii_v7
+	Data.LOAD.Elf ~~~~/term_performance_demo_pie_thumb_ii_v7m.elf &offset /RelPATH /Verify
+ELSE
+(
+	PRINT %ERROR "Error: Coretype not supported by this script."
+	ENDDO FALSE()
+)
+
+ENDDO TRUE()
+
+
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+	PRIVATE &param &offset
+	ENTRY &param
+	&offset=STRing.SCANAndExtract("&param","0x","")
+	IF "&offset"==""
+	(
+		PRINT %ERROR "Error: Missing Argument - Usage DO load_SyscallsBufferE.cmm 0x<offset> "
+		ENDDO FALSE()
+	)
+	; ensure parameter is HEX and round down to the nearest LONG
+	&offset="0x&offset"
+	&offset=(&offset)&~0x3
+
+	IF !SYStem.Up()
+	(
+		PRINT %ERROR "Error: Not connected to target. - Please use SYStem.Up before."
+		ENDDO FALSE()
+	)
+
+	RETURN &offset
+
+GetCpuModes: ;()
+	PRIVATE &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7
+
+	&arm=FALSE()
+	&armbe=FALSE()
+	&thumbv4=FALSE()
+	&thumbv6m=FALSE()
+	&thumb_ii_v7=FALSE()
+
+	&arm=&arm||(STRing.SCAN(CORENAME(),"CORTEXA",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"CORTEXR",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"ARM7",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"ARM9",0)>=0)
+	&arm=&arm||(STRing.SCAN(CORENAME(),"ARM11",0)>=0)
+	if (&arm&&(STRing.SCAN(CORENAME(),"CORTEXR",0)>=0))
+	(
+		IF ((Data.Long(C15:0x1)&0x80000000)!=0x0)
+		(
+			&armbe=TRUE()
+			&arm=FALSE()
+		)
+	)
+
+	&thumbv6m=&thumbv6m||(STRing.SCAN(CORENAME(),"CORTEXM0",0)>=0)
+	&thumbv6m=&thumbv6m||(STRing.SCAN(CORENAME(),"CORTEXM1",0)>=0)
+
+	&thumb_ii_v7=&thumb_ii_v7||(STRing.SCAN(CORENAME(),"CORTEXM3",0)>=0)
+	&thumb_ii_v7=&thumb_ii_v7||(STRing.SCAN(CORENAME(),"CORTEXM4",0)>=0)
+	&thumb_ii_v7=&thumb_ii_v7||(STRing.SCAN(CORENAME(),"CORTEXM7",0)>=0)
+	RETURN &arm &armbe &thumbv4 &thumbv6m &thumb_ii_v7
+

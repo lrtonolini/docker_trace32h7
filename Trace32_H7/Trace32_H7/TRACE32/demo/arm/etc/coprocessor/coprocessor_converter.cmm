@@ -1,0 +1,262 @@
+; --------------------------------------------------------------------------------
+; @Title: ARM Coprocessor Address Converter
+; @Description:
+;   This dialog assists in calculating the C15: access class and Data.Assemble 
+;   parameters for the ARM coprocessor interface. 
+;   Usage:
+;     DO ~~/demo/arm/etc/coprocessor/coprocessor_converter
+;       will open a dialog
+; @Keywords: CP15, C15, Assemble
+; @Props: NoIndex, NoWelcome, NoMetaTags
+; @Author: AME
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: coprocessor_converter.cmm 18850 2022-01-26 18:41:29Z bschroefel $
+
+PRIVATE &arg 
+ENTRY %LINE &arg
+PRIVATE &crn &op1 &crm &op2 &reg &dialog &dump
+PRIVATE &cp15addr32 &cp15addr64 &mrcmcr &mrrcmcrr
+
+; if no parameters are given open the dialog
+IF "&arg"==""
+(
+  GOSUB ShowDialog
+  ENDDO
+)
+
+; this time we need to update the dialog
+GOSUB ParseParameters &arg
+ENTRY &crn &op1 &crm &op2 &reg &dialog &dump
+
+; calculation for 32-bit wide CP15 registers
+&cp15addr32=((&(op1)&0x7)<<0xc)|((&(op2)&0x7)<<0x8)|((&(crm)&0xf)<<0x4)|((&(crn)&0xf)<<0x0)
+&cp15addr32="C15:0x"+FORMAT.HEX(4.,&cp15addr32)
+
+; calculation for 64-bit wide CP15 registers
+&cp15addr64=0x10000|((&(op1)&0x7)<<0xc)|((&(crm)&0xf)<<0x4)
+&cp15addr64="C15:0x"+FORMAT.HEX(5.,&cp15addr64)
+
+; calculation for ARM assembler commands
+&mrcmcr="p15,&(op1),R0,c"+FORMAT.DECimal(1.,&crn)+",c"+FORMAT.DECimal(1.,&crm)+",&(op2)"
+&mrrcmcrr="p15,&(op1),R0,R1,c"+FORMAT.DECimal(1.,&crm)+""
+
+IF (&dialog)&&DIALOG.EXIST(MCRR.Out)
+(
+  ; update the dialog if the dialog exists
+  
+  DIALOG.Set CP15.Out "&cp15addr32"
+  DIALOG.Set MRC.Out "mrc &(mrcmcr)"
+  DIALOG.Set MCR.Out "mcr &(mrcmcr)"
+  DIALOG.Set CP15.Out2 "&cp15addr64"
+  DIALOG.Set MRRC.Out "mrrc &(mrrcmcrr)"
+  DIALOG.Set MCRR.Out "mcrr &(mrrcmcrr)"
+)
+ELSE IF (&dump==32.)
+(
+  ; open the dump window for 32-bit wide registers
+  Data.dump &(cp15addr32)++0x0
+)
+ELSE IF (&dump==64.)
+(
+  ; open the dump window for 64-bit wide registers
+  Data.dump &(cp15addr64)++0x1 /Quad
+)
+
+ENDDO 
+; --------------------------------------------------------------------------------
+; SUBROUTINES
+;
+ParseParameters: ;(param)
+  PRIVATE &param &crn &op1 &crm &op2 &reg &dialog &dump &dump32 &dump64
+  ENTRY %LINE &param
+  &crn=STRing.SCANAndExtract("&param","CRn=c","")
+  &op1=STRing.SCANAndExtract("&param","OP1=0x","")
+  &crm=STRing.SCANAndExtract("&param","CRm=c","")
+  &op2=STRing.SCANAndExtract("&param","OP2=0x","")
+  &reg=STRing.SCANAndExtract("&param","Rd=R","0")
+  &dialog=STRing.SCAN("&param","DIALOG",0.)!=-1.
+  &dump32=STRing.SCAN("&param","DUMP32",0.)!=-1.
+  &dump64=STRing.SCAN("&param","DUMP64",0.)!=-1.
+  
+  IF ("&crn"=="")||("&op1"=="")||("&crm"=="")||("&op2"=="")
+  (
+    PRINT %ERROR "Error: Wrong Usage "
+    ENDDO ""
+  )
+  ; ensure parameter types are correct
+  &crn="&(crn)."
+  &op1="0x&(op1)"
+  &crm="&(crm)."
+  &op2="0x&(op2)"
+  &reg="R&(reg)"
+
+  IF (&dump32)
+    &dump=32.
+  ELSE IF (&dump64)
+    &dump=64.
+  ELSE
+    &dump=0.
+   
+  RETURN &crn &op1 &crm &op2 &reg &dialog &dump
+
+ShowDialog: ;()
+  LOCAL &ppf
+  &ppf=OS.PPF()
+  DIALOG
+  (&+
+    HEADER "Coprocessor converter"
+    POS 0. 0. 30. 1.
+    TEXT "Convert CRn/OP1/CRm/OP2"
+    POS 0. 1. 3. 1.
+    TEXT "CRn"
+    POSX 1. 6.
+    CRn.SEL:  COMBOBOX "c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POSX 1. 3.
+    TEXT "OP1"
+    POSX 1. 6.
+    OP1.SEL:  COMBOBOX "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POSX 1. 3.
+    TEXT "CRm"
+    POSX 1. 6.
+    CRm.SEL:  COMBOBOX "c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POSX 1. 3.
+    TEXT "OP2"
+    POSX 1. 6.
+    OP2.SEL:  COMBOBOX "0x0,0x1,0x2,0x3,0x4,0x5,0x6,0x7"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POS 0. 2.5 43. 1.
+    LINE "TRACE32 internal CP15 access class (32-bit)"
+    POS 3. 4. 6. 1.
+    TEXT "Address:"
+    POSX 1. 11.
+    CP15.Out: HOTEDIT "C15:0x0000"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POSX 9. 13.
+    BUTTON "[:dump] Data.dump"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DUMP32
+    )
+    POS 0. 5.5 43. 1.
+    LINE "ARM Assembler instruction (32-bit)"
+    POS 1. 7. 8. 1.
+    TEXT "Data.Assemble"
+    POSX 1. 33.
+    MRC.Out:  HOTEDIT "mrc p15,0x0,R0,c0,c0,0x0"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POS 1. 8.5 8. 1.
+    TEXT "Data.Assemble"
+    POSX 1. 33.
+    MCR.Out:  HOTEDIT "mcr p15,0x0,R0,c0,c0,0x0"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POS 0. 10. 43. 1.
+    LINE "TRACE32 internal CP15 access class (64-bit)"
+    POS 3. 11.5 6. 1.
+    TEXT "Address:"
+    POSX 1. 11.
+    CP15.Out2:HOTEDIT "C15:0x8000"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POSX 9. 13.
+    BUTTON "[:dump] Data.dump"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DUMP64
+    )
+    POS 0. 13. 43. 1.
+    LINE "ARM Assembler instruction (64-bit)"
+    POS 1. 14.5 8. 1.
+    TEXT "Data.Assemble"
+    POSX 1. 33.
+    MRRC.Out: HOTEDIT "mrrc p15,0x0,R0,R1,c0"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    POS 1. 16. 8. 1.
+    TEXT "Data.Assemble"
+    POSX 1. 33.
+    MCRR.Out: HOTEDIT "mcrr p15,0x0,R0,R1,c0"
+    (
+      PRIVATE &crn &op1 &crm &op2
+      &crn=DIALOG.STRing(CRn.SEL)
+      &op1=DIALOG.STRing(OP1.SEL)
+      &crm=DIALOG.STRing(CRm.SEL)
+      &op2=DIALOG.STRing(OP2.SEL)
+      DO "&ppf" CRn=&crn OP1=&op1 CRm=&crm OP2=&op2 DIALOG
+    )
+    CLOSE "DIALOG.END"
+  )
+  RETURN
+  

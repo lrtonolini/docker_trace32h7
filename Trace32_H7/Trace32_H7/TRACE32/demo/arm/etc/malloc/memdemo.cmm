@@ -1,0 +1,73 @@
+; --------------------------------------------------------------------------------
+; @Title: Memory Allocation Demo for ARM
+; @Description: -
+; @Author: -
+; @Copyright: (C) 1989-2022 Lauterbach GmbH, licensed for use with TRACE32(R) only
+; --------------------------------------------------------------------------------
+; $Id: memdemo.cmm 20803 2023-04-20 09:33:18Z bschroefel $
+
+
+ WinCLEAR
+
+ SYStem.Down
+
+ IF hardware.FIRE()
+ (
+  MAP.RESet
+  MAP.Ram 0x0--0xffff
+ )
+ IF SIMULATOR()
+   SYStem.CPU ARM7TDMI
+ IF hardware.ICE()||hardware.FIRE()
+   SYStem.Mode AloneInt
+ ELSE
+   SYStem.Up
+
+;check if RAM is vissible
+ Data.Test 0x8000++0xff /Long /Prime
+ IF FOUND()
+ (
+  Go.direct
+  WAIT 1.0s
+  Break.direct
+ )
+
+ Data.Assemble 8 mov pc,r14
+
+; load demo applicaton
+ Data.LOAD.Elf memdemo.axf
+
+; patch calls of whole program except the hook module
+ Data.ReRoute sYmbol.SECRANGE(ER_RO) malloc T32_malloc \t32mem
+ Data.ReRoute sYmbol.SECRANGE(ER_RO) realloc T32_realloc \t32mem
+ Data.ReRoute sYmbol.SECRANGE(ER_RO) free T32_free \t32mem
+
+; set breakpoint to memory check breakpoint location
+ Break.Set T32_breakpoint
+
+; run till testcode is reached
+ Mode.Hll
+ Go.direct memorytest
+ WAIT !STATE.RUN()
+
+; configure logger (optional)
+ LOGGER.ADDRESS T32_LoggerStruct
+ LOGGER.Init
+
+; open demonstration windows
+ SETUP.Var %y
+ Data.AllocList
+ LOGGER.List var
+ LOGGER.DRAW.Var %DEFault (T32_MemTrace.totalsize) /steps 
+ LOGGER.DRAW.Var %DEFault ((int)T32_MemTrace.size) /impulses 
+ List.auto
+
+ ENDDO
+
+
+
+
+
+
+
+
