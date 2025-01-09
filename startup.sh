@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd $MNTWSL
 sudo ./Trace32_H7/TRACE32/bin/pc_linux64/udev.conf/setup_udevrules.sh
 
 IMAGE_NAME="trace32"
@@ -9,7 +8,7 @@ CONTAINER_NAME="t32"
 # Vérifier si l'image existe réellement
 if ! docker inspect "$IMAGE_NAME" > /dev/null 2>&1; then
     echo "Image $IMAGE_NAME non trouvee. Construction de l'image..."
-    docker build --no-cache --tag "$IMAGE_NAME" --build-arg T32ZIP=Trace32_H7.zip .
+    docker build --tag "$IMAGE_NAME" --build-arg T32=Trace32_H7 .
 else
     echo "L'image $IMAGE_NAME existe deja."
 fi

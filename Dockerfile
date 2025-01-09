@@ -6,8 +6,8 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
   && rm -rf /var/lib/apt/lists/*
 
-COPY ${T32} /opt/
-RUN chmod +x /opt/Trace32_H7/TRACE32/bin/pc_linux64/t32marm 
+COPY ${T32} /opt/Trace32_H7
+RUN chmod +x /opt/Trace32_H7/TRACE32/bin/pc_linux64/t32marm
 
 FROM lscr.io/linuxserver/webtop:ubuntu-openbox
 
