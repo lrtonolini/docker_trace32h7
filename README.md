@@ -1,12 +1,12 @@
 README 
 
-----------only for Windows with WSL2 : 
+----------sous host Windows avec WSL2 : 
 
 
 
 please make commande : 
 
-setx WSLENV "/mnt/c/<your path>/docker_trace32h7"
+setx MNTWSL "/mnt/c/<your path>/docker_trace32h7"
 
 run .\connect_lauterbach.bat
 
@@ -15,7 +15,7 @@ Avant de stoper le docker, quitter Trace32 pour reprendre la main sur la sonde
 Sinon, veillez faire un power cycle de la carte et de la sonde 
 
 
-----------Sous linux : 
+----------Sous host linux : 
 
 export MNTWSL="/mnt/c/<your path>/docker_trace32h7"
 

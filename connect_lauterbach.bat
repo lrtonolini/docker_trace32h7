@@ -36,8 +36,7 @@ echo No matching USB device found with VID:PID %VIDPID1% or %VIDPID2%.
 
 rem Set the WSL environment variable for the current session
 echo Setting WSLENV for the current session...
-rem setx WSLENV "/mnt/c/Users/Lily-RoseTonolini/Documents/docker_workspace/docker_trace32h7"
-set WSLENV="MNTWSL:pu"
+setx WSLENV "MNTWSL:pu"
 
 rem Run the startup.sh script in WSL
 echo Running startup.sh in WSL...
