@@ -48,9 +48,10 @@ STATUSBAR ON
 FramePOS ,,,,Maximized
 WinPAGE.RESet
 WinCLEAR
-MENU.RESet
+Menu.RESet
 RESet
-Do "~~\ard.cmm"
+Do "~~/ard.cmm"
+
 ; ------------------------------------------------------------------------------
 ; global input parameters
 GLOBAL &GDBPORT
@@ -341,6 +342,7 @@ ELSE
         END
       )
     )
+
     &gdbComPort="&comport1"
     )
 

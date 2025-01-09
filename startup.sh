@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cd $MNTWSL
+sudo ./Trace32_H7/TRACE32/bin/pc_linux64/udev.conf/setup_udevrules.sh
+
 IMAGE_NAME="trace32"
 CONTAINER_NAME="t32"
 
@@ -14,7 +17,7 @@ fi
 # Vérifier si le conteneur existe déjà
 if ! docker ps -a --filter "name=$CONTAINER_NAME" | grep -q "$CONTAINER_NAME"; then
     echo "Conteneur $CONTAINER_NAME non trouve. Lancement du conteneur..."
-    docker run -d --publish 127.0.0.1:3000:3000 --name "$CONTAINER_NAME" "$IMAGE_NAME"
+    docker run -d --device=/dev/lauterbach/trace32/1-1 --publish 127.0.0.1:3000:3000 --name "$CONTAINER_NAME" "$IMAGE_NAME"
 else
     echo "Le conteneur $CONTAINER_NAME existe deja. Redemarrage du conteneur..."
     docker start "$CONTAINER_NAME"
@@ -24,7 +27,7 @@ fi
 sleep 5
 
 # Exécuter le script dans le conteneur
-docker exec -it "$CONTAINER_NAME" "/opt/Trace32_H7/Trace32_H7_linux.sh"
+docker exec "$CONTAINER_NAME" "/opt/Trace32_H7/TRACE32/bin/pc_linux64/t32marm"
 
 # Attendre que l'utilisateur arrête le conteneur
 echo "Appuyez sur [Entrée] pour arrêter le conteneur..."

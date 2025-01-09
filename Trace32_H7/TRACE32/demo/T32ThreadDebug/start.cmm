@@ -50,7 +50,7 @@ WinPAGE.RESet
 WinCLEAR
 MENU.RESet
 RESet
-Do "~~\ard.cmm"
+Do "~~/ard.cmm"
 
 ; ------------------------------------------------------------------------------
 ; global input parameters

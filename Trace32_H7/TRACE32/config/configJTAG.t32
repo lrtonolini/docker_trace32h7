@@ -24,6 +24,7 @@ OS=
 ;Connection to Host
 PBI=ICD
 USB
+CONNECTIONMODE=AUTOCONNECT
 
 ;Screen Settings
 SCREEN=
