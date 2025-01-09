@@ -6,7 +6,7 @@ README
 
 please make commande : 
 
-setx WSLENV "/mnt/c/<your path>/docker_trace32h7"
+setx WSLENV "/mnt/c/your path/docker_trace32h7"
 
 run .\connect_lauterbach.bat
 
@@ -17,6 +17,6 @@ Sinon, veillez faire un power cycle de la carte et de la sonde
 
 ----------Sous host linux : 
 
-export MNTWSL="/mnt/c/<your path>/docker_trace32h7"
+export MNTWSL="/mnt/c/your path/docker_trace32h7"
 
 run ./startup.sh
