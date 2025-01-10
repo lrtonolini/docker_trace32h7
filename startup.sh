@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo .${MNTWSL}/Trace32_H7/TRACE32/bin/pc_linux64/udev.conf/setup_udevrules.sh
+sudo $MNTWSL/Trace32_H7/TRACE32/bin/pc_linux64/udev.conf/setup_udevrules.sh
 
 IMAGE_NAME="trace32"
 CONTAINER_NAME="t32"
